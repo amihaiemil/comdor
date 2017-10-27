@@ -14,7 +14,6 @@ deploy:
 #  secring.gpg: "repo/rcfg/secring.gpg.asc"
 release:
   script: |-
+    echo "Some deployment script"
   #  chmod +x ./rrv.sh
   #  ./rrv.sh
-    echo "Some deployment script"
-
