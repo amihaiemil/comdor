@@ -6,11 +6,7 @@
 [![DevOps By Rultor.com](http://www.rultor.com/b/amihaiemil/comdor)](http://www.rultor.com/p/amihaiemil/comdor)
 [![We recommend IntelliJ IDEA](http://amihaiemil.github.io/images/intellij-idea-recommend.svg)](https://www.jetbrains.com/idea/)
 
-
-
-Comdor is the master of Github automation.
-
-It can help you automate basically anything related to your Github workflow.
+Comdor can help you automate anything related to your Github workflow.
 
 More details coming soon.
 
