@@ -1,0 +1,13 @@
+/.idea
+*.iml
+.classpath
+.project
+target/
+.settings/
+*.log*
+bin/
+*/settings.xml
+*/pubring.gpg
+*/secring.gpg
+
+
