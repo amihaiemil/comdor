@@ -6,7 +6,7 @@
 [![DevOps By Rultor.com](http://www.rultor.com/b/amihaiemil/comdor)](http://www.rultor.com/p/amihaiemil/comdor)
 [![We recommend IntelliJ IDEA](http://amihaiemil.github.io/images/intellij-idea-recommend.svg)](https://www.jetbrains.com/idea/)
 
-Comdor can help you automate anything related to your Github workflow.
+Comdor can help you automate anything related to your project on Github.
 
 More details coming soon.
 
@@ -18,5 +18,5 @@ Make sure the maven build:
 
 ``$mvn clean install -Pcheckstyle``
 
-passes before making a PR. Checkstyle static analyser will make sure
+passes before making a PR. [Checkstyle](http://checkstyle.sourceforge.net/) will make sure
 you're following our code style and guidlines.
