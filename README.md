@@ -1,0 +1,26 @@
+### comdor
+
+[![Build Status](https://travis-ci.org/amihaiemil/comdor.svg?branch=master)](https://travis-ci.org/amihaiemil/comdor)
+[![PDD status](http://www.0pdd.com/svg?name=opencharles/charles-rest)](http://www.0pdd.com/p?name=amihaiemil/comdor)
+
+[![DevOps By Rultor.com](http://www.rultor.com/b/amihaiemil/comdor)](http://www.rultor.com/p/amihaiemil/comdor)
+[![We recommend IntelliJ IDEA](http://amihaiemil.github.io/images/intellij-idea-recommend.svg)](https://www.jetbrains.com/idea/)
+
+
+
+Comdor is the master of Github automation.
+
+It can help you automate basically anything related to your Github workflow.
+
+More details coming soon.
+
+### Contributing 
+
+If you would like to contribute, just open an issue or a PR.
+
+Make sure the maven build:
+
+``$mvn clean install -Pcheckstyle``
+
+passes before making a PR. Checkstyle static analyser will make sure
+you're following our code style and guidlines.
