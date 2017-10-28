@@ -23,29 +23,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor;
+package co.comdor.rest.model;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import javax.json.JsonObject;
 
 /**
- * REST interface for comdor.
- * @author Mihai Andronache (amihaiemil@gmail.com)
- * @version $Id$
- * @since 1.0.0
+ * Notifications received via the webhook endpoint.
  */
-@Path("/")
-public final class ComdorResource {
-    
+public final class WebhookNotifications extends Notifications {
+
     /**
-     * Endpoint for checking if the service is online.
-     * @return ok response.
+     * Ctor.
+     * @param all All webhook notifications
      */
-    @GET
-    @Path("/ping")
-    public Response ping() {
-        return Response.ok().entity("Comdor is online!").build();
+    public WebhookNotifications(final JsonObject... all) {
+        for(final JsonObject json : all) {
+            super.notifications().add(new IssueCommentNotification(json));
+        }
     }
 
 }

@@ -23,7 +23,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor;
+package co.comdor.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
