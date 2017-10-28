@@ -23,10 +23,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor.rest.model;
+package co.comdor.github;
 
-import co.comdor.github.JsonMention;
-import co.comdor.github.Mention;
 import com.jcabi.github.Issue;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -37,7 +35,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 /**
- * Unit tests for {@link co.comdor.github.JsonMention}
+ * Unit tests for {@link JsonMention}
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
