@@ -37,7 +37,8 @@ import javax.json.JsonObject;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
- * @todo #9:30min Implement method scripts() and write some unit tests for it.
+ * @todo #9:30min Implement method scripts(), which extracts the code
+ *  to run from the comment, and write some unit tests for it.
  */
 public abstract class JsonMention implements Mention {
 
@@ -63,9 +64,12 @@ public abstract class JsonMention implements Mention {
     }
 
     @Override
-    public final String type() {
-        return "unknown";
+    public final String author() {
+        return this.json.getJsonObject("user").getString("login");
     }
+
+    @Override
+    public abstract String type();
 
     @Override
     public final String scripts() {

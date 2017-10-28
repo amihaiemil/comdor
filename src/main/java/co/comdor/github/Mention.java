@@ -38,6 +38,12 @@ import javax.json.JsonObject;
 public interface Mention {
 
     /**
+     * The mentioning comment's author.
+     * @return String.
+     */
+    String author();
+
+    /**
      * What type is it? 'hello', 'run' etc
      * @return String.
      */

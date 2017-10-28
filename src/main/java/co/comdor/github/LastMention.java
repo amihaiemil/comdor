@@ -49,6 +49,12 @@ public final class LastMention extends JsonMention {
         super(LastMention.findLastMention(issue), issue);
     }
 
+    @Override
+    public String type() {
+        return "unknown";
+    }
+
+
     /**
      * Looks for the last mentioning comment in this Github issue.
      * It searches for the most recent (bottoms up).
