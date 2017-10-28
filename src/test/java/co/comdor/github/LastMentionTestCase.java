@@ -33,6 +33,8 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 /**
  * Unit tests for {@link LastMention}
  * @author Mihai Andronache (amihaiemil@gmail.com)
@@ -207,6 +209,37 @@ public final class LastMentionTestCase {
         MatcherAssert.assertThat(
             new LastMention(comdor).json().getString("body"),
             Matchers.equalTo("@comdor hello!")
+        );
+    }
+
+    /**
+     * LastMention can send a reply to the author.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void sendsReply() throws Exception {
+        final MkStorage storage = new MkStorage.Synced(new MkStorage.InFile());
+        final Repo repoMihai = new MkGithub(storage, "amihaiemil")
+                .repos().create(
+                        new Repos.RepoCreate("amihaiemil.github.io", false)
+                );
+        final Issue mihai = repoMihai.issues().create("test issue", "body");
+        mihai.comments().post("@comdor hello!");//first mention
+
+        final Issue comdor = new MkGithub(storage, "comdor").repos()
+                .get(repoMihai.coordinates())
+                .issues()
+                .get(mihai.number());
+
+        MatcherAssert.assertThat(
+            comdor.comments().iterate(),
+            Matchers.iterableWithSize(1)
+        );
+        final Mention mention = new LastMention(comdor);
+        mention.reply("Hello there!");
+        MatcherAssert.assertThat(
+            comdor.comments().iterate(),
+            Matchers.iterableWithSize(2)
         );
     }
 }

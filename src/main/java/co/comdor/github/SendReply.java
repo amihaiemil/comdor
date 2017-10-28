@@ -3,12 +3,12 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  1)Redistributions of source code must retain the above copyright notice,
- *  this list of conditions and the following disclaimer.
- *  2)Redistributions in binary form must reproduce the above copyright notice,
+ * 1)Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * 2)Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- *  3)Neither the name of comdor nor the names of its
+ * 3)Neither the name of comdor nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -24,56 +24,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 package co.comdor.github;
-
-import com.jcabi.github.Issue;
-
-import javax.json.JsonObject;
+import co.comdor.IntermediaryStep;
+import co.comdor.Step;
+import org.slf4j.Logger;
 import java.io.IOException;
 
 /**
- * A Github Issue comment where the bot has been mentioned.
+ * Step where the bot replies to a {@link Mention}.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public interface Mention {
+public final class SendReply extends IntermediaryStep {
 
     /**
-     * The mentioning comment's author.
-     * @return String.
+     * Reply to send.
      */
-    String author();
+    private String rep;
 
     /**
-     * What type is it? 'hello', 'run' etc
-     * @return String.
+     * Ctor with just the reply.
+     * SendReply is usually the last one in the chain, so this is
+     * for convenience.
+     * @param rep The reply to be sent.
      */
-    String type();
+    public SendReply(final String rep) {
+        this(rep, new Step.FinalStep());
+    }
 
     /**
-     * What scripts to run does it contain?
-     * @return String.
+     * Ctor.
+     * @param rep The reply to be sent.
+     * @param next The next step to perform.
      */
-    String scripts();
+    public SendReply(final String rep, final Step next) {
+        super(next);
+        this.rep = rep;
+    }
 
-    /**
-     * Issue where the mention is found.
-     * @return Github Issue.
-     */
-    Issue issue();
-
-    /**
-     * Reply to this mention.
-     * @param message Message of the reply.
-     * @throws IOException If the comment cannot be sent to Github.
-     */
-    void reply(final String message)throws IOException;
-
-    /**
-     * The entire Mention in Json, as it is returned by the
-     * Github API.
-     * @return JsonObject
-     * @see https://developer.github.com/v3/issues/comments/
-     */
-    JsonObject json();
+    @Override
+    public void perform(
+        final Mention mention, final Logger log
+    ) throws IOException {
+        try {
+            mention.reply(this.rep);
+        } catch (final IOException ex) {
+            log.error("IOException when sending a reply!", ex);
+            throw new IOException("IOException when sending a reply!", ex);
+        }
+        this.next().perform(mention, log);
+    }
 }

@@ -3,12 +3,12 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  1)Redistributions of source code must retain the above copyright notice,
- *  this list of conditions and the following disclaimer.
- *  2)Redistributions in binary form must reproduce the above copyright notice,
+ * 1)Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * 2)Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- *  3)Neither the name of comdor nor the names of its
+ * 3)Neither the name of comdor nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -23,57 +23,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor.github;
-
-import com.jcabi.github.Issue;
-
-import javax.json.JsonObject;
-import java.io.IOException;
+package co.comdor;
 
 /**
- * A Github Issue comment where the bot has been mentioned.
+ * A Step which validates a condition.
+ * It splits the path in two: one for the case when the condition is true,
+ * the other for when it is false.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public interface Mention {
+public abstract class PreconditionCheckStep implements Step {
 
     /**
-     * The mentioning comment's author.
-     * @return String.
+     * Next step if the check is true.
      */
-    String author();
+    private Step onTrue;
 
     /**
-     * What type is it? 'hello', 'run' etc
-     * @return String.
+     * Next step if the check is false.
      */
-    String type();
+    private Step onFalse;
 
     /**
-     * What scripts to run does it contain?
-     * @return String.
+     * Ctor.
+     * @param onTrue Step that should be performed next if the check is true.
+     * @param onFalse Step that should be performed next if the check is false.
      */
-    String scripts();
+    public PreconditionCheckStep(final Step onTrue, final Step onFalse) {
+        this.onTrue = onTrue;
+        this.onFalse = onFalse;
+    }
 
     /**
-     * Issue where the mention is found.
-     * @return Github Issue.
+     * Step to perform on successful check.
+     * @return Step
      */
-    Issue issue();
+    public final Step onTrue() {
+        return this.onTrue;
+    }
 
     /**
-     * Reply to this mention.
-     * @param message Message of the reply.
-     * @throws IOException If the comment cannot be sent to Github.
+     * Step to perform on failed check.
+     * @return Step
      */
-    void reply(final String message)throws IOException;
-
-    /**
-     * The entire Mention in Json, as it is returned by the
-     * Github API.
-     * @return JsonObject
-     * @see https://developer.github.com/v3/issues/comments/
-     */
-    JsonObject json();
+    public final Step onFalse() {
+        return this.onFalse;
+    }
 }

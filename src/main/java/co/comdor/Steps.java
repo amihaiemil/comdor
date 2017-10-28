@@ -3,12 +3,12 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  1)Redistributions of source code must retain the above copyright notice,
- *  this list of conditions and the following disclaimer.
- *  2)Redistributions in binary form must reproduce the above copyright notice,
+ * 1)Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * 2)Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- *  3)Neither the name of comdor nor the names of its
+ * 3)Neither the name of comdor nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -23,57 +23,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor.github;
+package co.comdor;
 
-import com.jcabi.github.Issue;
-
-import javax.json.JsonObject;
+import org.slf4j.Logger;
 import java.io.IOException;
 
 /**
- * A Github Issue comment where the bot has been mentioned.
+ * All the steps that the bot performs in order to do something.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public interface Mention {
+public interface Steps {
 
     /**
-     * The mentioning comment's author.
-     * @return String.
+     * Perform this step.
+     * @param log Action logger.
+     * @throws IOException If there is anything wrong in the communication
+     *  with Github.
      */
-    String author();
-
-    /**
-     * What type is it? 'hello', 'run' etc
-     * @return String.
-     */
-    String type();
-
-    /**
-     * What scripts to run does it contain?
-     * @return String.
-     */
-    String scripts();
-
-    /**
-     * Issue where the mention is found.
-     * @return Github Issue.
-     */
-    Issue issue();
-
-    /**
-     * Reply to this mention.
-     * @param message Message of the reply.
-     * @throws IOException If the comment cannot be sent to Github.
-     */
-    void reply(final String message)throws IOException;
-
-    /**
-     * The entire Mention in Json, as it is returned by the
-     * Github API.
-     * @return JsonObject
-     * @see https://developer.github.com/v3/issues/comments/
-     */
-    JsonObject json();
+    void perform(final Logger log) throws IOException;
 }

@@ -28,6 +28,7 @@ package co.comdor.github;
 import com.jcabi.github.Issue;
 
 import javax.json.JsonObject;
+import java.io.IOException;
 
 /**
  * {@link Mention} represented in Json.<br><br>
@@ -79,6 +80,12 @@ public abstract class JsonMention implements Mention {
     @Override
     public final Issue issue() {
         return this.issue;
+    }
+
+    @Override
+    public final void reply(final String message) throws IOException {
+        final String reply = "@" + this.author() + " " + message;
+        this.issue.comments().post(reply);
     }
 
     @Override
