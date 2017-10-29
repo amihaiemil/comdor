@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--test-->
+    <link rel="icon" href="http://www.amihaiemil.com/images/logo_mic.PNG">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Data Policy</title>
+
+    <link rel="stylesheet" href="https://cdn.rawgit.com/yegor256/tacit/gh-pages/tacit-0.8.1.min.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <script data-bg="#0C1961" data-fg="#99D9FF" type="text/javascript" id="cookiebanner"
+        src="http://cookiebanner.eu/js/cookiebanner.min.js"></script>
+</head>
+
+<body id="page-top" class="index">
+  <a href="https://github.com/opencharles/charles-rest" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+  <!-- Header -->
+  <header>
+      <div class="centered">
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/19765212?v=3" alt="charlesmike avatar">
+        <span class="skills">Github Chatbot For Content Search</span>
+        <a href="index.html">Homepage</a>
+      </div>
+  </header>
+  <section class="content">
+      <h3>Data Policy</h3>
+      <p>
+        This document's purpose is to describe what kind of data we gather and how we handle it.
+        It is important to mention that we do not try to gather any sensitive information
+        or private content of any kind.
+      </p>
+      <br/>
+          <ul>
+            <li>
+                          The Service does not directly hold any data regarding its Users. Any contact information that might be stored comes solely from the content published on the crawled websites.
+          </li>
+          <br/>
+              <li>
+              The Service's clear scope is to index and make searchable data and content that is already public and accessible on a website. <b>All the data published on the crawled website will be
+            indexed and made searchable</b> via a REST endpoint. If you do not want some content to be searchable, then it should not be published on the crawled website.
+            </li>
+          <br/>
+          <li>
+              No index action is ever triggered without the User's command. No action is scheduled or repeated even if it fails.
+          </li>
+          <br/>
+          <li>
+              All the crawled content is sent to Elasticsearch in the AWS cloud.
+            We do not store in any other way. <b>The Content is not altered in any way, it is fetched and indexed as-is.</b>
+          </li>
+          <br/>
+          <li>
+              <b>We do not sell your data to anyone</b>, although it might be accessible to anyone through the search endpoint (again, this data is supposed to be public anyway, on your website!)
+          </li>
+          <br/>
+        </ul>
+  </section>
+  <footer class="content">
+      <div class="centered">
+            <span>Website last updated at: <span id="lastupdated"></span></span>
+            <span>Copyright &copy; charles.amihaiemil.com 2016-2017</span>
+            <span><a href="terms.html">Terms and conditions</a> |
+            <a href="data.html">Data policy</a></span>
+      </div>
+  </footer>
+  <script src="js/common/scriptslu.min.js"></script>
+</body>
+
+</html>
