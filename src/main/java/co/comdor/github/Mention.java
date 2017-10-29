@@ -51,6 +51,12 @@ public interface Mention {
     String type();
 
     /**
+     * Language of this mention.
+     * @return Language. Defaults to English.
+     */
+    Language language();
+
+    /**
      * What scripts to run does it contain?
      * @return String.
      */
@@ -68,6 +74,13 @@ public interface Mention {
      * @throws IOException If the comment cannot be sent to Github.
      */
     void reply(final String message)throws IOException;
+
+    /**
+     * Tries to understand this Mention, based on the languages that it speaks.
+     * @param langs Languages that the bot can speak.
+     * @throws IOException If something goes wrong with the call to Github.
+     */
+    void understand(final Language[] langs) throws IOException;
 
     /**
      * The entire Mention in Json, as it is returned by the

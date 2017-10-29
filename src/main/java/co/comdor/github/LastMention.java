@@ -41,6 +41,17 @@ import java.util.List;
 public final class LastMention extends JsonMention {
 
     /**
+     * What type of mention is it? "hello", "run" etc.
+     * Initially, this is unknown.
+     */
+    private String type = "unknown";
+
+    /**
+     * What language is spoken? Default is English.
+     */
+    private Language lang = new English();
+
+    /**
      * Ctor.
      * @param issue Github issue.
      * @throws IOException If something goes wrong with the HTTP calls.
@@ -51,9 +62,24 @@ public final class LastMention extends JsonMention {
 
     @Override
     public String type() {
-        return "unknown";
+        return this.type;
     }
 
+    @Override
+    public Language language() {
+        return this.lang;
+    }
+
+    @Override
+    public void understand(final Language[] langs) throws IOException {
+        for(final Language spoken : langs) {
+            this.type = lang.categorize(this);
+            if(!"unknown".equals(this.type)) {
+                this.lang = spoken;
+                break;
+            }
+        }
+    }
 
     /**
      * Looks for the last mentioning comment in this Github issue.

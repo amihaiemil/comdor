@@ -65,12 +65,19 @@ public abstract class JsonMention implements Mention {
     }
 
     @Override
+    public abstract String type();
+
+    @Override
+    public abstract Language language();
+
+    @Override
+    public abstract void understand(final Language[] langs) throws IOException;
+
+    @Override
     public final String author() {
         return this.json.getJsonObject("user").getString("login");
     }
 
-    @Override
-    public abstract String type();
 
     @Override
     public final String scripts() {
