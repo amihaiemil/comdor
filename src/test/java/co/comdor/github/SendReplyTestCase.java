@@ -31,11 +31,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
-
 import java.io.IOException;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Unit tests for {@link SendReply}

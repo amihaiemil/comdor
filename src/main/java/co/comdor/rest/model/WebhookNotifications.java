@@ -29,6 +29,9 @@ import javax.json.JsonObject;
 
 /**
  * Notifications received via the webhook endpoint.
+ * @author Mihai Andronache (amihaiemil@gmail.com)
+ * @version $Id$
+ * @since 0.0.1
  */
 public final class WebhookNotifications extends Notifications {
 

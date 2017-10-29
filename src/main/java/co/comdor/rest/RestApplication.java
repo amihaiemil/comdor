@@ -32,7 +32,7 @@ import javax.ws.rs.core.Application;
  * REST application. Point where all resources are registered.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  */
 @ApplicationPath("/api")
 public class RestApplication extends Application {

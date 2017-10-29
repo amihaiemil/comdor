@@ -33,7 +33,7 @@ import javax.ws.rs.core.Response;
  * REST interface for comdor.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  */
 @Path("/")
 public final class ComdorResource {

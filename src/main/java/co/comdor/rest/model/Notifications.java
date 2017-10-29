@@ -34,7 +34,7 @@ import java.util.List;
  * The bot can act upon more notifications at the same time.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  *
  */
 public abstract class Notifications implements Iterable<Notification> {

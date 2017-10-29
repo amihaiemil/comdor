@@ -46,7 +46,7 @@ import java.net.HttpURLConnection;
  * REST interface to receive Github notifications.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  *
  */
 @Path("/")

@@ -36,7 +36,7 @@ import javax.json.JsonObject;
  * Unit tests for {@link WebhookNotifications}
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  *
  */
 @SuppressWarnings("unused")

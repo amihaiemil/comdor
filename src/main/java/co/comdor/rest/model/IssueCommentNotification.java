@@ -31,7 +31,7 @@ import javax.json.JsonObject;
  * Github issueComment notification, which comes from the webhook.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  */
 public final class IssueCommentNotification implements Notification {
 

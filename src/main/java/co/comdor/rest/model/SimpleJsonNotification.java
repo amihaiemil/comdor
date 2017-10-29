@@ -31,7 +31,7 @@ import javax.json.JsonObject;
  * Simplified Github notifications in Json format.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  *
  */
 public final class SimpleJsonNotification implements Notification {

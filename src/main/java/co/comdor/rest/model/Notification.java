@@ -29,7 +29,7 @@ package co.comdor.rest.model;
  * Simplified Github notification to act upon.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 1.0.0
+ * @since 0.0.1
  *
  */
 public interface Notification {
