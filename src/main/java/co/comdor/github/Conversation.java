@@ -46,11 +46,11 @@ public final class Conversation implements Knowledge {
     /**
      * The bot starts the conversation by saying "hello".
      */
-    private Knowledge hello;
+    private Knowledge followup;
 
     /**
      * Ctor.
-     * @param followup Followup of this conversation; what does it know to do next?
+     * @param followup What should it do after the conversation starts?
      */
     public Conversation(final Knowledge followup) {
         this(followup, new English());
@@ -58,17 +58,17 @@ public final class Conversation implements Knowledge {
 
     /**
      * Ctor.
-     * @param hello Start this conversation, say "hello".
+     * @param followup What should it do after the conversation starts?
      * @param langs Languages that the bot speaks.
      */
-    public Conversation(final Knowledge hello, final Language... langs) {
-        this.hello = hello;
+    public Conversation(final Knowledge followup, final Language... langs) {
+        this.followup = followup;
         this.languages = langs;
     }
 
     @Override
     public Steps start(final Mention mention) throws IOException {
         mention.understand(this.languages);
-        return this.hello.start(mention);
+        return this.followup.start(mention);
     }
 }

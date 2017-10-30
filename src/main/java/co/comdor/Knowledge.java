@@ -42,6 +42,7 @@ public interface Knowledge {
      * order to fulfill it.
      * @param mention Github mentioning comment.
      * @return Steps to execute.
+     * @throws IOException If something goes wrong when calling Github.
      */
     Steps start(final Mention mention) throws IOException;
 }

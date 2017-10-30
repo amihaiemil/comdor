@@ -26,24 +26,37 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
-import co.comdor.Step;
 import co.comdor.Steps;
-import java.io.IOException;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * The is ultimately confused, if it cannot understand the mention.
+ * Unit tests for {@link Confused}
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class Confused implements Knowledge {
+public final class ConfusedTestCase {
 
-    @Override
-    public Steps start(final Mention mention) throws IOException {
-        final Step reply = new SendReply(
-            mention.language().response("unknown.comment")
+    /**
+     * Confused can start an 'unknown' command.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void startsUnknownCommand() throws Exception {
+        final Mention com = Mockito.mock(Mention.class);
+        Mockito.when(com.type()).thenReturn("unknown");
+        Mockito.when(com.language()).thenReturn(new English());
+
+        final Knowledge confused = new Confused();
+
+        Steps steps = confused.start(com);
+        MatcherAssert.assertThat(steps, Matchers.notNullValue());
+        MatcherAssert.assertThat(
+            steps instanceof GithubSteps, Matchers.is(true)
         );
-        return new GithubSteps(reply, mention);
-    }
 
+    }
 }

@@ -73,7 +73,7 @@ public final class LastMention extends JsonMention {
     @Override
     public void understand(final Language[] langs) throws IOException {
         for(final Language spoken : langs) {
-            this.type = lang.categorize(this);
+            this.type = spoken.categorize(this);
             if(!"unknown".equals(this.type)) {
                 this.lang = spoken;
                 break;

@@ -33,6 +33,7 @@ import org.mockito.Mockito;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.io.IOException;
 
 /**
  * Unit tests for {@link JsonMention}
@@ -127,6 +128,16 @@ public final class JsonMentionTestCase {
         @Override
         public String type() {
             throw new UnsupportedOperationException("A mock, no type here.");
+        }
+
+        @Override
+        public Language language() {
+            throw new UnsupportedOperationException("A mock, no language.");
+        }
+
+        @Override
+        public void understand(Language[] langs) throws IOException {
+            throw new UnsupportedOperationException("A mock, no understand().");
         }
 
     }

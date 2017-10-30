@@ -26,24 +26,42 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
-import co.comdor.Step;
 import co.comdor.Steps;
+
 import java.io.IOException;
 
 /**
- * The is ultimately confused, if it cannot understand the mention.
+ * The bot knows how to respond to a 'hello' mention.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class Confused implements Knowledge {
+public final class Hello implements Knowledge {
 
-    @Override
-    public Steps start(final Mention mention) throws IOException {
-        final Step reply = new SendReply(
-            mention.language().response("unknown.comment")
-        );
-        return new GithubSteps(reply, mention);
+    /**
+     * What do we do if it's not a 'hello' command?
+     */
+    private Knowledge notHello;
+
+    /**
+     * Ctor.
+     * @param notHello What do we do if it's not a 'hello' command?
+     */
+    public Hello(final Knowledge notHello) {
+        this.notHello = notHello;
     }
 
+    @Override
+    public Steps start(final Mention com) throws IOException {
+        final Steps resolved;
+        if("hello".equalsIgnoreCase(com.type())) {
+            resolved =  new GithubSteps(
+                new SendReply(com.language().response("hello.comment")),
+                com
+            );
+        } else {
+            resolved = this.notHello.start(com);
+        }
+        return resolved;
+    }
 }

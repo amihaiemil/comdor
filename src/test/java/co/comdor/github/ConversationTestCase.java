@@ -26,24 +26,38 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
-import co.comdor.Step;
 import co.comdor.Steps;
+import org.junit.Test;
+import org.mockito.Mockito;
+
 import java.io.IOException;
 
 /**
- * The is ultimately confused, if it cannot understand the mention.
+ * Unit tests for {@link Conversation}
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class Confused implements Knowledge {
+public final class ConversationTestCase {
 
-    @Override
-    public Steps start(final Mention mention) throws IOException {
-        final Step reply = new SendReply(
-            mention.language().response("unknown.comment")
+    /**
+     * Conversation should try to understand the Mention before forwarding it
+     * to the next Knowledge.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void understandsBeforeForwarding() throws Exception {
+        final Language[] langs = {new English()};
+        final Conversation conv = new Conversation(
+            new Knowledge() {
+                @Override
+                public Steps start(final Mention mention) throws IOException {
+                    Mockito.verify(mention).understand(langs);
+                    return null;
+                }
+            },
+            langs
         );
-        return new GithubSteps(reply, mention);
+        conv.start(Mockito.mock(Mention.class));
     }
-
 }
