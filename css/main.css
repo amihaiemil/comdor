@@ -5,8 +5,7 @@
     align-items: center;
 }
 .avatar {
-    border-radius: 50%;
-    width: 120px;
+    border-radius: 10px;
 }
 ul.horizontal-list {
     list-style: none;
