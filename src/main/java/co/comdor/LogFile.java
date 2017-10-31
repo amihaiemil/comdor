@@ -46,7 +46,7 @@ public final class LogFile implements Log {
     /**
      * Id of the log file.
      */
-    private String id = UUID.randomUUID().toString();
+    private String id;
 
     /**
      * Logger.
@@ -55,10 +55,13 @@ public final class LogFile implements Log {
     
     /**
      * Ctor.
+     * @param dir The directory where the file should be located.
+     * @param id Id of the log file.
      * @throws IOException If the log file cannot be created/configured.
      */
-    public LogFile() throws IOException {
-        this.setup();
+    public LogFile(final String dir, final String id) throws IOException {
+    	this.id = id;
+        this.setup(dir);
     }
     
     @Override
@@ -76,18 +79,24 @@ public final class LogFile implements Log {
      * file way is not thread-safe!<br>
      * Also, note that we have to create the file ourselves since FileAppender
      * acts funny under linux if the file doesn't already exist.
+     * @param dir The directory where the file should be located.
      * @throws IOException If there's something wrong with the File.
      */
-    private void setup() throws IOException {
+    private void setup(final String dir) throws IOException {
         final String loggerName = "Action_" + this.id;
         final org.apache.log4j.Logger build = org.apache.log4j.Logger
             .getLogger(loggerName);
-        String logRoot = System.getProperty("LOG_ROOT");
-        if(logRoot == null) {
-            logRoot = ".";
+        
+        final String logFilePath;
+        if(dir == null) {
+        	logFilePath = "/" + this.id;
+        } else {
+            if(dir.endsWith("/")) {
+            	logFilePath = dir + this.id;
+            } else {
+            	logFilePath = dir + "/" + this.id;
+            }
         }
-        final String logFilePath = logRoot
-            + "/comdor/ActionsLogs/" + this.id + ".log";
         
         final File logFile = new File(logFilePath);
         logFile.getParentFile().mkdirs();
