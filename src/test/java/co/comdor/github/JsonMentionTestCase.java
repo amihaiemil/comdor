@@ -136,7 +136,7 @@ public final class JsonMentionTestCase {
         }
 
         @Override
-        public void understand(Language[] langs) throws IOException {
+        public void understand(Language... langs) throws IOException {
             throw new UnsupportedOperationException("A mock, no understand().");
         }
 

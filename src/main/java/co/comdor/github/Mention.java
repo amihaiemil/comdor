@@ -80,7 +80,7 @@ public interface Mention {
      * @param langs Languages that the bot can speak.
      * @throws IOException If something goes wrong with the call to Github.
      */
-    void understand(final Language[] langs) throws IOException;
+    void understand(final Language... langs) throws IOException;
 
     /**
      * The entire Mention in Json, as it is returned by the

@@ -71,7 +71,7 @@ public abstract class JsonMention implements Mention {
     public abstract Language language();
 
     @Override
-    public abstract void understand(final Language[] langs) throws IOException;
+    public abstract void understand(final Language... langs) throws IOException;
 
     @Override
     public final String author() {

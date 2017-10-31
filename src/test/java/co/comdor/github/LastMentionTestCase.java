@@ -32,11 +32,10 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Iterator;
+import org.mockito.Mockito;
 
 /**
- * Unit tests for {@link LastMention}
+ * Tests for {@link LastMention}
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
@@ -44,27 +43,80 @@ import java.util.Iterator;
 public final class LastMentionTestCase {
 
     /**
-     * LastMention doesn't know its type. This functionality has
-     * to be implemented in a decorator.
+     * The bot understands a mention using the first language.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void typeIsUnknown() throws Exception {
+    public void understandsWithFirstLanguage() throws Exception {
+        final MkStorage storage = new MkStorage.Synced(new MkStorage.InFile());
+        final Repo repoMihai = new MkGithub(storage, "amihaiemil")
+            .repos().create(
+                new Repos.RepoCreate("amihaiemil.github.io", false)
+            );
+        final Issue mihai = repoMihai.issues().create("test issue", "body");
+        mihai.comments().post("@comdor hello!");
+
+        final Issue comdor = new MkGithub(storage, "comdor").repos()
+                .get(repoMihai.coordinates())
+                .issues()
+                .get(mihai.number());
+        final Mention last = new LastMention(comdor);
+        MatcherAssert.assertThat(
+        	last.type(), Matchers.equalTo("unknown")
+        );
+        
+        final Language first = Mockito.mock(Language.class);
+        Mockito.when(first.categorize(last)).thenReturn("hello");
+        
+        final Language second = Mockito.mock(Language.class);
+        Mockito.when(second.categorize(last)).thenReturn("hello");
+        
+        last.understand(first, second, Mockito.mock(Language.class));
+        
+        MatcherAssert.assertThat(
+            last.type(), Matchers.equalTo("hello")
+        );
+        MatcherAssert.assertThat(
+            last.language(), Matchers.is(first)
+        );
+    }
+    
+    /**
+     * The bot understands a mention using the second language.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void understandsWithSecondLanguage() throws Exception {
         final MkStorage storage = new MkStorage.Synced(new MkStorage.InFile());
         final Repo repoMihai = new MkGithub(storage, "amihaiemil")
                 .repos().create(
                         new Repos.RepoCreate("amihaiemil.github.io", false)
                 );
         final Issue mihai = repoMihai.issues().create("test issue", "body");
-        mihai.comments().post("@comdor hello!");//first mention
+        mihai.comments().post("@comdor hello!");
 
         final Issue comdor = new MkGithub(storage, "comdor").repos()
                 .get(repoMihai.coordinates())
                 .issues()
                 .get(mihai.number());
+        final Mention last = new LastMention(comdor);
         MatcherAssert.assertThat(
-                new LastMention(comdor).type(),
-                Matchers.equalTo("unknown")
+        	last.type(), Matchers.equalTo("unknown")
+        );
+        
+        final Language first = Mockito.mock(Language.class);
+        Mockito.when(first.categorize(last)).thenReturn("unknown");
+        
+        final Language second = Mockito.mock(Language.class);
+        Mockito.when(second.categorize(last)).thenReturn("hello");
+        
+        last.understand(first, second, Mockito.mock(Language.class));
+        
+        MatcherAssert.assertThat(
+            last.type(), Matchers.equalTo("hello")
+        );
+        MatcherAssert.assertThat(
+            last.language(), Matchers.is(second)
         );
     }
 
@@ -92,8 +144,8 @@ public final class LastMentionTestCase {
             Assert.fail("An IAE should have been thrown!");
         } catch (final IllegalArgumentException iae) {
             MatcherAssert.assertThat(
-                    iae.getMessage(),
-                    Matchers.equalTo("No mention found!")
+                iae.getMessage(),
+                Matchers.equalTo("No mention found!")
             );
         }
     }
@@ -193,7 +245,7 @@ public final class LastMentionTestCase {
      * @throws Exception if something goes wrong.
      */
     @Test
-    public void singeUnrepliedMention() throws Exception {
+    public void singleUnrepliedMention() throws Exception {
         final MkStorage storage = new MkStorage.Synced(new MkStorage.InFile());
         final Repo repoMihai = new MkGithub(storage, "amihaiemil")
                 .repos().create(

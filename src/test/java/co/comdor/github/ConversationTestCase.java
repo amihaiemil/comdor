@@ -60,4 +60,17 @@ public final class ConversationTestCase {
         );
         conv.start(Mockito.mock(Mention.class));
     }
+    
+    /**
+     * Conversation should always forward the mention to the next Knowledge.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void followupIsCalled() throws Exception {
+        final Knowledge followup = Mockito.mock(Knowledge.class);
+        final Conversation conv = new Conversation(followup);
+        final Mention mention = Mockito.mock(Mention.class);
+        conv.start(mention);
+        Mockito.verify(followup).start(mention);
+    }
 }
