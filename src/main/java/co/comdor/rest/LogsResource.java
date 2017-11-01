@@ -51,7 +51,7 @@ public final class LogsResource {
         final String logroot = System.getProperty("LOG_ROOT");
         Response response = Response.noContent().build();
         if(logroot != null) {
-            final File log = new File(logroot + "/comdor/ActionsLogs/" + name);
+            final File log = new File(logroot + "/comdor/ActionLogs" + name);
             if(log.exists()) {
                 response =  Response.ok()
                         .entity(log)

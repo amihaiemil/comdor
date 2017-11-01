@@ -25,11 +25,20 @@
  */
 package co.comdor.rest;
 
+import co.comdor.Action;
+import co.comdor.github.GithubAction;
+import co.comdor.rest.model.Notification;
 import co.comdor.rest.model.Notifications;
 import co.comdor.rest.model.SimplifiedNotifications;
 import co.comdor.rest.model.WebhookNotifications;
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.RtGithub;
+import com.jcabi.http.wire.RetryWire;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +49,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 
 /**
@@ -47,11 +57,16 @@ import java.net.HttpURLConnection;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
- *
+ * @checkstyle DesignForExtension (300 lines)
  */
 @Path("/")
 @Stateless
-public final class NotificationsResource {
+public class NotificationsResource {
+
+    /**
+     * The name of the System property holding theGithub API token.
+     */
+    private static final String GITHUB_API_TOKEN = "comdor.api.token";
 
     /**
      * Logger.
@@ -99,7 +114,7 @@ public final class NotificationsResource {
         if(token == null || token.isEmpty()) {
             status = HttpURLConnection.HTTP_FORBIDDEN;
         } else {
-            final String key = System.getProperty("github.auth.token");
+            final String key = System.getProperty(GITHUB_API_TOKEN);
             if(token.equals(key)) {
                 final boolean startedHandling = this.handleNotifications(
                     new SimplifiedNotifications(notifications)
@@ -110,7 +125,10 @@ public final class NotificationsResource {
                     status = HttpURLConnection.HTTP_INTERNAL_ERROR;
                 }
             } else {
-                LOG.error("Missing or incorrect github.auth.token!");
+                LOG.error(
+                    "Missing or incorrect comdor.auth.token! "
+                    + "Notifications post is FORBIDDEN!"
+                );
                 status = HttpURLConnection.HTTP_FORBIDDEN;
             }
         }
@@ -156,23 +174,52 @@ public final class NotificationsResource {
         }
         return Response.status(status).build();
     }
-    
+
     /**
-     * Handles notifications.
+     * Handles notifications, starts one action thread for each of them.
      * @param notifications List of notifications.
-     * @return true if notifications were handled successfully;
-     *  false otherwise.
+     * @return true if actions were started successfully; false otherwise.
      */
     private boolean handleNotifications(final Notifications notifications) {
-        final String authToken = System.getProperty("github.auth.token");
-        final boolean handled;
+        final String authToken = System.getProperty(GITHUB_API_TOKEN);
+        boolean handled;
         if(authToken == null || authToken.isEmpty()) {
-            LOG.error("Missing github.auth.token. Please specify it!");
+            LOG.error(
+                "Missing comdor.auth.token; "
+                + "Please specify the Github api access token!"
+            );
             handled = false;
         } else {
-            LOG.info("Handle notifications somehow...");
-            handled = true;
+            final Github github = new RtGithub(
+                new RtGithub(authToken).entry().through(RetryWire.class)
+            );
+            try {
+                for(final Notification notification : notifications) {
+                    this.take(
+                        new GithubAction(
+                            github.repos().get(
+                                new Coordinates.Simple(
+                                    notification.repoFullName()
+                                )
+                            ).issues().get(notification.issueNumber())
+                        )
+                    );
+                }
+                handled = true;
+            } catch (final IOException ex) {
+                LOG.error("IOException when getting the Github Issue", ex);
+                handled = false;
+            }
         }
         return handled;
+    }
+
+    /**
+     * Take an action.
+     * @param action Given action.
+     */
+    @Asynchronous
+    private void take(final Action action) {
+        action.perform();
     }
 }
