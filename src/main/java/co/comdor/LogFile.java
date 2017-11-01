@@ -27,8 +27,6 @@ package co.comdor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
-
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.PatternLayout;
@@ -60,7 +58,7 @@ public final class LogFile implements Log {
      * @throws IOException If the log file cannot be created/configured.
      */
     public LogFile(final String dir, final String id) throws IOException {
-    	this.id = id;
+        this.id = id;
         this.setup(dir);
     }
     
@@ -89,12 +87,12 @@ public final class LogFile implements Log {
         
         final String logFilePath;
         if(dir == null) {
-        	logFilePath = "/" + this.id;
+            logFilePath = "/" + this.id + ".log";
         } else {
             if(dir.endsWith("/")) {
-            	logFilePath = dir + this.id;
+                logFilePath = dir + this.id + ".log";
             } else {
-            	logFilePath = dir + "/" + this.id;
+                logFilePath = dir + "/" + this.id  + ".log";
             }
         }
         

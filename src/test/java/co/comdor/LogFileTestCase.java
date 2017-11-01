@@ -26,22 +26,17 @@
 package co.comdor;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
 import java.util.UUID;
-
-import org.apache.commons.io.FileUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.After;
 import org.junit.Test;
 
 /**
- * Tests for {@link LogFile}
+ * Tests for {@link LogFile}.
+ * The tests in this class will create *.log files
+ * under /src/test/resources/log_tests. These are ignored by git, via .gitignore,
+ * so just don't mind them. We do not try to delete them in a cleanup method in order
+ * to avoid access rights or file lock problems.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
