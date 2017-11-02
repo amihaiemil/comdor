@@ -86,7 +86,9 @@ public interface Mention {
      * The entire Mention in Json, as it is returned by the
      * Github API.
      * @return JsonObject
-     * @see https://developer.github.com/v3/issues/comments/
+     * @see <a href="https://developer.github.com/v3/issues/comments">
+     *     Github Comments API
+     * </a>
      */
     JsonObject json();
 }

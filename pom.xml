@@ -146,8 +146,20 @@
 								</goals>
 							</execution>
 						</executions>
+                                                <configuration>
+                                                    <tags>
+                                                      <tag>
+                                                        <name>todo</name>
+                                                        <placement>X</placement>
+                                                      </tag>
+                                                      <tag>
+                                                        <name>checkstyle</name>
+                                                        <placement>X</placement>
+                                                      </tag>
+                                                    </tags>
+                                                </configuration>
 					</plugin>
-					<plugin>
+					<!--<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>1.6.7</version>
@@ -181,7 +193,7 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
+					</plugin>-->
 				</plugins>
 			</build>
 		</profile>
