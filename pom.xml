@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.amihaiemil.devops</groupId>
 	<artifactId>comdor</artifactId>
-	<version>0.0.1-SNAPSHOT</version><!--rrv-sed-flag-->
+	<version>0.0.2-SNAPSHOT</version><!--rrv-sed-flag-->
 	<packaging>war</packaging>
 	<name>comdor</name>
 	<description>Github chatbot for DevOps automation</description>
