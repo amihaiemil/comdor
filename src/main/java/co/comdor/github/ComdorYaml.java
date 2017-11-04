@@ -36,7 +36,6 @@ import java.util.List;
  * @todo #27:30min Design and implement "aliases", which will basically be
  *  customized commands, aliases, labels for scripts which the users may want
  *  to execute periodically, like merging or deploying scripts.
- * @todo #27:30min Add an implementation based on camel library.
  */
 public interface ComdorYaml {
     

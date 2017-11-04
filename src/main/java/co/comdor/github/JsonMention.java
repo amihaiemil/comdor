@@ -25,7 +25,9 @@
  */
 package co.comdor.github;
 
+import com.jcabi.github.Content;
 import com.jcabi.github.Issue;
+import java.io.ByteArrayInputStream;
 
 import javax.json.JsonObject;
 import java.io.IOException;
@@ -47,12 +49,12 @@ public abstract class JsonMention implements Mention {
      * Github issue Comment in Json format.
      * @see https://developer.github.com/v3/issues/comments/
      */
-    private JsonObject json;
+    private final JsonObject json;
 
     /**
      * Issue where the mention was found.
      */
-    private Issue issue;
+    private final Issue issue;
 
     /**
      * Ctor.
@@ -70,6 +72,25 @@ public abstract class JsonMention implements Mention {
     @Override
     public abstract Language language();
 
+    @Override
+    public final ComdorYaml comdorYaml() throws IOException {
+        final ComdorYaml yaml;
+        if(this.issue.repo().contents().exists(".comdor.yml", "master")) {
+            yaml = new ComdorYamlInput(
+                new ByteArrayInputStream(
+                    new Content.Smart(
+                        this.issue.repo()
+                            .contents()
+                            .get(".comdor.yml")
+                    ).decoded()
+                )
+            );
+        } else {
+            yaml = new ComdorYaml.Missing();
+        }
+        return yaml;
+    }
+    
     @Override
     public abstract void understand(final Language... langs) throws IOException;
 

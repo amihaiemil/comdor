@@ -25,7 +25,11 @@
  */
 package co.comdor.github;
 
+import com.amihaiemil.camel.Yaml;
 import com.jcabi.github.Issue;
+import com.jcabi.github.Repo;
+import com.jcabi.github.Repos;
+import com.jcabi.github.mock.MkGithub;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -34,6 +38,7 @@ import org.mockito.Mockito;
 import javax.json.Json;
 import javax.json.JsonObject;
 import java.io.IOException;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Unit tests for {@link JsonMention}
@@ -110,6 +115,62 @@ public final class JsonMentionTestCase {
         );
     }
 
+    /**
+     * JsonMention can return the .comdor.yml if it exists in the repository.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void returnsExistingComdorYaml() throws Exception {
+        final MkGithub gh = new MkGithub("amihaiemil");
+        final Repo repo = gh.repos().create(
+            new Repos.RepoCreate("charlesrepo", false)
+        );
+        repo.contents()
+            .create(
+                Json.createObjectBuilder()
+                    .add("path", ".comdor.yml")
+                    .add("message", "just a test")
+                    .add(
+                        "content",
+                         Base64.encodeBase64String(
+                            "docker: test".getBytes()
+                        )
+                    ).build()
+            );
+        final Mention mention = new MockConcrete(
+            Json.createObjectBuilder().build(),
+            repo.issues().create("for test", "body")
+        );
+        MatcherAssert.assertThat(mention.comdorYaml(), Matchers.notNullValue());
+        MatcherAssert.assertThat(
+            mention.comdorYaml() instanceof ComdorYamlInput,
+            Matchers.is(true)
+        );
+    }
+
+    /**
+     * JsonMention can return the .comdor.yml
+     * if it is missing from the repository.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void returnsMissingComdorYaml() throws Exception {
+        final MkGithub gh = new MkGithub("amihaiemil");
+        final Repo repo = gh.repos().create(
+            new Repos.RepoCreate("charlesrepo", false)
+        );
+        final Mention mention = new MockConcrete(
+            Json.createObjectBuilder().build(),
+            repo.issues().create("for test", "body")
+        );
+        final ComdorYaml yaml = mention.comdorYaml();
+        MatcherAssert.assertThat(yaml, Matchers.notNullValue());
+        MatcherAssert.assertThat(
+            yaml instanceof ComdorYaml.Missing,
+            Matchers.is(true)
+        );
+    }
+    
     /**
      * Mock concrete class, for testing. It's better to test the final
      * methods of JsonMention separately from LastMention or other concrete

@@ -69,6 +69,14 @@ public interface Mention {
     Issue issue();
 
     /**
+     * Comdor.yml file present in the repository's root, which contains
+     * configurations.
+     * @return ComdorYaml
+     * @throws IOException If .comdor.yml cannot be read from the repository.
+     */
+    ComdorYaml comdorYaml() throws IOException;
+    
+    /**
      * Reply to this mention.
      * @param message Message of the reply.
      * @throws IOException If the comment cannot be sent to Github.
