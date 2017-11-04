@@ -26,7 +26,6 @@
 package co.comdor;
 
 import co.comdor.github.Mention;
-import org.slf4j.Logger;
 import java.io.IOException;
 
 /**
@@ -44,7 +43,7 @@ public interface Step {
      * @throws IOException If there is anything wrong in the communication
      *  with Github.
      */
-    void perform(final Mention mention, final Logger log) throws IOException;
+    void perform(final Mention mention, final Log log) throws IOException;
 
     /**
      * Final step in the chain.
@@ -73,8 +72,8 @@ public interface Step {
         }
 
         @Override
-        public void perform(final Mention mention, final Logger log) {
-            log.info(this.message);
+        public void perform(final Mention mention, final Log log) {
+            log.logger().info(this.message);
         }
     }
 
@@ -97,7 +96,7 @@ public interface Step {
         }
 
         @Override
-        public void perform(final Mention mention, final Logger log) {
+        public void perform(final Mention mention, final Log log) {
             if(!this.pass) {
                 throw new IllegalStateException(
                     "Step should not have been executed!"

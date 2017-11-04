@@ -28,6 +28,7 @@ package co.comdor.github;
 import co.comdor.Action;
 import co.comdor.Log;
 import co.comdor.LogFile;
+import co.comdor.SocialSteps;
 import co.comdor.Steps;
 import co.comdor.WebLog;
 import com.jcabi.github.Issue;
@@ -53,6 +54,12 @@ public final class GithubAction implements Action {
     private Issue issue;
     
     /**
+     * Social steps to be executed in the end, after the bot finishes everything
+     * else.
+     */
+    private SocialSteps social;
+    
+    /**
      * Log of this action. Each Github action should be logged in its own file,
      * since we want to let the user inspect the logs sometimes.
      */
@@ -61,11 +68,16 @@ public final class GithubAction implements Action {
     /**
      * Ctor.
      * @param issue Github Issue which triggered this action.
+     * @param social Social steps that the bot executes after the he fulfills
+     *  the triggering Mention.
      * @throws IOException If there is any IO problem (e.g. writing files,
      *  communicating with Github etc).
      */
-    public GithubAction(final Issue issue) throws IOException {
+    public GithubAction(
+        final Issue issue, final SocialSteps social
+    ) throws IOException {
         this.issue = issue;
+        this.social = social;
         this.id = UUID.randomUUID().toString();
         this.log = new WebLog(
             new LogFile(
@@ -89,8 +101,10 @@ public final class GithubAction implements Action {
                     new Confused()
                 )
             );
-            final Steps steps = talk.start(new LastMention(this.issue));
-            steps.perform(this.log.logger());
+            final Mention mention = new LastMention(this.issue);
+            final Steps steps = talk.start(mention);
+            steps.perform(this.log);
+            this.social.perform(mention, this.log);
         } catch (final IllegalArgumentException iae) {
             this.log.logger().warn(
                 "No command found in the issue or the agent has already"

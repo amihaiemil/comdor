@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Step;
+import co.comdor.Log;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Stars;
@@ -53,12 +54,14 @@ public final class StarRepoTestCase {
      */
     @Test
     public void starsRepo() throws Exception {
-        final Logger logger = Mockito.mock(Logger.class);
-        Mockito.doNothing().when(logger).info(Mockito.anyString());
+        final Log log = Mockito.mock(Log.class);
+        final Logger slf4j = Mockito.mock(Logger.class);
+        Mockito.doNothing().when(slf4j).info(Mockito.anyString());
         Mockito.doThrow(
             new IllegalStateException("Unexpected error; test failed")
-        ).when(logger).error(Mockito.anyString());
-        
+        ).when(slf4j).error(Mockito.anyString());
+        Mockito.when(log.logger()).thenReturn(slf4j);
+
         final Github gh = new MkGithub("amihaiemil");
         final Repo repo =  gh.repos().create(
             new Repos.RepoCreate("amihaiemil.github.io", false)
@@ -73,7 +76,7 @@ public final class StarRepoTestCase {
             com.issue().repo().stars().starred(),
             Matchers.is(false)
         );
-        star.perform(com, logger);
+        star.perform(com, log);
         MatcherAssert.assertThat(
             com.issue().repo().stars().starred(),
             Matchers.is(true)
@@ -86,11 +89,13 @@ public final class StarRepoTestCase {
      */
     @Test
     public void starsRepoTwice() throws Exception {
-        final Logger logger = Mockito.mock(Logger.class);
-        Mockito.doNothing().when(logger).info(Mockito.anyString());
+        final Log log = Mockito.mock(Log.class);
+        final Logger slf4j = Mockito.mock(Logger.class);
+        Mockito.doNothing().when(slf4j).info(Mockito.anyString());
         Mockito.doThrow(
             new IllegalStateException("Unexpected error; test failed")
-        ).when(logger).error(Mockito.anyString());
+        ).when(slf4j).error(Mockito.anyString());
+        Mockito.when(log.logger()).thenReturn(slf4j);
 
         final Github gh = new MkGithub("amihaiemil");
         final Repo repo =  gh.repos().create(
@@ -106,8 +111,8 @@ public final class StarRepoTestCase {
             com.issue().repo().stars().starred(),
             Matchers.is(false)
         );
-        star.perform(com, logger);
-        star.perform(com, logger);
+        star.perform(com, log);
+        star.perform(com, log);
         MatcherAssert.assertThat(
             com.issue().repo().stars().starred(),
             Matchers.is(true)
@@ -124,8 +129,10 @@ public final class StarRepoTestCase {
      * @throws IOException If something goes wrong.
      */
     public void repoStarringFails() throws IOException {
-        final Logger logger = Mockito.mock(Logger.class);
-        Mockito.doNothing().when(logger).info(Mockito.anyString());
+        final Log log = Mockito.mock(Log.class);
+        final Logger slf4j = Mockito.mock(Logger.class);
+        Mockito.doNothing().when(slf4j).info(Mockito.anyString());
+        Mockito.when(log.logger()).thenReturn(slf4j);
         
         final Repo repo = Mockito.mock(Repo.class);
         final Stars stars = Mockito.mock(Stars.class);
@@ -139,8 +146,8 @@ public final class StarRepoTestCase {
         Mockito.when(com.issue()).thenReturn(issue);
         
         final StarRepo star = new StarRepo(Mockito.mock(Step.class));
-        star.perform(com, logger);
-        Mockito.verify(logger).warn(
+        star.perform(com, log);
+        Mockito.verify(slf4j).warn(
             "IOException when starring repository, could not star the repo."
         );
     }

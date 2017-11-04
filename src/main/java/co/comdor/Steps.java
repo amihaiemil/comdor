@@ -25,7 +25,6 @@
  */
 package co.comdor;
 
-import org.slf4j.Logger;
 import java.io.IOException;
 
 /**
@@ -42,5 +41,6 @@ public interface Steps {
      * @throws IOException If there is anything wrong in the communication
      *  with Github.
      */
-    void perform(final Logger log) throws IOException;
+    void perform(final Log log) throws IOException;
+
 }

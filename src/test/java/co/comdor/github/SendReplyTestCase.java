@@ -26,12 +26,13 @@
 package co.comdor.github;
 
 import co.comdor.Step;
+import co.comdor.Log;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 import java.io.IOException;
+import org.slf4j.Logger;
 
 /**
  * Unit tests for {@link SendReply}
@@ -52,7 +53,7 @@ public final class SendReplyTestCase {
         Mockito.doNothing().when(mention).reply(message);
         new SendReply(
             message, new Step.Fake(true)
-        ).perform(mention, Mockito.mock(Logger.class));
+        ).perform(mention, Mockito.mock(Log.class));
     }
 
     /**
@@ -65,10 +66,12 @@ public final class SendReplyTestCase {
         final String message = "hello";
         Mockito.doThrow(new IOException("This is expected, it's ok!"))
             .when(mention).reply(message);
+        final Log log = Mockito.mock(Log.class);
+        Mockito.when(log.logger()).thenReturn(Mockito.mock(Logger.class));
         try {
             new SendReply(
                 message, new Step.Fake(false)
-            ).perform(mention, Mockito.mock(Logger.class));
+            ).perform(mention, log);
         } catch (final IOException ex) {
             MatcherAssert.assertThat(
                 ex.getMessage(),

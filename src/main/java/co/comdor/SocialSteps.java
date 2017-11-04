@@ -23,54 +23,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor.github;
+package co.comdor;
 
-import co.comdor.IntermediaryStep;
-import co.comdor.Step;
-import com.jcabi.http.Request;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import co.comdor.Log;
+import co.comdor.github.Mention;
 
 /**
- * Step where the bot follows the Github user.
+ * After executing all the steps which are needed to fulfill an action, 
+ * the bot performs a few more social, cosmetic steps, like starring the repo,
+ * following the user on Github, tweeting etc.
+ * 
+ * These steps should be executted all the time, in the end of the Steps
+ * pyramid.
+ * 
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.2
  */
-public final class FollowUser extends IntermediaryStep {
 
+public interface SocialSteps extends Step {
+    
     /**
-     * Ctor.
-     * @param next Next step to execute.
+     * Notice that this overriden perform does not throw IOException.
+     * This is because we are not treating social steps failures, they are only
+     * cosmetic, not affecting the business at all.
+     * @param mention Mention which triggered everything.
+     * @param log Log of the Action.
      */
-    public FollowUser(final Step next) {
-        super(next);
-    }
-    
     @Override
-    public void perform(
-        final Mention mention, final Log log
-    ) throws IOException {
-        final String author = mention.author();
-        final Request follow = mention.issue().repo().github().entry()
-            .uri().path("/user/following/").path(author).back()
-            .method("PUT");
-        log.logger().info("Following Github user " + author + " ...");
-        try {
-            final int status = follow.fetch().status();
-            if(status != HttpURLConnection.HTTP_NO_CONTENT) {
-                log.logger().error(
-                    "User follow status response is " + status
-                    + " . Should have been 204 (NO CONTENT)"
-                );
-            } else {
-                log.logger().info("Followed user " + author + " .");
-            }
-        } catch (final IOException ex) {
-            log.logger().warn("IOException while trying to follow the user.");
-        }
-        this.next().perform(mention, log);
-    }
-    
+    void perform(final Mention mention, final Log log);
 }

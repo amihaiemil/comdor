@@ -26,7 +26,7 @@
 package co.comdor.github;
 import co.comdor.IntermediaryStep;
 import co.comdor.Step;
-import org.slf4j.Logger;
+import co.comdor.Log;
 import java.io.IOException;
 
 /**
@@ -64,12 +64,12 @@ public final class SendReply extends IntermediaryStep {
 
     @Override
     public void perform(
-        final Mention mention, final Logger log
+        final Mention mention, final Log log
     ) throws IOException {
         try {
             mention.reply(this.rep);
         } catch (final IOException ex) {
-            log.error("IOException when sending a reply!", ex);
+            log.logger().error("IOException when sending a reply!", ex);
             throw new IOException("IOException when sending a reply!", ex);
         }
         this.next().perform(mention, log);

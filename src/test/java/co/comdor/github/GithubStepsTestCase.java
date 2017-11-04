@@ -25,6 +25,7 @@
  */
 package co.comdor.github;
 
+import co.comdor.Log;
 import java.io.IOException;
 
 import javax.json.Json;
@@ -58,16 +59,17 @@ public final class GithubStepsTestCase {
         Mockito.when(comment.author()).thenReturn("amihaiemil");
         final Step toExecute = Mockito.mock(Step.class);
         
-        final Steps steps = new GithubSteps(
-            toExecute, comment, new SendReply("some failure message")
-        );
+        final Steps steps = new GithubSteps(toExecute, comment);
         
-        final Logger logger = Mockito.mock(Logger.class);
-        steps.perform(logger);
+        final Log log = Mockito.mock(Log.class);
+        final Logger slf4j = Mockito.mock(Logger.class);
+        Mockito.when(log.logger()).thenReturn(slf4j);
         
-        Mockito.verify(logger).info("Received command: @comdor run");
-        Mockito.verify(logger).info("Author login: amihaiemil");
-        Mockito.verify(toExecute).perform(comment, logger);
+        steps.perform(log);
+        
+        Mockito.verify(slf4j).info("Received command: @comdor run");
+        Mockito.verify(slf4j).info("Author login: amihaiemil");
+        Mockito.verify(toExecute).perform(comment, log);
     }
     
     /**
@@ -78,20 +80,27 @@ public final class GithubStepsTestCase {
     @Test
     public void stepsThrowIOException() throws Exception {
         final Mention comment = Mockito.mock(Mention.class);
+        Mockito.when(comment.language()).thenReturn(new English());
+        Mockito.when(comment.author()).thenReturn("amihaiemil");
         Mockito.when(comment.json()).thenReturn(
             Json.createObjectBuilder().add("body", "@comdor run").build()
         );
-        final Logger logger = Mockito.mock(Logger.class);
+        final Log log = Mockito.mock(Log.class);
+        Mockito.when(log.logger()).thenReturn(Mockito.mock(Logger.class));
+        Mockito.when(log.location()).thenReturn("/path/to/123.log");
         final Step toExecute = Mockito.mock(Step.class);
         Mockito.doThrow(
             new IOException("Intented IOException")
-        ).when(toExecute).perform(comment, logger);
-        final Steps steps = new GithubSteps(
-            toExecute, comment, new SendReply("some failure message")
-        );
+        ).when(toExecute).perform(comment, log);
+        final Steps steps = new GithubSteps(toExecute, comment);
         
-        steps.perform(logger);
-        Mockito.verify(comment).reply("some failure message");
+        steps.perform(log);
+        Mockito.verify(comment).reply(
+            String.format(
+                new English().response("steps.failure.comment"),
+                log.location()
+            )
+        );
     }
     
 }

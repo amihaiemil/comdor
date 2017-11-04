@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Step;
+import co.comdor.Log;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repo;
@@ -67,15 +68,17 @@ public final class FollowUserTestCase {
         Mockito.when(com.issue().repo().github().entry())
             .thenReturn(new ApacheRequest("http://localhost:" + port + "/"));
         
-        final Logger logger = Mockito.mock(Logger.class);
+        final Log log = Mockito.mock(Log.class);
+        final Logger slf4j = Mockito.mock(Logger.class);
+        Mockito.when(log.logger()).thenReturn(slf4j);
         
         try {
-            new FollowUser(new Step.Fake(true)).perform(com, logger);
+            new FollowUser(new Step.Fake(true)).perform(com, log);
             
-            Mockito.verify(logger).info(
+            Mockito.verify(slf4j).info(
                 "Following Github user " + com.author() + " ..."
             );
-            Mockito.verify(logger).info("Followed user " + com.author() + " .");
+            Mockito.verify(slf4j).info("Followed user " + com.author() + " .");
             final MkQuery request = github.take();
             MatcherAssert.assertThat(
                 request.uri().toString(),
@@ -101,15 +104,18 @@ public final class FollowUserTestCase {
         final Mention com = this.mockMention();
         Mockito.when(com.issue().repo().github().entry())
             .thenReturn(new ApacheRequest("http://localhost:" + port + "/"));
-        final Logger logger = Mockito.mock(Logger.class);
         
+        final Log log = Mockito.mock(Log.class);
+        final Logger slf4j = Mockito.mock(Logger.class);
+        Mockito.when(log.logger()).thenReturn(slf4j);
+
         try {
-            new FollowUser(new Step.Fake(true)).perform(com, logger);
+            new FollowUser(new Step.Fake(true)).perform(com, log);
             
-            Mockito.verify(logger).info(
+            Mockito.verify(slf4j).info(
                 "Following Github user " + com.author() + " ..."
             );
-            Mockito.verify(logger).error(
+            Mockito.verify(slf4j).error(
                 "User follow status response is "
                 + HttpURLConnection.HTTP_INTERNAL_ERROR
                 + " . Should have been 204 (NO CONTENT)"
@@ -136,14 +142,16 @@ public final class FollowUserTestCase {
             .thenReturn(
                 new ApacheRequest("http://localhost:" + this.port() + "/")
             );
-        final Logger logger = Mockito.mock(Logger.class);
+        final Log log = Mockito.mock(Log.class);
+        final Logger slf4j = Mockito.mock(Logger.class);
+        Mockito.when(log.logger()).thenReturn(slf4j);
+
+        new FollowUser(new Step.Fake(true)).perform(com, log);
         
-        new FollowUser(new Step.Fake(true)).perform(com, logger);
-        
-        Mockito.verify(logger).info(
+        Mockito.verify(slf4j).info(
             "Following Github user " + com.author() + " ..."
         );
-        Mockito.verify(logger).warn(
+        Mockito.verify(slf4j).warn(
             "IOException while trying to follow the user."
         );
     }

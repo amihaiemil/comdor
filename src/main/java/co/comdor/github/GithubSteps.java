@@ -27,7 +27,7 @@ package co.comdor.github;
 
 import co.comdor.Step;
 import co.comdor.Steps;
-import org.slf4j.Logger;
+import co.comdor.Log;
 
 import java.io.IOException;
 
@@ -43,16 +43,11 @@ public final class GithubSteps implements Steps {
      * Steps to be performed.
      */
     private Step steps;
-
+    
     /**
      * Initial mention. The one that triggered everything.
      */
     private Mention mention;
-
-    /**
-     * Message to send in case some step fails.
-     */
-    private SendReply failureMessage;
 
     /**
      * Constructor.
@@ -60,46 +55,35 @@ public final class GithubSteps implements Steps {
      * @param mention Initial menton.
      */
     public GithubSteps(final Step steps, final Mention mention) {
-        this(
-            steps, mention,
-            new SendReply(
-                mention.language().response("step.failure.comment"),
-                new Step.FinalStep("[ERROR] Some step didn't execute properly.")
-            )
-        );
-    }
-
-    /**
-     * Constructor.
-     * @param steps Steps to perform everything.
-     * @param mention Initial menton.
-     * @param failureMessage Reply sent in case of failure.
-     */
-    public GithubSteps(
-        final Step steps, final Mention mention,
-        final SendReply failureMessage
-    ) {
         this.steps = steps;
         this.mention = mention;
-        this.failureMessage = failureMessage;
     }
 
     /**
      * Perform all the given steps.
-     * @param logger Action logger.
+     * @param log Action logger.
      * @throws IOException If something goes wrong while calling Github.
      */
     @Override
-    public void perform(final Logger logger) throws IOException {
+    public void perform(final Log log) throws IOException {
         try {
-            logger.info(
+            log.logger().info(
                 "Received command: " + this.mention.json().getString("body")
             );
-            logger.info("Author login: " + this.mention.author());
-            this.steps.perform(this.mention, logger);
+            log.logger().info("Author login: " + this.mention.author());
+            this.steps.perform(this.mention, log);
         } catch (final IOException ex) {
-            logger.error("An exception occured, sending failure comment.", ex);
-            this.failureMessage.perform(this.mention, logger);
+            log.logger().error(
+                "Some step did not execute properly, sending failure reply.", ex
+            );
+            this.mention.reply(
+                String.format(
+                    this.mention.language().response("steps.failure.comment"),
+                    log.location()
+                )
+            );
         }
+
     }
+
 }

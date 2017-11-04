@@ -27,6 +27,7 @@ package co.comdor.rest;
 
 import co.comdor.Action;
 import co.comdor.github.GithubAction;
+import co.comdor.github.GithubSocialSteps;
 import co.comdor.rest.model.Notification;
 import co.comdor.rest.model.Notifications;
 import co.comdor.rest.model.SimplifiedNotifications;
@@ -203,7 +204,8 @@ public class NotificationsResource {
                                 new Coordinates.Simple(
                                     notification.repoFullName()
                                 )
-                            ).issues().get(notification.issueNumber())
+                            ).issues().get(notification.issueNumber()),
+                            new GithubSocialSteps()
                         )
                     );
                 }

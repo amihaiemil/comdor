@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Action;
+import co.comdor.SocialSteps;
 import com.google.common.collect.Lists;
 import com.jcabi.github.*;
 import com.jcabi.github.mock.MkGithub;
@@ -61,9 +62,10 @@ public final class GithubActionTestCase {
         final Issue issue1 = this.githubIssue("amihaiemil", "@comdor hello there");
         final Issue issue2 = this.githubIssue("jeff", "@comdor hello");
         final Issue issue3 = this.githubIssue("vlad", "@comdor, hello");
-        final Action ac1 = new GithubAction(issue1);
-        final Action ac2 = new GithubAction(issue2);
-        final Action ac3 = new GithubAction(issue3);
+        final SocialSteps social = Mockito.mock(SocialSteps.class);
+        final Action ac1 = new GithubAction(issue1, social);
+        final Action ac2 = new GithubAction(issue2, social);
+        final Action ac3 = new GithubAction(issue3, social);
 
         final ExecutorService executorService = Executors.newFixedThreadPool(5);
         final List<Future> futures = new ArrayList<Future>();
@@ -95,7 +97,7 @@ public final class GithubActionTestCase {
         MatcherAssert.assertThat(
             commentsWithReply3.get(1).json().getString("body"),
             Matchers.equalTo(expectedReply3)
-        );
+        );        
     }
 
     /**
@@ -118,7 +120,7 @@ public final class GithubActionTestCase {
                .thenReturn(comments)
                .thenReturn(issue.comments());
 
-        final Action action = new GithubAction(failing);
+        final Action action = new GithubAction(failing, Mockito.mock(SocialSteps.class));
         action.perform();
 
         final List<Comment> commentsWithReply = Lists.newArrayList(issue.comments().iterate());

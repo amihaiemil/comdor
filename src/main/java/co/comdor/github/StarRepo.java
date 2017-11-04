@@ -27,9 +27,9 @@ package co.comdor.github;
 
 import co.comdor.IntermediaryStep;
 import co.comdor.Step;
+import co.comdor.Log;
 import com.jcabi.github.Repo;
 import java.io.IOException;
-import org.slf4j.Logger;
 
 /**
  * Step where the bot stars the Github repository.
@@ -49,17 +49,17 @@ public final class StarRepo extends IntermediaryStep{
     
     @Override
     public void perform(
-        final Mention mention, final Logger log
+        final Mention mention, final Log log
     ) throws IOException {
         try {
-            log.info("Starring repository...");
+            log.logger().info("Starring repository...");
             final Repo repo = mention.issue().repo();
             if(!repo.stars().starred()) {
                 repo.stars().star();
             }
-            log.info("Repository starred!");
+            log.logger().info("Repository starred!");
         } catch (final IOException ex) {
-            log.warn(
+            log.logger().warn(
                 "IOException when starring repository, could not star the repo."
             );
         }
