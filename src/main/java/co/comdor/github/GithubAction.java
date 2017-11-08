@@ -98,7 +98,9 @@ public final class GithubAction implements Action {
             this.log.logger().info("Started action " + this.id);
             final Conversation talk = new Conversation(
                 new Hello(
-                    new Confused()
+                    new RunScript(
+                        new Confused()
+                    )
                 )
             );
             final Mention mention = new LastMention(this.issue);

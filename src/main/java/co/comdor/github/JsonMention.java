@@ -76,13 +76,15 @@ public abstract class JsonMention implements Mention {
     public final ComdorYaml comdorYaml() throws IOException {
         final ComdorYaml yaml;
         if(this.issue.repo().contents().exists(".comdor.yml", "master")) {
-            yaml = new ComdorYamlInput(
-                new ByteArrayInputStream(
-                    new Content.Smart(
-                        this.issue.repo()
-                            .contents()
-                            .get(".comdor.yml")
-                    ).decoded()
+            yaml = new ComdorYamlRules(
+                new ComdorYamlInput(
+                    new ByteArrayInputStream(
+                        new Content.Smart(
+                            this.issue.repo()
+                                .contents()
+                                .get(".comdor.yml")
+                        ).decoded()
+                    )
                 )
             );
         } else {

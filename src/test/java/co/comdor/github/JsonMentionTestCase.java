@@ -143,7 +143,7 @@ public final class JsonMentionTestCase {
         );
         MatcherAssert.assertThat(mention.comdorYaml(), Matchers.notNullValue());
         MatcherAssert.assertThat(
-            mention.comdorYaml() instanceof ComdorYamlInput,
+            mention.comdorYaml() instanceof ComdorYamlRules,
             Matchers.is(true)
         );
     }
