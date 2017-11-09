@@ -61,7 +61,22 @@ public final class ComdorYamlInputTestCase {
             architects.get(1), Matchers.equalTo("john")
         );
     }
-    
+
+    /**
+     * ComdorYamlInput can tag the architects.
+     * @throws IOException If something goes wrong.
+     */
+    @Test
+    public void tagsArchitects() throws IOException {
+        final ComdorYaml comdor = new ComdorYamlInput(
+            new ByteArrayInputStream(
+                "docker: c/d\narchitects:\n  - joe\n  - emil".getBytes()
+            )
+        );
+        final String tagged = comdor.taggedArchitects();
+        MatcherAssert.assertThat(tagged, Matchers.equalTo("@emil or @joe"));
+    }
+
     /**
      * Reads the docker attribute.
      * @throws IOException If something goes wrong.
