@@ -70,7 +70,7 @@ public final class ComdorYamlRules implements ComdorYaml {
 
     @Override
     public String taggedArchitects() {
-        return this.taggedArchitects();
+        return this.decorated.taggedArchitects();
     }
 
     @Override

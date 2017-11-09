@@ -93,6 +93,30 @@ public final class ComdorYamlRulesTestCase {
         MatcherAssert.assertThat(arch2, Matchers.iterableWithSize(2));
         MatcherAssert.assertThat(arch2, Matchers.contains("amihaiemil", "joe"));
     }
+
+    @Test
+    public void returnsTaggedArchitects() {
+        final ComdorYaml read = Mockito.mock(ComdorYaml.class);
+        Mockito.when(read.taggedArchitects())
+                .thenReturn("")
+                .thenReturn("@amihaiemil")
+                .thenReturn("@amihaiemil @joe or @jana");
+
+        MatcherAssert.assertThat(
+            new ComdorYamlRules(read).taggedArchitects(),
+            Matchers.equalTo("")
+        );
+
+        final String tagged1 = new ComdorYamlRules(read).taggedArchitects();
+        MatcherAssert.assertThat(
+            tagged1, Matchers.equalTo("@amihaiemil")
+        );
+
+        final String tagged2 = new ComdorYamlRules(read).taggedArchitects();
+        MatcherAssert.assertThat(
+            tagged2, Matchers.equalTo("@amihaiemil @joe or @jana")
+        );
+    }
     
     /**
      * Doesn't touch the commanders' list. It returns it "as is".
