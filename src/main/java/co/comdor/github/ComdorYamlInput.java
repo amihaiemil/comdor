@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CcmdorYaml from InputStream.
+ * ComdorYaml from InputStream.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.2
@@ -50,6 +50,19 @@ public final class ComdorYamlInput implements ComdorYaml {
             }
         }
         return architects;
+    }
+
+    @Override
+    public String taggedArchitects() {
+        final StringBuilder tagged = new StringBuilder();
+        final List<String> architects = this.architects();
+        for(int idx = 0; idx < architects.size(); idx = idx + 1) {
+            if(architects.size() > 1 && idx == architects.size() - 1) {
+                tagged.append("or ");
+            }
+            tagged.append("@" + architects.get(idx)).append(" ");
+        }
+        return tagged.toString().trim();
     }
 
     @Override

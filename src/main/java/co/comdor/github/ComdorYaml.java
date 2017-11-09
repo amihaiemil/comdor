@@ -51,6 +51,12 @@ public interface ComdorYaml {
      * @return List String of architects.
      */
     List<String> architects();
+
+    /**
+     * Returns the tagged architects (e.g. "@john @mary or @joe)
+     * @return String containing all the tagged architects.
+     */
+    String taggedArchitects();
     
     /**
      * Commanders. Users who can command the bot, but the bot will ask one of
@@ -72,6 +78,11 @@ public interface ComdorYaml {
         @Override
         public List<String> architects() {
             return new ArrayList<>();
+        }
+
+        @Override
+        public String taggedArchitects() {
+            return "";
         }
 
         @Override

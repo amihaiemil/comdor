@@ -73,7 +73,7 @@ public final class RunScript implements Knowledge {
                                         "architects.approval"
                                     ),
                                     mention.author(),
-                                    mention.comdorYaml().architects()
+                                    mention.comdorYaml().taggedArchitects()
                                 )
                             ),
                             new SendReply(
