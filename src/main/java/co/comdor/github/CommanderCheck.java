@@ -32,19 +32,19 @@ import co.comdor.Step;
 import java.io.IOException;
 
 /**
- * Step where it is checked if the commander is an author or not.
+ * Step where it is checked if the author of the mention is a commander or not.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class ArchitectCheck extends PreconditionCheckStep {
+public final class CommanderCheck extends PreconditionCheckStep {
 
     /**
      * Ctor.
-     * @param onTrue Step to perform if the author is an architect.
-     * @param onFalse Step to perform if the author is not an architect.
+     * @param onTrue Step to perform if the author is a commander.
+     * @param onFalse Step to perform if the author is not a commander.
      */
-    public ArchitectCheck(final Step onTrue, final Step onFalse) {
+    public CommanderCheck(final Step onTrue, final Step onFalse) {
         super(onTrue, onFalse);
     }
 
@@ -55,16 +55,16 @@ public final class ArchitectCheck extends PreconditionCheckStep {
     ) throws IOException {
         final String author = mention.author();
         log.logger().info(
-            "Checking if " + author + " is an architect..."
+            "Checking if " + author + " is a commander..."
         );
-        for(final String architect : mention.comdorYaml().architects()) {
-            if(author.equalsIgnoreCase(architect)) {
-                log.logger().info(author + " is in architect - OK");
+        for(final String commander : mention.comdorYaml().commanders()) {
+            if(author.equalsIgnoreCase(commander)) {
+                log.logger().info(author + " is in commander - OK");
                 this.onTrue().perform(mention, log);
                 return;
             }
         }
-        log.logger().warn(author + " is not an architect!");
+        log.logger().warn(author + " is not an commander!");
         this.onFalse().perform(mention, log);
     }
 }

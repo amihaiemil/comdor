@@ -56,7 +56,12 @@ public final class Hello implements Knowledge {
         final Steps resolved;
         if("hello".equalsIgnoreCase(com.type())) {
             resolved =  new GithubSteps(
-                new SendReply(com.language().response("hello.comment")),
+                new SendReply(
+                    String.format(
+                        com.language().response("hello.comment"),
+                        com.author()
+                    )
+                ),
                 com
             );
         } else {

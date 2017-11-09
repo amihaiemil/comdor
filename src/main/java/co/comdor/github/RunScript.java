@@ -56,7 +56,43 @@ public final class RunScript implements Knowledge {
         final Steps resolved;
         if("run".equalsIgnoreCase(mention.type())) {
             resolved =  new GithubSteps(
-                new SendReply(mention.language().response("hello.comment")),
+                new ArchitectsRequired(
+                    new ArchitectCheck(
+                        new SendReply(
+                            String.format(
+                                mention.language().response(
+                                    "run.comment.started"
+                                ),
+                                mention.author()
+                            )
+                        ),
+                        new CommanderCheck(
+                            new SendReply(
+                                String.format(
+                                    mention.language().response(
+                                        "architects.approval"
+                                    ),
+                                    mention.author(),
+                                    mention.comdorYaml().architects()
+                                )
+                            ),
+                            new SendReply(
+                                String.format(
+                                    mention.language().response(
+                                        "author.no.rights"
+                                    ),
+                                    mention.author()
+                                )
+                            )
+                        )
+                    ),
+                    new SendReply(
+                        String.format(
+                            mention.language().response("architects.missing"),
+                            mention.author()
+                        )
+                    )
+                ),
                 mention
             );
         } else {

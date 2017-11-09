@@ -25,65 +25,69 @@
  */
 package co.comdor.github;
 
-import co.comdor.Knowledge;
-import co.comdor.Steps;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import co.comdor.Log;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Unit tests for {@link RunScript}.
+ * Unit tests {@link ArchitectsRequired}.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class RunScriptTestCase {
+public final class ArchitectsRequiredTestCase {
 
     /**
-     * RunScript can start a 'run' command.
+     * The check passes, because there are architects defined.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void startsRunCommand() throws Exception {
-        final Mention com = Mockito.mock(Mention.class);
-        Mockito.when(com.type()).thenReturn("run");
-        Mockito.when(com.comdorYaml()).thenReturn(new ComdorYaml.Missing());
-        Mockito.when(com.language()).thenReturn(new English());
-        final Knowledge run = new RunScript(
-            (Mention mention) -> {
-                throw new IllegalStateException(
-                    "'run' command misunderstood!"
-                );
+    public void architectsDefined() throws Exception {
+        final ArchitectsRequired check = new ArchitectsRequired(
+            (Mention mention, Log log) -> {log.logger().info("OK");},
+            (Mention mention, Log log) -> {
+                throw new IllegalStateException("architectsDefined failed!");
             }
         );
-        final Steps steps = run.start(com);
-        MatcherAssert.assertThat(steps, Matchers.notNullValue());
-        MatcherAssert.assertThat(
-            steps instanceof GithubSteps, Matchers.is(true)
-        );
 
+        final Mention mention = Mockito.mock(Mention.class);
+        final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
+        final List<String> architects = new ArrayList<>();
+        architects.add("amihaiemil");
+        Mockito.when(yaml.architects()).thenReturn(architects);
+        Mockito.when(mention.comdorYaml()).thenReturn(yaml);
+
+        final Log log = Mockito.mock(Log.class);
+        Mockito.when(log.logger()).thenReturn(Mockito.mock(Logger.class));
+
+        check.perform(mention, log);
     }
 
     /**
-     * RunScript can start a command which is not 'run',
-     * by forwarding it to the next Knowledge.
+     * The check doesn't pass, because the archtiects' list is empty.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void forwardsNotRunCommand() throws Exception {
-        final Mention com = Mockito.mock(Mention.class);
-        Mockito.when(com.type()).thenReturn("notrun");
-        final Knowledge hello = new RunScript(
-                (Mention mention) -> {
-                     MatcherAssert.assertThat(
-                         mention.type(),
-                         Matchers.equalTo("notrun")
-                     );
-                     return null;
-                }
+    public void architectsMissing() throws Exception {
+        final ArchitectsRequired check = new ArchitectsRequired(
+            (Mention mention, Log log) -> {
+                throw new IllegalStateException("architectsMissing failed!");
+            },
+            (Mention mention, Log log) -> {log.logger().info("OK");}
         );
-        hello.start(com);
-    }
 
+        final Mention mention = Mockito.mock(Mention.class);
+        final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
+        Mockito.when(yaml.architects()).thenReturn(new ArrayList<>());
+        Mockito.when(mention.comdorYaml()).thenReturn(yaml);
+
+        final Log log = Mockito.mock(Log.class);
+        Mockito.when(log.logger()).thenReturn(Mockito.mock(Logger.class));
+
+        check.perform(mention, log);
+    }
 }

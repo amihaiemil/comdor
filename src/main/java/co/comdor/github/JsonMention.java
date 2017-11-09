@@ -114,8 +114,7 @@ public abstract class JsonMention implements Mention {
 
     @Override
     public final void reply(final String message) throws IOException {
-        final String reply = "@" + this.author() + " " + message;
-        this.issue.comments().post(reply);
+        this.issue.comments().post(message);
     }
 
     @Override

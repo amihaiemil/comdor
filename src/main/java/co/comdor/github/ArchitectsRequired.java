@@ -32,22 +32,22 @@ import co.comdor.Step;
 import java.io.IOException;
 
 /**
- * Step where it is checked if the commander is an author or not.
+ * Step where it is checked that at least one architect is
+ * defined in .comdor.yml.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class ArchitectCheck extends PreconditionCheckStep {
+public final  class ArchitectsRequired extends PreconditionCheckStep{
 
     /**
      * Ctor.
-     * @param onTrue Step to perform if the author is an architect.
-     * @param onFalse Step to perform if the author is not an architect.
+     * @param onTrue Step to perform if there is at least one architect.
+     * @param onFalse Step to perform if there is not architect defined.
      */
-    public ArchitectCheck(final Step onTrue, final Step onFalse) {
+    public ArchitectsRequired(final Step onTrue, final Step onFalse) {
         super(onTrue, onFalse);
     }
-
 
     @Override
     public void perform(
@@ -55,16 +55,14 @@ public final class ArchitectCheck extends PreconditionCheckStep {
     ) throws IOException {
         final String author = mention.author();
         log.logger().info(
-            "Checking if " + author + " is an architect..."
+            "At least an architect is needed for this..."
         );
-        for(final String architect : mention.comdorYaml().architects()) {
-            if(author.equalsIgnoreCase(architect)) {
-                log.logger().info(author + " is in architect - OK");
-                this.onTrue().perform(mention, log);
-                return;
-            }
+        if(mention.comdorYaml().architects().isEmpty()) {
+            log.logger().warn("No architects defined!");
+            this.onFalse().perform(mention, log);
+        } else {
+            log.logger().info("Found at least an architect - OK!");
+            this.onTrue().perform(mention, log);
         }
-        log.logger().warn(author + " is not an architect!");
-        this.onFalse().perform(mention, log);
     }
 }

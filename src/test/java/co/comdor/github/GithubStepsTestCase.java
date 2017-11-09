@@ -98,6 +98,7 @@ public final class GithubStepsTestCase {
         Mockito.verify(comment).reply(
             String.format(
                 new English().response("steps.failure.comment"),
+                "amihaiemil",
                 log.location()
             )
         );

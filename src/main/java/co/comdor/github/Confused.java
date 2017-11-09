@@ -41,7 +41,10 @@ public final class Confused implements Knowledge {
     @Override
     public Steps start(final Mention mention) throws IOException {
         final Step reply = new SendReply(
-            mention.language().response("unknown.comment")
+            String.format(
+                mention.language().response("unknown.comment"),
+                mention.author()
+            )
         );
         return new GithubSteps(reply, mention);
     }

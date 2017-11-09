@@ -35,6 +35,9 @@ import java.io.IOException;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
+ * @todo #41:30min Add CachedMention decorator, to cache certain things
+ *  such as the .comdor.yml file (currently that is read from the Github repo
+ *  at each call of .comdorYaml()).
  */
 public interface Mention {
 

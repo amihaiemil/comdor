@@ -79,6 +79,7 @@ public final class GithubSteps implements Steps {
             this.mention.reply(
                 String.format(
                     this.mention.language().response("steps.failure.comment"),
+                    this.mention.author(),
                     log.location()
                 )
             );

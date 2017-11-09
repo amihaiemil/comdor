@@ -81,19 +81,19 @@ public final class GithubActionTestCase {
         final List<Comment> commentsWithReply2 = Lists.newArrayList(issue2.comments().iterate());
         final List<Comment> commentsWithReply3 = Lists.newArrayList(issue3.comments().iterate());
 
-        final String expectedReply1 = "@amihaiemil " + String.format(english.response("hello.comment"),"amihaiemil");
+        final String expectedReply1 = String.format(english.response("hello.comment"),"amihaiemil");
         MatcherAssert.assertThat(
             commentsWithReply1.get(1).json().getString("body"),
             Matchers.equalTo(expectedReply1)
         );
 
-        final String expectedReply2 = "@jeff " + String.format(english.response("hello.comment"),"jeff");
+        final String expectedReply2 = String.format(english.response("hello.comment"),"jeff");
         MatcherAssert.assertThat(
             commentsWithReply2.get(1).json().getString("body"),
             Matchers.equalTo(expectedReply2)
         );
 
-        final String expectedReply3 = "@vlad " + String.format(english.response("hello.comment"),"vlad");
+        final String expectedReply3 = String.format(english.response("hello.comment"),"vlad");
         MatcherAssert.assertThat(
             commentsWithReply3.get(1).json().getString("body"),
             Matchers.equalTo(expectedReply3)
