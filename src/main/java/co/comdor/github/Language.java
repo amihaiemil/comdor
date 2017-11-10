@@ -86,8 +86,8 @@ abstract class Language {
     String categorize(final Mention mention) throws IOException {
         final Set<Object> keys = this.commands.keySet();
         String type = "unknown";
-        boolean match = true;
         for(final Object key : keys) {
+            boolean match = true;
             final String keyString = (String) key;
             final String[] words = this.commands.getProperty(keyString, "")
                 .split("\\^");
