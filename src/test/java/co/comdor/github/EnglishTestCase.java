@@ -75,6 +75,35 @@ public final class EnglishTestCase {
     }
 
     /**
+     * A 'run' comment is understood.
+     */
+    @Test
+    public void categorizesRunCommands() throws Exception {
+        final Mention run1 = this.mockMention("@comdor, run ``cloc .`` pls");
+        final Mention run2 = this.mockMention("@comdor, run it");
+        final Mention run3 = this.mockMention("@comdor pls run ``mvn clean``");
+        final Mention run4 = this.mockMention("@comdor run");
+        final Mention run5 = this.mockMention("@comdor run?");
+
+        final Language english = new English();
+        MatcherAssert.assertThat(
+            english.categorize(run1), Matchers.equalTo("run")
+        );
+        MatcherAssert.assertThat(
+            english.categorize(run2), Matchers.equalTo("run")
+        );
+        MatcherAssert.assertThat(
+            english.categorize(run3), Matchers.equalTo("run")
+        );
+        MatcherAssert.assertThat(
+            english.categorize(run4), Matchers.equalTo("run")
+        );
+        MatcherAssert.assertThat(
+            english.categorize(run5), Matchers.equalTo("run")
+        );
+    }
+
+    /**
      * A comment is not understood.
      */
     @Test
