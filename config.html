@@ -32,20 +32,39 @@
   <section class="content">
       <h3>.comdor.yml</h3>
       <p>
-        This is an optional file which you can add in the <b>root dir</b> of your repo, in order to configure the behaviour of the bot.
-        So far, the following configs are read:
+        This is a file which you should add in the <b>root dir</b> of your repo, in order to configure the behaviour of comdor. It is not mandatory, but you have to declare
+        at least one architect in order to run any scripts.
       </p>
       <ul>
         <li>
-          TBD
+          architects
           <ul>
-            <li>todo: decide what .comdor.yml will look like</li>
+            <li>Github users that can command the bot with no questions asked and have to approve (repeat) the commands given by the commanders.</li>
+          </ul>
+        </li>
+        <li>
+          commanders
+          <ul>
+            <li>Github users that are allowed to command the bot, but it will ask the architects for approval. If a user is neither a commander nor an architect, the bot will not run their scripts and not ask for approval, to avoid spamming.</li>
+          </ul>
+        </li>
+        <li>
+          docker
+          <ul>
+            <li>Optional docker image (to be pulled from Dockerhub), used for running the scripts. If this is not specified, a default <a href="https://hub.docker.com/r/amihaiemil/comdor/" target="_blank">one</a> will be used.</li>
           </ul>
         </li>
       </ul>
       <h3>Example .comdor.yml</h3>
       <p>Bellow you have an example of .comdor.yml:</p>
-      <pre>#To be decided...</pre>
+      <pre>docker: amihaiemil/java8
+architects:
+  - amihaiemil
+  - john
+commanders:
+  - johndoe
+  - danmarkov
+  - someone</pre>
 </section>
   <footer class="content">
       <div class="centered">
