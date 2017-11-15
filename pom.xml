@@ -226,11 +226,6 @@
 			<version>1.8</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.detro</groupId>
-			<artifactId>phantomjsdriver</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.amihaiemil.web</groupId>
 			<artifactId>camel</artifactId>
 			<version>1.0.1</version>
