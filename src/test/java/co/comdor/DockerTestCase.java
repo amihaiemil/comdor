@@ -25,67 +25,49 @@
  */
 package co.comdor;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 
 /**
- * A Docker container where the scripts are run.
+ * Unit tests for {@link Docker}.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #49:30min Continue implementing this class. It should use a Docker
- *  client which communicates with the Docker Host and starts a container,
- *  executes something and can close (terminate) the container.
  */
-public final class Docker implements Container {
-
-    /**
-     * Is this container started or not?
-     */
-    private final boolean started;
+public final class DockerTestCase {
     
     /**
-     * Image of this container.
+     * Docker can start.
      */
-    private final String image;
-    
-    /**
-     * Ctor.
-     * @param image Image for this container.
-     */
-    public Docker(final String image) {
-        this(false, image);
+    @Test
+    public void startsContainer() {
+        Container container = new Docker("amihaiemil/comdor");
+        MatcherAssert.assertThat(container.isStarted(), Matchers.is(false));
+        MatcherAssert.assertThat(
+            container.start().isStarted(), Matchers.is(true)
+        );
     }
     
     /**
-     * Private ctor (for immutability).
-     * @param started Is it started, or not?
-     * @param image Image for this container.
+     * Docker throws ISE if we try to execute something when it's not started.
      */
-    private Docker(final boolean started, final String image) {
-        this.started = started;
-        this.image = image;
+    @Test(expected = IllegalStateException.class)
+    public void executionFailsIfContainerIsStopped() {
+        Container container = new Docker("amihaiemil/comdor");
+        container.execute("cloc .", Mockito.mock(Logger.class));
     }
     
-    @Override
-    public Container start() {
-        return new Docker(true, this.image);
-    }
-
-    @Override
-    public void execute(final String scripts, final Logger logger) {
-        if(!this.started) {
-            throw new IllegalStateException("Docker container not started!");
-        }
-    }
-
-    @Override
-    public void close() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    @Override
-    public boolean isStarted() {
-        return this.started;
+    /**
+     * Docker can be closed.
+     * TODO: edit this test when the method will be implemented.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void containerCloses() {
+        Container container = new Docker("amihaiemil/comdor");
+        container.close();
     }
     
 }

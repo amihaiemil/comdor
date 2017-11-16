@@ -47,4 +47,13 @@ public interface Container extends AutoCloseable {
      * @param logger Logger to write the output into.
      */
     void execute(final String scripts, final Logger logger);
+    
+    @Override
+    void close();
+    
+    /**
+     * Is this container started or not?
+     * @return boolean.
+     */
+    boolean isStarted();
 }
