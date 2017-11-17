@@ -210,26 +210,32 @@
 			<version>7.0</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency><!-- Client for the Github API -->
+		<dependency>
 			<groupId>com.jcabi</groupId>
 			<artifactId>jcabi-github</artifactId>
 			<version>0.28</version>
-		</dependency>
-		<dependency><!-- Client for the Twitter API -->
-			<groupId>org.twitter4j</groupId>
-			<artifactId>twitter4j-core</artifactId>
-			<version>4.0.6</version>
-		</dependency>
-		<dependency><!-- Email client -->
-			<groupId>com.jcabi</groupId>
-			<artifactId>jcabi-email</artifactId>
-			<version>1.8</version>
+                        <exclusions>
+                            <exclusion>
+                              <groupId>com.jcabi</groupId>
+                              <artifactId>jcabi-xml</artifactId>
+                            </exclusion>
+                            <exclusion>
+                              <groupId>com.jcabi.incubator</groupId>
+                              <artifactId>xembly</artifactId>
+                            </exclusion>
+                            <exclusion>
+                              <groupId>org.glassfish</groupId>
+                              <artifactId>javax.json</artifactId>
+                            </exclusion>
+                        </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.amihaiemil.web</groupId>
 			<artifactId>camel</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+                
+                <!-- Test-scoped dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -254,6 +260,24 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
+                <dependency>
+                        <groupId>org.glassfish</groupId>
+                        <artifactId>javax.json</artifactId>
+                        <version>1.0.4</version>
+                        <scope>test</scope>
+                </dependency>
+                <dependency>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-xml</artifactId>
+                        <version>0.18.1</version>
+                        <scope>test</scope>
+                </dependency>
+                <dependency>
+                        <groupId>com.jcabi.incubator</groupId>
+                        <artifactId>xembly</artifactId>
+                        <version>0.22</version>
+                        <scope>test</scope>
+                </dependency>
 	</dependencies>
 	<distributionManagement>
 		<repository>
