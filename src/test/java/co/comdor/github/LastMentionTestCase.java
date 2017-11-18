@@ -142,9 +142,9 @@ public final class LastMentionTestCase {
         try {
             new LastMention(comdor);
             Assert.fail("An IAE should have been thrown!");
-        } catch (final IllegalArgumentException iae) {
+        } catch (final MentionLookupException mle) {
             MatcherAssert.assertThat(
-                iae.getMessage(),
+                mle.getMessage(),
                 Matchers.equalTo("No mention found!")
             );
         }
@@ -174,9 +174,9 @@ public final class LastMentionTestCase {
         try {
             new LastMention(comdor);
             Assert.fail("An IAE should have been thrown!");
-        } catch (final IllegalArgumentException iae) {
+        } catch (final MentionLookupException mae) {
             MatcherAssert.assertThat(
-                iae.getMessage(),
+                mae.getMessage(),
                 Matchers.equalTo("Last mention is already answered!")
             );
         }

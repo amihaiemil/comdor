@@ -107,11 +107,8 @@ public final class GithubAction implements Action {
             final Steps steps = talk.start(mention);
             steps.perform(this.log);
             this.social.perform(mention, this.log);
-        } catch (final IllegalArgumentException iae) {
-            this.log.logger().warn(
-                "No command found in the issue or the agent has already"
-                + "replied to the last command!"
-            );
+        } catch (final MentionLookupException mle) {
+            this.log.logger().warn(mle.getMessage());
         } catch (final IOException ioe) {
             this.log.logger().error(
                 "Action failed entirely with exception: ",  ioe

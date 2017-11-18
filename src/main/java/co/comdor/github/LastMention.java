@@ -89,8 +89,6 @@ public final class LastMention extends JsonMention {
      *  by the API.
      * @see https://developer.github.com/v3/issues/comments/
      * @throws IOException If something goes wrong with the HTTP calls.
-     * @throws IllegalArgumentException If something no comment was found
-     *  or the last mentioning comment has already been replied by the bot.
      */
     private static JsonObject findLastMention(
         final Issue issue
@@ -105,7 +103,7 @@ public final class LastMention extends JsonMention {
                 current.getJsonObject("user").getString("login")
             );
             if(foundReply) {
-                throw new IllegalArgumentException(
+                throw new MentionLookupException(
                     "Last mention is already answered!"
                 );
             } else {
@@ -114,6 +112,6 @@ public final class LastMention extends JsonMention {
                 }
             }
         }
-        throw new IllegalArgumentException("No mention found!");
+        throw new MentionLookupException("No mention found!");
     }
 }
