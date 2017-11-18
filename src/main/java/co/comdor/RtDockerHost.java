@@ -25,49 +25,56 @@
  */
 package co.comdor;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.exceptions.DockerCertificateException;
+import com.spotify.docker.client.exceptions.DockerException;
+import com.spotify.docker.client.messages.ContainerConfig;
+import com.spotify.docker.client.messages.ContainerCreation;
 
 /**
- * Unit tests for {@link Docker}.
+ * The Docker host contacted via its REST api (using Spotify's docker-client).
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
+ * @todo #55:30min Finish the implementation here. Connection to the remote
+ *  host has to be fixed (now it connects to localhost all the time).
  */
-public final class DockerTestCase {
-    
+public final class RtDockerHost implements DockerHost{
+
     /**
-     * Docker can start.
+     * Docker client.
      */
-    @Test
-    public void startsContainer() {
-        Container container = new Docker();
-        MatcherAssert.assertThat(container.isStarted(), Matchers.is(false));
-        MatcherAssert.assertThat(
-            container.start().isStarted(), Matchers.is(true)
-        );
-    }
-    
+    private final DockerClient docker;
+
     /**
-     * Docker throws ISE if we try to execute something when it's not started.
+     * Ctor.
      */
-    @Test(expected = IllegalStateException.class)
-    public void executionFailsIfContainerIsStopped() {
-        Container container = new Docker();
-        container.execute("cloc .", Mockito.mock(Logger.class));
+    public RtDockerHost() {
+        try {
+            this.docker = DefaultDockerClient.fromEnv().build();
+        } catch (final DockerCertificateException ex) {
+            throw new IllegalStateException(
+                "Could not build the docker client!", ex
+            );
+        }
     }
-    
-    /**
-     * Docker can be closed.
-     * TODO: edit this test when the method will be implemented.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void containerCloses() {
-        Container container = new Docker();
-        container.close();
+
+    @Override
+    public Container create(final String image, final String name) {
+        try {
+            final ContainerCreation container = this.docker.createContainer(
+                ContainerConfig
+                    .builder()
+                    .image(image)
+                    .build(),
+                name
+            );
+        } catch (final DockerException dex) {
+            dex.printStackTrace();
+        } catch (final InterruptedException iex) {
+            iex.printStackTrace();
+        }
+        return null;
     }
-    
 }

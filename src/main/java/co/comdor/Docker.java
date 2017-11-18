@@ -32,9 +32,9 @@ import org.slf4j.Logger;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #49:30min Continue implementing this class. It should use a Docker
- *  client which communicates with the Docker Host and starts a container,
- *  executes something and can close (terminate) the container.
+ * @todo #55:30min Continue implementing this class.
+ *  It should take a DockerClient and a ContainerCreation, which
+ *  holds the container's coordinates on the Docker host.
  */
 public final class Docker implements Container {
 
@@ -42,33 +42,25 @@ public final class Docker implements Container {
      * Is this container started or not?
      */
     private final boolean started;
-    
-    /**
-     * Image of this container.
-     */
-    private final String image;
-    
+
     /**
      * Ctor.
-     * @param image Image for this container.
      */
-    public Docker(final String image) {
-        this(false, image);
+    public Docker() {
+        this(false);
     }
     
     /**
      * Private ctor (for immutability).
      * @param started Is it started, or not?
-     * @param image Image for this container.
      */
-    private Docker(final boolean started, final String image) {
+    private Docker(final boolean started) {
         this.started = started;
-        this.image = image;
     }
     
     @Override
     public Container start() {
-        return new Docker(true, this.image);
+        return new Docker(true);
     }
 
     @Override

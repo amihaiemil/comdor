@@ -25,49 +25,19 @@
  */
 package co.comdor;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-
 /**
- * Unit tests for {@link Docker}.
+ * The Docker host where comdor runs the containers.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
  */
-public final class DockerTestCase {
-    
+public interface DockerHost {
+
     /**
-     * Docker can start.
+     * Create a container based on the given image.
+     * @param image Docker image.
+     * @param name Name of the container.
+     * @return The created Container.
      */
-    @Test
-    public void startsContainer() {
-        Container container = new Docker();
-        MatcherAssert.assertThat(container.isStarted(), Matchers.is(false));
-        MatcherAssert.assertThat(
-            container.start().isStarted(), Matchers.is(true)
-        );
-    }
-    
-    /**
-     * Docker throws ISE if we try to execute something when it's not started.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void executionFailsIfContainerIsStopped() {
-        Container container = new Docker();
-        container.execute("cloc .", Mockito.mock(Logger.class));
-    }
-    
-    /**
-     * Docker can be closed.
-     * TODO: edit this test when the method will be implemented.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void containerCloses() {
-        Container container = new Docker();
-        container.close();
-    }
-    
+    Container create(final String image, final String name);
 }

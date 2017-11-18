@@ -211,6 +211,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.spotify</groupId>
+			<artifactId>docker-client</artifactId>
+			<version>8.9.2</version>
+		</dependency>
+		<dependency>
 			<groupId>com.jcabi</groupId>
 			<artifactId>jcabi-github</artifactId>
 			<version>0.28</version>

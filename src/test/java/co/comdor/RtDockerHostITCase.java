@@ -27,47 +27,26 @@ package co.comdor;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 /**
- * Unit tests for {@link Docker}.
+ * Integration tests for {@RtDockerHost}.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
  */
-public final class DockerTestCase {
-    
+public class RtDockerHostITCase {
+
     /**
-     * Docker can start.
+     * RtDockerHost can create a container.
      */
     @Test
-    public void startsContainer() {
-        Container container = new Docker();
+    @Ignore
+    public void createsContainer() {
+        final DockerHost host = new RtDockerHost();
+        final Container container = host.create("hello-world", "test");
+        MatcherAssert.assertThat(container, Matchers.notNullValue());
         MatcherAssert.assertThat(container.isStarted(), Matchers.is(false));
-        MatcherAssert.assertThat(
-            container.start().isStarted(), Matchers.is(true)
-        );
     }
-    
-    /**
-     * Docker throws ISE if we try to execute something when it's not started.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void executionFailsIfContainerIsStopped() {
-        Container container = new Docker();
-        container.execute("cloc .", Mockito.mock(Logger.class));
-    }
-    
-    /**
-     * Docker can be closed.
-     * TODO: edit this test when the method will be implemented.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void containerCloses() {
-        Container container = new Docker();
-        container.close();
-    }
-    
 }
