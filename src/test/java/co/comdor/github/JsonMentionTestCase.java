@@ -100,18 +100,18 @@ public final class JsonMentionTestCase {
     }
 
     /**
-     * JsonMention finds and returns the scripts from the comment's body.
-     * TODO: Adapt this unit test once JsonMention.scripts() is properly
-     *  implemented.
+     * JsonMention finds and returns the scripts from the comment's body.* TODO: Adapt this unit test once JsonMention.scripts() is properly
      * @throws Exception If something goes wrong.
      */
     @Test
     public void returnsTheScripts() throws Exception {
+        final JsonObject comment = Json.createObjectBuilder()
+            .add("body", "@comdor run ```cd src \ncloc .```").build();
         final Mention mention = new MockConcrete(
-            Mockito.mock(JsonObject.class), Mockito.mock(Issue.class)
+            comment, Mockito.mock(Issue.class)
         );
         MatcherAssert.assertThat(
-            mention.scripts(), Matchers.equalTo("echo 'hello world'")
+            mention.scripts(), Matchers.equalTo("cd src \ncloc .")
         );
     }
 

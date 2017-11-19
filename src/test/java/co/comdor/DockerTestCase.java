@@ -25,8 +25,6 @@
  */
 package co.comdor;
 
-import com.spotify.docker.client.DockerClient;
-import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;

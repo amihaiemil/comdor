@@ -40,8 +40,6 @@ import java.io.IOException;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
- * @todo #9:30min Implement method scripts(), which extracts the code
- *  to run from the comment, and write some unit tests for it.
  */
 public abstract class JsonMention implements Mention {
 
@@ -104,7 +102,10 @@ public abstract class JsonMention implements Mention {
 
     @Override
     public final String scripts() {
-        return "echo 'hello world'";
+        final String body = this.json.getString("body");
+        final int start = body.indexOf("```") + 3;
+        final int end = body.lastIndexOf("```");
+        return body.substring(start, end);
     }
 
     @Override
