@@ -26,55 +26,122 @@
 package co.comdor;
 
 import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerCertificates;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
+import java.nio.file.Paths;
 
 /**
  * The Docker host contacted via its REST api (using Spotify's docker-client).
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #55:30min Finish the implementation here. Connection to the remote
- *  host has to be fixed (now it connects to localhost all the time).
+ * @todo #58:30min Add a Decorator which catches all the checked exceptions,
+ *  logs them and throws a RuntimeException further.
  */
 public final class RtDockerHost implements DockerHost{
 
     /**
      * Docker client.
      */
-    private final DockerClient docker;
+    private final DockerClient client;
+
+    /**
+     * Ctor. This will create the DockerClient based on DOCKER_HOST
+     * and DOCKER_CERT_PATH env vars. If these are not set, then it will
+     * connect to the local dockerd.
+     * @throws DockerCertificateException If the docker client cannot be built.
+     */
+    public RtDockerHost() throws DockerCertificateException {
+        this(DefaultDockerClient.fromEnv().build());
+    }
+
+    /**
+     * Ctor. This will create the DockerClient based on the given configs.
+     * It should be used when connecting to a remote host.
+     * @param dockerHost Https-scheme ip + port of the remote docker host.
+     * @param dockerCertPath Path, on disk, to the certificates.
+     * @throws DockerCertificateException If the docker client cannot be built.
+     */
+    public RtDockerHost(
+        final String dockerHost, final String dockerCertPath
+    ) throws DockerCertificateException {
+        this(
+           DefaultDockerClient
+               .builder()
+               .uri(dockerHost)
+               .dockerCertificates(
+                   new DockerCertificates(Paths.get(dockerCertPath))
+               ).build()
+        );
+    }
 
     /**
      * Ctor.
+     * @param client Docker client talking to this host.
      */
-    public RtDockerHost() {
-        try {
-            this.docker = DefaultDockerClient.fromEnv().build();
-        } catch (final DockerCertificateException ex) {
-            throw new IllegalStateException(
-                "Could not build the docker client!", ex
-            );
-        }
+    public RtDockerHost(final DockerClient client) {
+        this.client = client;
     }
 
     @Override
     public Container create(final String image, final String name) {
         try {
-            final ContainerCreation container = this.docker.createContainer(
+            final ContainerCreation container = this.client.createContainer(
                 ContainerConfig
                     .builder()
                     .image(image)
                     .build(),
                 name
             );
+            return new Docker(container.id(), this);
         } catch (final DockerException dex) {
-            dex.printStackTrace();
+            throw new IllegalStateException(
+                "DockerException when creating the container "
+                + "with image: " + image + " & name: " + name, dex
+            );
         } catch (final InterruptedException iex) {
-            iex.printStackTrace();
+            throw new IllegalStateException(
+                "InterruptedException when creating the container "
+                + "with image: " + image + " & name: " + name, iex
+            );
         }
-        return null;
+    }
+
+    @Override
+    public void start(final String containterId) {
+        try {
+            this.client.startContainer(containterId);
+        } catch (final DockerException dex) {
+            throw new IllegalStateException(
+                    "DockerException when starting container "
+                            + "with id " + containterId, dex
+            );
+        } catch (final InterruptedException iex) {
+            throw new IllegalStateException(
+                    "InterruptedException when starting container "
+                            + "with id " + containterId, iex
+            );
+        }
+    }
+
+    @Override
+    public void remove(final String containerId) {
+        try {
+            this.client.removeContainer(containerId);
+        } catch (final DockerException dex) {
+            throw new IllegalStateException(
+                "DockerException when removing container "
+                + "with id " + containerId, dex
+            );
+        } catch (final InterruptedException iex) {
+            throw new IllegalStateException(
+                "InterruptedException when removing container "
+                + "with id " + containerId, iex
+            );
+        }
     }
 }

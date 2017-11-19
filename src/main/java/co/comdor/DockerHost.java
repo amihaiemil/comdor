@@ -40,4 +40,16 @@ public interface DockerHost {
      * @return The created Container.
      */
     Container create(final String image, final String name);
+
+    /**
+     * Start a container.
+     * @param containterId The container's id.
+     */
+    void start(final String containterId);
+
+    /**
+     * Remove a container.
+     * @param containerId The container's Id.
+     */
+    void remove(final String containerId);
 }

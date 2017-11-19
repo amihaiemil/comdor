@@ -39,14 +39,17 @@ import org.junit.Test;
 public class RtDockerHostITCase {
 
     /**
-     * RtDockerHost can create a container.
+     * RtDockerHost creates and removes a container from the local dockerd.
+     * @throws Exception If something goes wrong.
      */
     @Test
-    @Ignore
-    public void createsContainer() {
+    public void createsAndRemovesLocalContainer() throws Exception {
         final DockerHost host = new RtDockerHost();
-        final Container container = host.create("hello-world", "test");
-        MatcherAssert.assertThat(container, Matchers.notNullValue());
-        MatcherAssert.assertThat(container.isStarted(), Matchers.is(false));
+        final Container created = host.create(
+            "hello-world", "test-local-container"
+        );
+        MatcherAssert.assertThat(created, Matchers.notNullValue());
+        MatcherAssert.assertThat(created.isStarted(), Matchers.is(false));
+        host.remove(created.containerId());
     }
 }

@@ -34,7 +34,7 @@ import org.slf4j.Logger;
  * @since 0.0.3
  */
 public interface Container extends AutoCloseable {
-    
+
     /**
      * Start this container.
      * @return Started Container.
@@ -56,4 +56,10 @@ public interface Container extends AutoCloseable {
      * @return boolean.
      */
     boolean isStarted();
+
+    /**
+     * This container's id.
+     * @return String.
+     */
+    String containerId();
 }

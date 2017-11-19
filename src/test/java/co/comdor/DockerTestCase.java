@@ -25,6 +25,8 @@
  */
 package co.comdor;
 
+import com.spotify.docker.client.DockerClient;
+import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -43,12 +45,14 @@ public final class DockerTestCase {
      * Docker can start.
      */
     @Test
-    public void startsContainer() {
-        Container container = new Docker();
-        MatcherAssert.assertThat(container.isStarted(), Matchers.is(false));
-        MatcherAssert.assertThat(
-            container.start().isStarted(), Matchers.is(true)
+    public void containerStarts() {
+        final Container created = new Docker(
+             "id", Mockito.mock(DockerHost.class)
         );
+        MatcherAssert.assertThat(created.isStarted(), Matchers.is(false));
+        final Container started = created.start();
+        MatcherAssert.assertThat(created == started, Matchers.is(false));
+        MatcherAssert.assertThat(started.isStarted(), Matchers.is(true));
     }
     
     /**
@@ -56,7 +60,7 @@ public final class DockerTestCase {
      */
     @Test(expected = IllegalStateException.class)
     public void executionFailsIfContainerIsStopped() {
-        Container container = new Docker();
+        Container container = new Docker("id", Mockito.mock(DockerHost.class));
         container.execute("cloc .", Mockito.mock(Logger.class));
     }
     
@@ -66,7 +70,7 @@ public final class DockerTestCase {
      */
     @Test(expected = UnsupportedOperationException.class)
     public void containerCloses() {
-        Container container = new Docker();
+        Container container = new Docker("id", Mockito.mock(DockerHost.class));
         container.close();
     }
     

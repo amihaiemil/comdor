@@ -32,11 +32,19 @@ import org.slf4j.Logger;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #55:30min Continue implementing this class.
- *  It should take a DockerClient and a ContainerCreation, which
- *  holds the container's coordinates on the Docker host.
+ * @todo #58:30min Continue implementation of execute and close methods.
  */
 public final class Docker implements Container {
+
+    /**
+     * This container's id.
+     */
+    private final String id;
+
+    /**
+     * The docker host where this container is.
+     */
+    private final DockerHost docker;
 
     /**
      * Is this container started or not?
@@ -45,39 +53,51 @@ public final class Docker implements Container {
 
     /**
      * Ctor.
+     * @param id This container's id.
+     * @param docker The docker host where it is running.
      */
-    public Docker() {
-        this(false);
+    public Docker(final String id, final DockerHost docker) {
+        this(id, docker, false);
     }
-    
+
     /**
-     * Private ctor (for immutability).
-     * @param started Is it started, or not?
+     * Ctor.
+     * @param id This container's id.
+     * @param docker The docker client.
+     * @param started Is this container started or not?
      */
-    private Docker(final boolean started) {
+    private Docker(
+        final String id, final DockerHost docker, final boolean started
+    ) {
+        this.id = id;
+        this.docker = docker;
         this.started = started;
     }
-    
     @Override
     public Container start() {
-        return new Docker(true);
+        this.docker.start(this.id);
+        return new Docker(this.id, this.docker, true);
     }
 
     @Override
     public void execute(final String scripts, final Logger logger) {
         if(!this.started) {
-            throw new IllegalStateException("Docker container not started!");
+            throw new IllegalStateException("Container is not started.");
         }
     }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not implemented yet");
     }
-    
+
     @Override
     public boolean isStarted() {
         return this.started;
     }
-    
+
+    @Override
+    public String containerId() {
+        return this.id;
+    }
 }
