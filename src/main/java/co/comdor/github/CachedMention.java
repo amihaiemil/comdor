@@ -26,77 +26,90 @@
 package co.comdor.github;
 
 import com.jcabi.github.Issue;
-
-import javax.json.JsonObject;
 import java.io.IOException;
+import javax.json.JsonObject;
 
 /**
- * A Github Issue comment where the bot has been mentioned.
+ * A caching decorator for a Mention. We don't cache all the values, just the
+ * ones that are expensive to fetch (e.g. .comdor.yml, scripts etc).
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.0.3
  */
-public interface Mention {
+public final class CachedMention implements Mention {
 
     /**
-     * The mentioning comment's author.
-     * @return String.
+     * Cached .comdor.yml.
      */
-    String author();
-
-    /**
-     * What type is it? 'hello', 'run' etc
-     * @return String.
-     */
-    String type();
-
-    /**
-     * Language of this mention.
-     * @return Language. Defaults to English.
-     */
-    Language language();
-
-    /**
-     * What scripts to run does it contain?
-     * @return String.
-     */
-    String scripts();
-
-    /**
-     * Issue where the mention is found.
-     * @return Github Issue.
-     */
-    Issue issue();
-
-    /**
-     * Comdor.yml file present in the repository's root, which contains
-     * configurations.
-     * @return ComdorYaml
-     * @throws IOException If .comdor.yml cannot be read from the repository.
-     */
-    ComdorYaml comdorYaml() throws IOException;
+    private ComdorYaml comdorYaml;
     
     /**
-     * Reply to this mention.
-     * @param message Message of the reply.
-     * @throws IOException If the comment cannot be sent to Github.
+     * Cached scripts.
      */
-    void reply(final String message)throws IOException;
+    private String scripts;
+    
+    /**
+     * Decorated mention.
+     */
+    private final Mention original;
 
     /**
-     * Tries to understand this Mention, based on the languages that it speaks.
-     * @param langs Languages that the bot can speak.
-     * @throws IOException If something goes wrong with the call to Github.
+     * Ctor.
+     * @param original Mention which has to have caching.
      */
-    void understand(final Language... langs) throws IOException;
+    public CachedMention(final Mention original) {
+        this.original = original;
+    }
+    
+    @Override
+    public String author() {
+        return this.original.author();
+    }
 
-    /**
-     * The entire Mention in Json, as it is returned by the
-     * Github API.
-     * @return JsonObject
-     * @see <a href="https://developer.github.com/v3/issues/comments">
-     *     Github Comments API
-     * </a>
-     */
-    JsonObject json();
+    @Override
+    public String type() {
+        return this.original.type();
+    }
+
+    @Override
+    public Language language() {
+        return this.original.language();
+    }
+
+    @Override
+    public String scripts() {
+        if(this.scripts == null) {
+            this.scripts = this.original.scripts();
+        }
+        return this.scripts;
+    }
+
+    @Override
+    public Issue issue() {
+        return this.original.issue();
+    }
+
+    @Override
+    public ComdorYaml comdorYaml() throws IOException {
+        if(this.comdorYaml == null) {
+            this.comdorYaml = this.original.comdorYaml();
+        }
+        return this.comdorYaml;
+    }
+
+    @Override
+    public void reply(final String message) throws IOException {
+        this.original.reply(message);
+    }
+
+    @Override
+    public void understand(final Language... langs) throws IOException {
+        this.original.understand(langs);
+    }
+
+    @Override
+    public JsonObject json() {
+        return this.original.json();
+    }
+    
 }

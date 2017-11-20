@@ -103,7 +103,9 @@ public final class GithubAction implements Action {
                     )
                 )
             );
-            final Mention mention = new LastMention(this.issue);
+            final Mention mention = new CachedMention(
+                new LastMention(this.issue)
+            );
             final Steps steps = talk.start(mention);
             steps.perform(this.log);
             this.social.perform(mention, this.log);

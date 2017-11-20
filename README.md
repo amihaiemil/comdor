@@ -28,4 +28,4 @@ In order to run the integration tests add the ``itcases`` profile to the maven c
 
 ``$mvn clean install -Pcheckstyle -Pitcases``
 
-Docker has to be intalled on the machine, with the default configuration. in order for the IT cases to work.
+Docker has to be intalled on the machine, with the default configuration, in order for the IT cases to work.
