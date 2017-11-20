@@ -40,6 +40,7 @@ import java.util.UUID;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle ClassDataAbstractionCoupling (300 lines)
  */
 public final class GithubAction implements Action {
 
