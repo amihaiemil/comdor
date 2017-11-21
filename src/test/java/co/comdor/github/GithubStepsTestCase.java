@@ -77,7 +77,7 @@ public final class GithubStepsTestCase {
      * The failure message has to be sent then.
      * @throws Exception If something goes wrong.
      */
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void stepsThrowIOException() throws Exception {
         final Mention comment = Mockito.mock(Mention.class);
         Mockito.when(comment.language()).thenReturn(new English());
