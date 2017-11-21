@@ -92,9 +92,10 @@ public final class GithubAction implements Action {
      * Builds and executes all the steps. Catches exceptions and logs them.
      * If everything fails with IOException, it tries to post a final error
      * reply, pointing the user to the action's logs.
+     * @throws IOException If some IO problems occur.
      */
     @Override
-    public void perform() {
+    public void perform() throws IOException {
         try {
             this.log.logger().info("Started action " + this.id);
             final Conversation talk = new Conversation(
@@ -112,22 +113,12 @@ public final class GithubAction implements Action {
             this.social.perform(mention, this.log);
         } catch (final MentionLookupException mle) {
             this.log.logger().warn(mle.getMessage());
-        } catch (final IOException ioe) {
-            this.log.logger().error(
-                "Action failed entirely with exception: ",  ioe
-            );
-            try {
-                this.issue.comments().post(
-                    String.format(
-                        "There was an error when processing your command. "
-                        + "[Here](%s) are the logs.",
-                        this.log.location()
-                    )
-                );
-            } catch (final IOException errEx) {
-                this.log.logger().error("FAILED TO SEND ERROR REPLY!", errEx);
-            }
         }
+    }
+
+    @Override
+    public Log log() {
+        return this.log;
     }
     
 }

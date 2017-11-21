@@ -26,6 +26,7 @@
 package co.comdor.rest;
 
 import co.comdor.Action;
+import co.comdor.VigilantAction;
 import co.comdor.github.GithubAction;
 import co.comdor.github.GithubSocialSteps;
 import co.comdor.rest.model.Notification;
@@ -199,13 +200,16 @@ public class NotificationsResource {
             try {
                 for(final Notification notification : notifications) {
                     this.take(
-                        new GithubAction(
-                            github.repos().get(
-                                new Coordinates.Simple(
-                                    notification.repoFullName()
-                                )
-                            ).issues().get(notification.issueNumber()),
-                            new GithubSocialSteps()
+                        new VigilantAction(
+                            new GithubAction(
+                                github.repos().get(
+                                    new Coordinates.Simple(
+                                        notification.repoFullName()
+                                    )
+                                ).issues().get(notification.issueNumber()),
+                                new GithubSocialSteps()
+                            ),
+                            github
                         )
                     );
                 }
@@ -224,6 +228,13 @@ public class NotificationsResource {
      */
     @Asynchronous
     private void take(final Action action) {
-        action.perform();
+        try {
+            action.perform();
+        } catch (final IOException ex) {
+            LOG.error(
+                "IOException when performing the Action! "
+                + "Probably didn't even manage to report a Github Issue!", ex
+            );
+        }
     }
 }

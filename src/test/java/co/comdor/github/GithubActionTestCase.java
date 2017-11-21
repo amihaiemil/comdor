@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Unit tests for {@link GithubAction}
@@ -58,79 +60,69 @@ public final class GithubActionTestCase {
      */
     @Test
     public void actionsExecuteConcurrently() throws Exception {
-        final Language english = (Language)new English();
-        final Issue issue1 = this.githubIssue("amihaiemil", "@comdor hello there");
-        final Issue issue2 = this.githubIssue("jeff", "@comdor hello");
-        final Issue issue3 = this.githubIssue("vlad", "@comdor, hello");
-        final SocialSteps social = Mockito.mock(SocialSteps.class);
-        final Action ac1 = new GithubAction(issue1, social);
-        final Action ac2 = new GithubAction(issue2, social);
-        final Action ac3 = new GithubAction(issue3, social);
-
-        final ExecutorService executorService = Executors.newFixedThreadPool(5);
-        final List<Future> futures = new ArrayList<Future>();
-        futures.add(executorService.submit(() -> ac1.perform()));
-        futures.add(executorService.submit(() -> ac2.perform()));
-        futures.add(executorService.submit(() -> ac3.perform()));
-
-        for(final Future f : futures) {
-            MatcherAssert.assertThat(f.get(), Matchers.nullValue());
+        try {
+            final Language english = (Language)new English();
+            final Issue issue1 = this.githubIssue("amihaiemil", "@comdor hello there");
+            final Issue issue2 = this.githubIssue("jeff", "@comdor hello");
+            final Issue issue3 = this.githubIssue("vlad", "@comdor, hello");
+            final SocialSteps social = Mockito.mock(SocialSteps.class);
+            final Action ac1 = new GithubAction(issue1, social);
+            final Action ac2 = new GithubAction(issue2, social);
+            final Action ac3 = new GithubAction(issue3, social);
+            
+            final ExecutorService executorService = Executors.newFixedThreadPool(5);
+            final List<Future> futures = new ArrayList<>();
+            futures.add(executorService.submit(() -> {
+                try {
+                    ac1.perform();
+                } catch (IOException ex) {
+                    throw new IllegalStateException();
+                }
+            }));
+            futures.add(executorService.submit(() -> {
+                try {
+                    ac2.perform();
+                } catch (IOException ex) {
+                    throw new IllegalStateException();
+                }
+            }));
+            futures.add(executorService.submit(() -> {
+                try {
+                    ac3.perform();
+                } catch (IOException ex) {
+                    throw new IllegalStateException();
+                }
+            }));
+            
+            for(final Future f : futures) {
+                MatcherAssert.assertThat(f.get(), Matchers.nullValue());
+            }
+            
+            final List<Comment> commentsWithReply1 = Lists.newArrayList(issue1.comments().iterate());
+            final List<Comment> commentsWithReply2 = Lists.newArrayList(issue2.comments().iterate());
+            final List<Comment> commentsWithReply3 = Lists.newArrayList(issue3.comments().iterate());
+            
+            final String expectedReply1 = String.format(english.response("hello.comment"),"amihaiemil");
+            MatcherAssert.assertThat(
+                    commentsWithReply1.get(1).json().getString("body"),
+                    Matchers.equalTo(expectedReply1)
+            );
+            
+            final String expectedReply2 = String.format(english.response("hello.comment"),"jeff");
+            MatcherAssert.assertThat(
+                    commentsWithReply2.get(1).json().getString("body"),
+                    Matchers.equalTo(expectedReply2)
+            );
+            
+            final String expectedReply3 = String.format(english.response("hello.comment"),"vlad");
+            MatcherAssert.assertThat(
+                    commentsWithReply3.get(1).json().getString("body"),
+                    Matchers.equalTo(expectedReply3)
+            );
+        } catch (IOException ex) {
+            Logger.getLogger(GithubActionTestCase.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        final List<Comment> commentsWithReply1 = Lists.newArrayList(issue1.comments().iterate());
-        final List<Comment> commentsWithReply2 = Lists.newArrayList(issue2.comments().iterate());
-        final List<Comment> commentsWithReply3 = Lists.newArrayList(issue3.comments().iterate());
-
-        final String expectedReply1 = String.format(english.response("hello.comment"),"amihaiemil");
-        MatcherAssert.assertThat(
-            commentsWithReply1.get(1).json().getString("body"),
-            Matchers.equalTo(expectedReply1)
-        );
-
-        final String expectedReply2 = String.format(english.response("hello.comment"),"jeff");
-        MatcherAssert.assertThat(
-            commentsWithReply2.get(1).json().getString("body"),
-            Matchers.equalTo(expectedReply2)
-        );
-
-        final String expectedReply3 = String.format(english.response("hello.comment"),"vlad");
-        MatcherAssert.assertThat(
-            commentsWithReply3.get(1).json().getString("body"),
-            Matchers.equalTo(expectedReply3)
-        );        
     }
-
-    /**
-     * The Steps in an Action fail, so generic error reply is sent.
-     * @throws Exception If something goes wrong.
-     */
-    @Test
-    public void genericErrorReplyIsSent() throws Exception {
-        final Language english = (Language)new English();
-        final Issue issue = this.githubIssue("amihaiemil", "@comdor hello there");
-
-        final Comments comments = Mockito.mock(Comments.class);
-        final Comment com = Mockito.mock(Comment.class);
-        Mockito.when(com.json()).thenThrow(new IOException("expected IOException..."));
-        Mockito.when(comments.iterate()).thenReturn(Arrays.asList(com));
-
-        Issue failing = Mockito.mock(Issue.class);
-        Mockito.when(failing.repo()).thenReturn(issue.repo());
-        Mockito.when(failing.comments())
-               .thenReturn(comments)
-               .thenReturn(issue.comments());
-
-        final Action action = new GithubAction(failing, Mockito.mock(SocialSteps.class));
-        action.perform();
-
-        final List<Comment> commentsWithReply = Lists.newArrayList(issue.comments().iterate());
-        final String expectedStartsWith = "There was an error when processing your command. [Here](/";
-        MatcherAssert.assertThat(
-            commentsWithReply.get(1).json().getString("body"),
-            Matchers.startsWith(expectedStartsWith)
-        );
-    }
-
 
     /**
      * Creates an Issue with the given command.

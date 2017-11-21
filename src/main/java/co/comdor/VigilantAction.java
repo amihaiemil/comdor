@@ -23,74 +23,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor.github;
+package co.comdor;
 
-import co.comdor.Step;
-import co.comdor.Steps;
-import co.comdor.Log;
-
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.Issue;
 import java.io.IOException;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
- * Steps to fulfill a mention, executed on Github.
+ * Action which catches exceptions and reports a Github Issue in comdor's
+ * repository.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.0.3
+ * @checkstyle IllegalCatch (100 lines)
  */
-public final class GithubSteps implements Steps {
-
-    /**
-     * Steps to be performed.
-     */
-    private Step steps;
+public final class VigilantAction implements Action {
     
     /**
-     * Initial mention. The one that triggered everything.
+     * Decorated action.
      */
-    private Mention mention;
-
+    private final Action original;
+    
     /**
-     * Constructor.
-     * @param steps Steps to perform everything.
-     * @param mention Initial menton.
+     * Github.
      */
-    public GithubSteps(final Step steps, final Mention mention) {
-        this.steps = steps;
-        this.mention = mention;
+    private final Github github;
+    
+    /**
+     * Ctor.
+     * @param original Decorated Action.
+     * @param github Github.
+     */
+    public VigilantAction(final Action original, final Github github) {
+        this.original = original;
+        this.github = github;
     }
-
-    /**
-     * Perform all the given steps.
-     * 
-     * Exceptions are caught, a comment is sent to the user (in the spoken 
-     * language) and then they are rethrown -- they should be caught by 
-     * {@link VigilanteAction} which should open an Issue in comdor's Repo.
-     * 
-     * @param log Action logger.
-     * @throws IOException If something goes wrong while calling Github.
-     * @checkstyle IllegalCatch (50 lines)
-     */
+    
     @Override
-    public void perform(final Log log) throws IOException {
+    public void perform() throws IOException {
         try {
-            log.logger().info(
-                "Received command: " + this.mention.json().getString("body")
-            );
-            log.logger().info("Author login: " + this.mention.author());
-            this.steps.perform(this.mention, log);
+            this.original.perform();
         } catch (final IOException | RuntimeException ex) {
-            log.logger().error(
-                "Some step did not execute properly, sending failure reply.", ex
-            );
-            this.mention.reply(
-                String.format(
-                    this.mention.language().response("steps.failure.comment"),
-                    this.mention.author(),
-                    log.location()
-                )
+            final Issue created = this.github.repos()
+                .get(new Coordinates.Simple("amihaiemil/comdor"))
+                .issues()
+                .create(
+                    "Exception occured while peforming an Action!",
+                    String.format(
+                        "@amihaiemil Something went wrong, please have a look."
+                        + "\n\n[HERE](%s) are the logs of the Action.",
+                        this.original.log().location()
+                    )
+                    + "\n\nHere is the exception:\n\n```"
+                    + ExceptionUtils.getStackTrace(ex) + "\n\n```"
+                );
+            this.original.log().logger().info(
+                "Opened Issue https://github.com/amihaiemil/comdor/issues/"
+                + created.number()
             );
         }
-
     }
 
+    @Override
+    public Log log() {
+        return this.original.log();
+    }
 }

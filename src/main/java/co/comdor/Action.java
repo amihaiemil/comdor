@@ -25,6 +25,8 @@
  */
 package co.comdor;
 
+import java.io.IOException;
+
 /**
  * Action that the agent takes. It does something, as a result of a trigger.
  * In order to fulfill an action, the bot will build a tree of Steps which have
@@ -37,6 +39,13 @@ public interface Action {
     
     /**
      * Perform this action.
+     * @throws IOException If some IO problems occur.
      */
-    void perform();
+    void perform() throws IOException;
+    
+    /**
+     * This Action's log.
+     * @return Log.
+     */
+    Log log();
 }
