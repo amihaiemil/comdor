@@ -73,10 +73,10 @@ public final class VigilantAction implements Action {
                     "Exception occured while peforming an Action!",
                     String.format(
                         "@amihaiemil Something went wrong, please have a look."
-                        + "\n\n[HERE](%s) are the logs of the Action.",
+                        + "\n\n[Here](%s) are the logs of the Action.",
                         this.original.log().location()
                     )
-                    + "\n\nHere is the exception:\n\n```"
+                    + "\n\nHere is the exception:\n\n```\n\n"
                     + ExceptionUtils.getStackTrace(ex) + "\n\n```"
                 );
             this.original.log().logger().info(
