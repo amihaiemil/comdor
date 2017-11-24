@@ -25,6 +25,8 @@
  */
 package co.comdor;
 
+import java.io.IOException;
+
 /**
  * The Docker host where comdor runs the containers.
  * @author Mihai Andronache (amihaiemil@gmail.com)
@@ -33,6 +35,14 @@ package co.comdor;
  */
 public interface DockerHost {
 
+    /**
+     * Connect to this DockerHost.
+     * @return Connected DockerHost.
+     * @throws IOException If DockerCertificateException occurs when trying to
+     *  connect.
+     */
+    DockerHost connect() throws IOException;
+    
     /**
      * Create a container based on the given image.
      * @param image Docker image.

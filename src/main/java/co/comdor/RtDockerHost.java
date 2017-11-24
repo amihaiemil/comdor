@@ -32,6 +32,7 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 /**
@@ -50,45 +51,86 @@ public final class RtDockerHost implements DockerHost{
     private final DockerClient client;
 
     /**
-     * Ctor. This will create the DockerClient based on DOCKER_HOST
-     * and DOCKER_CERT_PATH env vars. If these are not set, then it will
-     * connect to the local dockerd.
-     * @throws DockerCertificateException If the docker client cannot be built.
+     * Https-scheme ip + port of the remote docker host.
      */
-    public RtDockerHost() throws DockerCertificateException {
-        this(DefaultDockerClient.fromEnv().build());
+    private final String dockerHost;
+    
+    /**
+     * Path, on disk, to the certificates.
+     */
+    private final String certPath;
+    
+    /**
+     * Ctor. This will use the DOCKER_HOST and DOCKER_CERT_PATH env vars.
+     * If these are not set, then it will connect to the local dockerd.
+     */
+    public RtDockerHost() {
+        this(null, "", "");
     }
 
     /**
-     * Ctor. This will create the DockerClient based on the given configs.
-     * It should be used when connecting to a remote host.
+     * Ctor..
      * @param dockerHost Https-scheme ip + port of the remote docker host.
      * @param dockerCertPath Path, on disk, to the certificates.
-     * @throws DockerCertificateException If the docker client cannot be built.
      */
     public RtDockerHost(
         final String dockerHost, final String dockerCertPath
-    ) throws DockerCertificateException {
-        this(
-           DefaultDockerClient
-               .builder()
-               .uri(dockerHost)
-               .dockerCertificates(
-                   new DockerCertificates(Paths.get(dockerCertPath))
-               ).build()
-        );
+    ) {
+        this(null, dockerHost, dockerCertPath);
     }
 
     /**
      * Ctor.
      * @param client Docker client talking to this host.
+     * @param dockerHost Https-scheme ip + port of the remote docker host.
+     * @param dockerCertPath Path, on disk, to the certificates.
      */
-    public RtDockerHost(final DockerClient client) {
+    private RtDockerHost(
+        final DockerClient client,
+        final String dockerHost, final String dockerCertPath
+    ) {
         this.client = client;
+        this.dockerHost = dockerHost;
+        this.certPath = dockerCertPath;
     }
 
     @Override
+    public DockerHost connect() throws IOException {
+        try {
+            final DockerHost connected;
+            if(this.dockerHost.isEmpty() || this.certPath.isEmpty()) {
+                connected = new RtDockerHost(
+                    DefaultDockerClient.fromEnv().build(),
+                    this.dockerHost, this.certPath
+                );
+            } else {
+                connected = new RtDockerHost(
+                    DefaultDockerClient
+                        .builder()
+                        .uri(this.dockerHost)
+                        .dockerCertificates(
+                            new DockerCertificates(Paths.get(this.certPath))
+                        ).build(),
+                    this.dockerHost, this.certPath
+                );
+            }
+            return connected;
+        } catch (final DockerCertificateException ex) {
+            throw new IOException(
+                "DockerCertificateException when trying to connect", ex
+            );
+        }
+    }
+    
+    @Override
     public Container create(final String image, final String name) {
+        if(this.client == null) {
+            throw new IllegalStateException(
+                "Not connected. Don't forget to get a connected "
+                + "instnace by calling #connect()"
+            );
+        }
+        
         try {
             final ContainerCreation container = this.client.createContainer(
                 ContainerConfig
@@ -98,50 +140,47 @@ public final class RtDockerHost implements DockerHost{
                 name
             );
             return new Docker(container.id(), this);
-        } catch (final DockerException dex) {
+        } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
-                "DockerException when creating the container "
-                + "with image: " + image + " & name: " + name, dex
-            );
-        } catch (final InterruptedException iex) {
-            throw new IllegalStateException(
-                "InterruptedException when creating the container "
-                + "with image: " + image + " & name: " + name, iex
+                "Exception when creating the container "
+                + "with image: " + image + " & name: " + name, ex
             );
         }
     }
 
     @Override
-    public void start(final String containterId) {
-        try {
-            this.client.startContainer(containterId);
-        } catch (final DockerException dex) {
+    public void start(final String containerId) {
+        if(this.client == null) {
             throw new IllegalStateException(
-                    "DockerException when starting container "
-                            + "with id " + containterId, dex
+                "Not connected. Don't forget to get a connected "
+                + "instnace by calling #connect()"
             );
-        } catch (final InterruptedException iex) {
+        }
+        
+        try {
+            this.client.startContainer(containerId);
+        } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
-                    "InterruptedException when starting container "
-                            + "with id " + containterId, iex
+                "Exception when removing container with id " + containerId, ex
             );
         }
     }
 
     @Override
     public void remove(final String containerId) {
+        if(this.client == null) {
+            throw new IllegalStateException(
+                "Not connected. Don't forget to get a connected "
+                + "instnace by calling #connect()"
+            );
+        }
         try {
             this.client.removeContainer(containerId);
-        } catch (final DockerException dex) {
+        } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
-                "DockerException when removing container "
-                + "with id " + containerId, dex
-            );
-        } catch (final InterruptedException iex) {
-            throw new IllegalStateException(
-                "InterruptedException when removing container "
-                + "with id " + containerId, iex
+                "Exception when removing container with id " + containerId, ex
             );
         }
     }
+
 }

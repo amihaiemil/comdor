@@ -30,25 +30,62 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Integration tests for {@RtDockerHost}.
+ * Unit tests for {@RtDockerHost}.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
  */
-public class RtDockerHostITCase {
-
+public final class RtDockerHostTestCase {
+    
     /**
-     * RtDockerHost creates and removes a container from the local dockerd.
+     * RtDockerHost throws ISE if we want to create a Container
+     * before connecting to the host.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void createsAndRemovesLocalContainer() throws Exception {
-        final DockerHost host = new RtDockerHost().connect();
-        final Container created = host.create(
-            "hello-world", "test-local-container"
-        );
-        MatcherAssert.assertThat(created, Matchers.notNullValue());
-        MatcherAssert.assertThat(created.isStarted(), Matchers.is(false));
-        host.remove(created.containerId());
+    public void cannotCreateIfNotConnected() throws Exception {
+        final DockerHost host = new RtDockerHost();
+        try {
+            host.create("test/test", "name");
+        } catch (final IllegalStateException ex) {
+            MatcherAssert.assertThat(
+                ex.getMessage(), Matchers.startsWith("Not connected.")
+            );
+        }
     }
+    
+    /**
+     * RtDockerHost throws ISE if we want to start a Container
+     * before connecting to the host.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void cannotStartIfNotConnected() throws Exception {
+        final DockerHost host = new RtDockerHost();
+        try {
+            host.start("123cont");
+        } catch (final IllegalStateException ex) {
+            MatcherAssert.assertThat(
+                ex.getMessage(), Matchers.startsWith("Not connected.")
+            );
+        }
+    }
+    
+    /**
+     * RtDockerHost throws ISE if we want to reomve a Container
+     * before connecting to the host.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void cannotRemoveIfNotConnected() throws Exception {
+        final DockerHost host = new RtDockerHost();
+        try {
+            host.remove("123cont");
+        } catch (final IllegalStateException ex) {
+            MatcherAssert.assertThat(
+                ex.getMessage(), Matchers.startsWith("Not connected.")
+            );
+        }
+    }
+    
 }
