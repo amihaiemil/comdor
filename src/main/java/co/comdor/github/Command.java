@@ -31,7 +31,8 @@ import javax.json.JsonObject;
 import java.io.IOException;
 
 /**
- * A Github Issue comment where the bot has been mentioned.
+ * Command which triggers the bot's Action. Could be a mention
+ * in an Issue comment, a CI webhook ping etc.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1

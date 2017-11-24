@@ -35,25 +35,24 @@ import java.io.IOException;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
+ * @todo #68:30min Command should return the name for the Docker container
+ *  (e.g. repo/name#22). Right now the name is hardcoded to "test".
  */
 public final class FireUpDocker extends IntermediaryStep {
-    
+
     /**
-     * Https-scheme ip + port of the remote docker host.
+     * Docker host where containers will run.
      */
-    private final String dockerHost;
-    
-    /**
-     * Path, on disk, to the certificates.
-     */
-    private final String dockerCertPath;
+    private DockerHost host;
     
     /**
      * Ctor. Docker host will run based on the environment variables.
      * @param next The next step to perform.
      */
     public FireUpDocker(final Step next) {
-        this("", "", next);
+        this(
+            "", "", next
+        );
     }
     
     /**
@@ -65,32 +64,32 @@ public final class FireUpDocker extends IntermediaryStep {
     public FireUpDocker(
         final String dockerHost, final String dockerCertPath, final Step next
     ) {
+        this(new RtDockerHost(dockerHost, dockerCertPath), next);
+    }
+
+    /**
+     * Ctor. Docker host will run remotely at the specified coordinates.
+     * @param next The next step to perform.
+     * @param host Docker host where the containers will run.
+     */
+    public FireUpDocker(final DockerHost host, final Step next) {
         super(next);
-        this.dockerHost = dockerHost;
-        this.dockerCertPath = dockerCertPath;
+        this.host = host;
     }
     
     @Override
     public void perform(
         final Command command, final Log log
     ) throws IOException {
-        final DockerHost host;
-        try {
-            if(this.dockerHost.isEmpty() || this.dockerCertPath.isEmpty()) {
-                host = new RtDockerHost();
-            } else {
-                host = new RtDockerHost(this.dockerHost, this.dockerCertPath);
-            }
-        } catch (final DockerCertificateException ex) {
-            throw new IOException("Docker host could not be built!", ex);
-        }
-        
         try(
-            final Container container = host.create(
-                command.comdorYaml().docker(), ""
-            ).start()
+            final Container container = this.host
+                .connect()
+                .create(
+                    command.comdorYaml().docker(), "test"
+                ).start()
         ) {
             container.execute(command.scripts(), log.logger());
         }
+        this.next().perform(command, log);
     }
 }
