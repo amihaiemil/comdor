@@ -38,7 +38,7 @@ public interface Step {
 
     /**
      * Perform this step.
-     * @param mention Command that triggered the action.
+     * @param command Command that triggered the action.
      * @param log The Action's logger.
      * @throws IOException If there is anything wrong in the communication
      *  with Github.

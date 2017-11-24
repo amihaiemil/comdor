@@ -73,7 +73,8 @@ public class ChatResource {
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ChatResource.class.getName()
+    private static final Logger LOG = LoggerFactory.getLogger(
+        ChatResource.class.getName()
     );
 
     /**

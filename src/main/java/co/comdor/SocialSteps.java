@@ -43,10 +43,10 @@ import co.comdor.github.Command;
 public interface SocialSteps extends Step {
     
     /**
-     * Notice that this overriden perform does not throw IOException.
+     * Notice that this overriden perform() does not throw IOException.
      * This is because we are not treating social steps failures, they are only
      * cosmetic, not affecting the business at all.
-     * @param mention Mention which triggered everything.
+     * @param command Command which triggered everything.
      * @param log Log of the Action.
      */
     @Override

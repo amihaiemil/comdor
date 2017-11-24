@@ -60,7 +60,9 @@ public abstract class Language {
      * @param commandsFileName Properties file with commands.
      * @param responsesFileName Properties file with responses.
      */
-    public Language(final String commandsFileName, final String responsesFileName) {
+    public Language(
+        final String commandsFileName, final String responsesFileName
+    ) {
         try {
             this.commands.load(
                 this.getClass().getClassLoader()
@@ -81,7 +83,7 @@ public abstract class Language {
      * @param mention Mention where the bot has been called.
      * @return String type.
      * @throws IOException If something goes wrong with the call to Github.
-     * @checkstyle
+     * @checkstyle DesignForExtension (5 lines)
      */
     public String categorize(final Command mention) throws IOException {
         final Set<Object> keys = this.commands.keySet();
@@ -108,6 +110,7 @@ public abstract class Language {
      * Find a response.
      * @param key The response's key.
      * @return String.
+     * @checkstyle DesignForExtension (5 lines)
      */
     public String response(final String key) {
         return this.responses.getProperty(key);
