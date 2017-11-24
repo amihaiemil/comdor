@@ -26,7 +26,6 @@
 package co.comdor;
 
 import co.comdor.github.Command;
-import com.spotify.docker.client.exceptions.DockerCertificateException;
 import java.io.IOException;
 
 /**
