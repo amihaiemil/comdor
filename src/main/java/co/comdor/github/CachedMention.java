@@ -36,7 +36,7 @@ import javax.json.JsonObject;
  * @version $Id$
  * @since 0.0.3
  */
-public final class CachedMention implements Mention {
+public final class CachedMention implements Command {
 
     /**
      * Cached .comdor.yml.
@@ -51,13 +51,13 @@ public final class CachedMention implements Mention {
     /**
      * Decorated mention.
      */
-    private final Mention original;
+    private final Command original;
 
     /**
      * Ctor.
      * @param original Mention which has to have caching.
      */
-    public CachedMention(final Mention original) {
+    public CachedMention(final Command original) {
         this.original = original;
     }
     

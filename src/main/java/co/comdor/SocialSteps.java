@@ -25,7 +25,7 @@
  */
 package co.comdor;
 
-import co.comdor.github.Mention;
+import co.comdor.github.Command;
 
 /**
  * After executing all the steps which are needed to fulfill an action, 
@@ -50,5 +50,5 @@ public interface SocialSteps extends Step {
      * @param log Log of the Action.
      */
     @Override
-    void perform(final Mention mention, final Log log);
+    void perform(final Command command, final Log log);
 }

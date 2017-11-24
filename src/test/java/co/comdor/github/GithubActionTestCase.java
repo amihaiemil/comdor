@@ -47,7 +47,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Unit tests for {@link GithubAction}
+ * Unit tests for {@link Chat}
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
@@ -66,9 +66,9 @@ public final class GithubActionTestCase {
             final Issue issue2 = this.githubIssue("jeff", "@comdor hello");
             final Issue issue3 = this.githubIssue("vlad", "@comdor, hello");
             final SocialSteps social = Mockito.mock(SocialSteps.class);
-            final Action ac1 = new GithubAction(issue1, social);
-            final Action ac2 = new GithubAction(issue2, social);
-            final Action ac3 = new GithubAction(issue3, social);
+            final Action ac1 = new Chat(issue1, social);
+            final Action ac2 = new Chat(issue2, social);
+            final Action ac3 = new Chat(issue3, social);
             
             final ExecutorService executorService = Executors.newFixedThreadPool(5);
             final List<Future> futures = new ArrayList<>();

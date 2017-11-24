@@ -66,7 +66,7 @@ public final class StarRepoTestCase {
         final Repo repo =  gh.repos().create(
             new Repos.RepoCreate("amihaiemil.github.io", false)
         );
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         final Issue issue = Mockito.mock(Issue.class);
         Mockito.when(issue.repo()).thenReturn(repo);
         Mockito.when(com.issue()).thenReturn(issue);
@@ -101,7 +101,7 @@ public final class StarRepoTestCase {
         final Repo repo =  gh.repos().create(
             new Repos.RepoCreate("amihaiemil.github.io", false)
         );
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         final Issue issue = Mockito.mock(Issue.class);
         Mockito.when(issue.repo()).thenReturn(repo);
         Mockito.when(com.issue()).thenReturn(issue);
@@ -140,7 +140,7 @@ public final class StarRepoTestCase {
         Mockito.doThrow(new IOException()).when(stars).star();
         Mockito.when(repo.stars()).thenReturn(stars);
         
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         final Issue issue = Mockito.mock(Issue.class);
         Mockito.when(issue.repo()).thenReturn(repo);
         Mockito.when(com.issue()).thenReturn(issue);

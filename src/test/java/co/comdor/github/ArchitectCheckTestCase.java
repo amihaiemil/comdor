@@ -48,8 +48,8 @@ public final class ArchitectCheckTestCase {
     @Test
     public void authorIsArchitect() throws Exception {
         final ArchitectCheck check = new ArchitectCheck(
-            (Mention mention, Log log) -> {log.logger().info("OK");},
-            (Mention mention, Log log) -> {
+            (Command mention, Log log) -> {log.logger().info("OK");},
+            (Command mention, Log log) -> {
                 throw new IllegalStateException("authorIsArchitect failed!");
             }
         );
@@ -59,7 +59,7 @@ public final class ArchitectCheckTestCase {
         architects.add("mary");
         architects.add("johndoe");
 
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
         Mockito.when(yaml.architects()).thenReturn(architects);
         Mockito.when(mention.comdorYaml()).thenReturn(yaml);
@@ -79,10 +79,10 @@ public final class ArchitectCheckTestCase {
     @Test
     public void authorIsNotArchitect() throws Exception {
         final ArchitectCheck check = new ArchitectCheck(
-            (Mention mention, Log log) -> {
+            (Command mention, Log log) -> {
                 throw new IllegalStateException("authorIsNotArchitect failed!");
             },
-            (Mention mention, Log log) -> {log.logger().info("OK");}
+            (Command mention, Log log) -> {log.logger().info("OK");}
         );
 
         final List<String> architects = new ArrayList<>();
@@ -90,7 +90,7 @@ public final class ArchitectCheckTestCase {
         architects.add("mary");
         architects.add("johndoe");
 
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
         Mockito.when(yaml.architects()).thenReturn(architects);
         Mockito.when(mention.comdorYaml()).thenReturn(yaml);
@@ -109,13 +109,13 @@ public final class ArchitectCheckTestCase {
     @Test
     public void architectsMissing() throws Exception {
         final ArchitectCheck check = new ArchitectCheck(
-            (Mention mention, Log log) -> {
+            (Command mention, Log log) -> {
                 throw new IllegalStateException("architectsMissing failed!");
             },
-            (Mention mention, Log log) -> {log.logger().info("OK");}
+            (Command mention, Log log) -> {log.logger().info("OK");}
         );
 
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
         Mockito.when(yaml.architects()).thenReturn(new ArrayList<>());
         Mockito.when(mention.comdorYaml()).thenReturn(yaml);

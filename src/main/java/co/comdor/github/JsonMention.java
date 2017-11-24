@@ -33,7 +33,7 @@ import javax.json.JsonObject;
 import java.io.IOException;
 
 /**
- * {@link Mention} represented in Json.<br><br>
+ * {@link Command} represented in Json.<br><br>
  * This class is abstract because we don't know <b>which</b> comment
  * is this? We are interested in the <b>last</b> mentioning comment, so
  * this class is extended by {@link LastMention}.
@@ -41,7 +41,7 @@ import java.io.IOException;
  * @version $Id$
  * @since 0.0.1
  */
-public abstract class JsonMention implements Mention {
+public abstract class JsonMention implements Command {
 
     /**
      * Github issue Comment in Json format.

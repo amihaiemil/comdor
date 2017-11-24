@@ -55,7 +55,7 @@ public final class JsonMentionTestCase {
     @Test
     public void knowsItsIssue() throws Exception {
         final Issue parent = Mockito.mock(Issue.class);
-        final Mention mention = new MockConcrete(
+        final Command mention = new MockConcrete(
             Json.createObjectBuilder().build(), parent
         );
         MatcherAssert.assertThat(mention.issue() == parent, Matchers.is(true));
@@ -70,7 +70,7 @@ public final class JsonMentionTestCase {
         final JsonObject json = Json.createObjectBuilder()
             .add("user", Json.createObjectBuilder().add("login","jeff"))
             .build();
-        final Mention mention = new MockConcrete(
+        final Command mention = new MockConcrete(
             json, Mockito.mock(Issue.class)
         );
         MatcherAssert.assertThat(mention.author(), Matchers.equalTo("jeff"));
@@ -86,7 +86,7 @@ public final class JsonMentionTestCase {
             .add("author", "amihaiemil")
             .add("body", "@comdor hello")
             .build();
-        final Mention mention = new MockConcrete(
+        final Command mention = new MockConcrete(
             json, Mockito.mock(Issue.class)
         );
         MatcherAssert.assertThat(mention.json() == json, Matchers.is(true));
@@ -107,7 +107,7 @@ public final class JsonMentionTestCase {
     public void returnsTheScripts() throws Exception {
         final JsonObject comment = Json.createObjectBuilder()
             .add("body", "@comdor run ```cd src \ncloc .```").build();
-        final Mention mention = new MockConcrete(
+        final Command mention = new MockConcrete(
             comment, Mockito.mock(Issue.class)
         );
         MatcherAssert.assertThat(
@@ -137,7 +137,7 @@ public final class JsonMentionTestCase {
                         )
                     ).build()
             );
-        final Mention mention = new MockConcrete(
+        final Command mention = new MockConcrete(
             Json.createObjectBuilder().build(),
             repo.issues().create("for test", "body")
         );
@@ -159,7 +159,7 @@ public final class JsonMentionTestCase {
         final Repo repo = gh.repos().create(
             new Repos.RepoCreate("charlesrepo", false)
         );
-        final Mention mention = new MockConcrete(
+        final Command mention = new MockConcrete(
             Json.createObjectBuilder().build(),
             repo.issues().create("for test", "body")
         );

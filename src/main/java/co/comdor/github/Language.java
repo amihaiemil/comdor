@@ -37,7 +37,7 @@ import java.util.Set;
  * @version $Id$
  * @since 0.0.1
  */
-abstract class Language {
+public abstract class Language {
     /**
      * Logger.
      */
@@ -60,7 +60,7 @@ abstract class Language {
      * @param commandsFileName Properties file with commands.
      * @param responsesFileName Properties file with responses.
      */
-    Language(final String commandsFileName, final String responsesFileName) {
+    public Language(final String commandsFileName, final String responsesFileName) {
         try {
             this.commands.load(
                 this.getClass().getClassLoader()
@@ -83,7 +83,7 @@ abstract class Language {
      * @throws IOException If something goes wrong with the call to Github.
      * @checkstyle
      */
-    String categorize(final Mention mention) throws IOException {
+    public String categorize(final Command mention) throws IOException {
         final Set<Object> keys = this.commands.keySet();
         String type = "unknown";
         for(final Object key : keys) {
@@ -109,7 +109,7 @@ abstract class Language {
      * @param key The response's key.
      * @return String.
      */
-    String response(final String key) {
+    public String response(final String key) {
         return this.responses.getProperty(key);
     }
 }

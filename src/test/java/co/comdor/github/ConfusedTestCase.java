@@ -46,7 +46,7 @@ public final class ConfusedTestCase {
      */
     @Test
     public void startsUnknownCommand() throws Exception {
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         Mockito.when(com.type()).thenReturn("unknown");
         Mockito.when(com.language()).thenReturn(new English());
 

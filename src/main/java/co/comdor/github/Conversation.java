@@ -67,7 +67,7 @@ public final class Conversation implements Knowledge {
     }
 
     @Override
-    public Steps start(final Mention mention) throws IOException {
+    public Steps start(final Command mention) throws IOException {
         mention.understand(this.languages);
         return this.followup.start(mention);
     }

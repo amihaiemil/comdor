@@ -47,14 +47,14 @@ public final class GithubSteps implements Steps {
     /**
      * Initial mention. The one that triggered everything.
      */
-    private Mention mention;
+    private Command mention;
 
     /**
      * Constructor.
      * @param steps Steps to perform everything.
      * @param mention Initial menton.
      */
-    public GithubSteps(final Step steps, final Mention mention) {
+    public GithubSteps(final Step steps, final Command mention) {
         this.steps = steps;
         this.mention = mention;
     }

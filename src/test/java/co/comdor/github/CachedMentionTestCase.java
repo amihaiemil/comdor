@@ -46,9 +46,9 @@ public final class CachedMentionTestCase {
      */
     @Test
     public void cachesScripts() throws Exception {
-        final Mention original = Mockito.mock(Mention.class);
+        final Command original = Mockito.mock(Command.class);
         Mockito.when(original.scripts()).thenReturn("echo 'hello'");
-        final Mention cached = new CachedMention(original);
+        final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(
             cached.scripts(), Matchers.equalTo("echo 'hello'")
         );
@@ -67,10 +67,10 @@ public final class CachedMentionTestCase {
      */
     @Test
     public void cachesComdorYml() throws Exception {
-        final Mention original = Mockito.mock(Mention.class);
+        final Command original = Mockito.mock(Command.class);
         final ComdorYaml yml = Mockito.mock(ComdorYaml.class);
         Mockito.when(original.comdorYaml()).thenReturn(yml);
-        final Mention cached = new CachedMention(original);
+        final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(
             cached.comdorYaml(), Matchers.equalTo(yml)
         );
@@ -90,9 +90,9 @@ public final class CachedMentionTestCase {
      */
     @Test
     public void doesntCacheAuthor() throws Exception {
-        final Mention original = Mockito.mock(Mention.class);
+        final Command original = Mockito.mock(Command.class);
         Mockito.when(original.author()).thenReturn("john");
-        final Mention cached = new CachedMention(original);
+        final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(cached.author(), Matchers.equalTo("john"));
         MatcherAssert.assertThat(cached.author(), Matchers.equalTo("john"));
         Mockito.verify(original, Mockito.times(2)).author();
@@ -105,9 +105,9 @@ public final class CachedMentionTestCase {
      */
     @Test
     public void doesntCacheType() throws Exception {
-        final Mention original = Mockito.mock(Mention.class);
+        final Command original = Mockito.mock(Command.class);
         Mockito.when(original.type()).thenReturn("hello");
-        final Mention cached = new CachedMention(original);
+        final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(cached.type(), Matchers.equalTo("hello"));
         MatcherAssert.assertThat(cached.type(), Matchers.equalTo("hello"));
         Mockito.verify(original, Mockito.times(2)).type();
@@ -120,9 +120,9 @@ public final class CachedMentionTestCase {
     @Test
     public void doesntCacheLanguage() throws Exception {
         final Language lang = Mockito.mock(Language.class);
-        final Mention original = Mockito.mock(Mention.class);
+        final Command original = Mockito.mock(Command.class);
         Mockito.when(original.language()).thenReturn(lang);
-        final Mention cached = new CachedMention(original);
+        final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(cached.language(), Matchers.equalTo(lang));
         MatcherAssert.assertThat(cached.language(), Matchers.equalTo(lang));
         Mockito.verify(original, Mockito.times(2)).language();
@@ -135,9 +135,9 @@ public final class CachedMentionTestCase {
     @Test
     public void doesntCacheIssue() throws Exception {
         final Issue issue = Mockito.mock(Issue.class);
-        final Mention original = Mockito.mock(Mention.class);
+        final Command original = Mockito.mock(Command.class);
         Mockito.when(original.issue()).thenReturn(issue);
-        final Mention cached = new CachedMention(original);
+        final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(cached.issue(), Matchers.equalTo(issue));
         MatcherAssert.assertThat(cached.issue(), Matchers.equalTo(issue));
         Mockito.verify(original, Mockito.times(2)).issue();
@@ -150,9 +150,9 @@ public final class CachedMentionTestCase {
     @Test
     public void doesntCacheJson() throws Exception {
         final JsonObject json = Mockito.mock(JsonObject.class);
-        final Mention original = Mockito.mock(Mention.class);
+        final Command original = Mockito.mock(Command.class);
         Mockito.when(original.json()).thenReturn(json);
-        final Mention cached = new CachedMention(original);
+        final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(cached.json(), Matchers.equalTo(json));
         MatcherAssert.assertThat(cached.json(), Matchers.equalTo(json));
         Mockito.verify(original, Mockito.times(2)).json();
@@ -164,8 +164,8 @@ public final class CachedMentionTestCase {
      */
     @Test
     public void repliesEverytime() throws Exception {
-        final Mention original = Mockito.mock(Mention.class);
-        final Mention cached = new CachedMention(original);
+        final Command original = Mockito.mock(Command.class);
+        final Command cached = new CachedMention(original);
         cached.reply("test1");
         cached.reply("test1");
         cached.reply("test1");
@@ -178,8 +178,8 @@ public final class CachedMentionTestCase {
      */
     @Test
     public void understandsEverytime() throws Exception {
-        final Mention original = Mockito.mock(Mention.class);
-        final Mention cached = new CachedMention(original);
+        final Command original = Mockito.mock(Command.class);
+        final Command cached = new CachedMention(original);
         final Language lang = Mockito.mock(Language.class);
         cached.understand(lang);
         cached.understand(lang);

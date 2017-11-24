@@ -49,11 +49,10 @@ public final class StarRepo extends IntermediaryStep{
     
     @Override
     public void perform(
-        final Mention mention, final Log log
-    ) throws IOException {
+        final Command command, final Log log) throws IOException {
         try {
             log.logger().info("Starring repository...");
-            final Repo repo = mention.issue().repo();
+            final Repo repo = command.issue().repo();
             if(!repo.stars().starred()) {
                 repo.stars().star();
             }
@@ -63,7 +62,7 @@ public final class StarRepo extends IntermediaryStep{
                 "IOException when starring repository, could not star the repo."
             );
         }
-        this.next().perform(mention, log);
+        this.next().perform(command, log);
     }
     
 }

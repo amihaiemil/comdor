@@ -51,20 +51,19 @@ public final class ArchitectCheck extends PreconditionCheckStep {
 
     @Override
     public void perform(
-        final Mention mention, final Log log
-    ) throws IOException {
-        final String author = mention.author();
+        final Command command, final Log log) throws IOException {
+        final String author = command.author();
         log.logger().info(
             "Checking if " + author + " is an architect..."
         );
-        for(final String architect : mention.comdorYaml().architects()) {
+        for(final String architect : command.comdorYaml().architects()) {
             if(author.equalsIgnoreCase(architect)) {
                 log.logger().info(author + " is in architect - OK");
-                this.onTrue().perform(mention, log);
+                this.onTrue().perform(command, log);
                 return;
             }
         }
         log.logger().warn(author + " is not an architect!");
-        this.onFalse().perform(mention, log);
+        this.onFalse().perform(command, log);
     }
 }

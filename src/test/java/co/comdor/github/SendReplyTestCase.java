@@ -48,7 +48,7 @@ public final class SendReplyTestCase {
      */
     @Test
     public void replySentOk() throws Exception {
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         final String message = "hello";
         Mockito.doNothing().when(mention).reply(message);
         new SendReply(
@@ -62,7 +62,7 @@ public final class SendReplyTestCase {
      */
     @Test
     public void replyFails() throws Exception {
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         final String message = "hello";
         Mockito.doThrow(new IOException("This is expected, it's ok!"))
             .when(mention).reply(message);

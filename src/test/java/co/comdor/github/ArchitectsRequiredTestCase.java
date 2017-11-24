@@ -48,13 +48,13 @@ public final class ArchitectsRequiredTestCase {
     @Test
     public void architectsDefined() throws Exception {
         final ArchitectsRequired check = new ArchitectsRequired(
-            (Mention mention, Log log) -> {log.logger().info("OK");},
-            (Mention mention, Log log) -> {
+            (Command mention, Log log) -> {log.logger().info("OK");},
+            (Command mention, Log log) -> {
                 throw new IllegalStateException("architectsDefined failed!");
             }
         );
 
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
         final List<String> architects = new ArrayList<>();
         architects.add("amihaiemil");
@@ -74,13 +74,13 @@ public final class ArchitectsRequiredTestCase {
     @Test
     public void architectsMissing() throws Exception {
         final ArchitectsRequired check = new ArchitectsRequired(
-            (Mention mention, Log log) -> {
+            (Command mention, Log log) -> {
                 throw new IllegalStateException("architectsMissing failed!");
             },
-            (Mention mention, Log log) -> {log.logger().info("OK");}
+            (Command mention, Log log) -> {log.logger().info("OK");}
         );
 
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
         Mockito.when(yaml.architects()).thenReturn(new ArrayList<>());
         Mockito.when(mention.comdorYaml()).thenReturn(yaml);

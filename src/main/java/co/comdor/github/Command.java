@@ -36,16 +36,16 @@ import java.io.IOException;
  * @version $Id$
  * @since 0.0.1
  */
-public interface Mention {
+public interface Command {
 
     /**
-     * The mentioning comment's author.
+     * This command's author.
      * @return String.
      */
     String author();
 
     /**
-     * What type is it? 'hello', 'run' etc
+     * What type is it? 'hello', 'run', 'ci' etc
      * @return String.
      */
     String type();

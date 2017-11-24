@@ -47,13 +47,13 @@ public final class HelloTestCase {
      */
     @Test
     public void startsHelloCommand() throws Exception {
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         Mockito.when(com.type()).thenReturn("hello");
         Mockito.when(com.language()).thenReturn(new English());
         final Knowledge hello = new Hello(
             new Knowledge() {
                 @Override
-                public Steps start(final Mention com) throws IOException {
+                public Steps start(final Command com) throws IOException {
                     throw new IllegalStateException(
                         "'hello' command was misunderstood!"
                     );
@@ -75,12 +75,12 @@ public final class HelloTestCase {
      */
     @Test
     public void forwardsNotHelloCommand() throws Exception {
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         Mockito.when(com.type()).thenReturn("runcommand");
         final Knowledge hello = new Hello(
             new Knowledge() {
                 @Override
-                public Steps start(final Mention com) throws IOException {
+                public Steps start(final Command com) throws IOException {
                     MatcherAssert.assertThat(
                         com.type(),
                         Matchers.equalTo("runcommand")

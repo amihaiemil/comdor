@@ -30,7 +30,7 @@ import co.comdor.Log;
 import java.io.IOException;
 
 /**
- * Step where the bot replies to a {@link Mention}.
+ * Step where the bot replies to a {@link Command}.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
@@ -64,14 +64,13 @@ public final class SendReply extends IntermediaryStep {
 
     @Override
     public void perform(
-        final Mention mention, final Log log
-    ) throws IOException {
+        final Command command, final Log log) throws IOException {
         try {
-            mention.reply(this.rep);
+            command.reply(this.rep);
         } catch (final IOException ex) {
             log.logger().error("IOException when sending a reply!", ex);
             throw new IOException("IOException when sending a reply!", ex);
         }
-        this.next().perform(mention, log);
+        this.next().perform(command, log);
     }
 }

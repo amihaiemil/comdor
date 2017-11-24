@@ -36,13 +36,13 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Action that the agent takes, on Github.
+ * The bot chats with the user based on a mention.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (300 lines)
  */
-public final class GithubAction implements Action {
+public final class Chat implements Action {
 
     /**
      * This action's id.
@@ -74,7 +74,7 @@ public final class GithubAction implements Action {
      * @throws IOException If there is any IO problem (e.g. writing files,
      *  communicating with Github etc).
      */
-    public GithubAction(
+    public Chat(
         final Issue issue, final SocialSteps social
     ) throws IOException {
         this.issue = issue;
@@ -105,7 +105,7 @@ public final class GithubAction implements Action {
                     )
                 )
             );
-            final Mention mention = new CachedMention(
+            final Command mention = new CachedMention(
                 new LastMention(this.issue)
             );
             final Steps steps = talk.start(mention);

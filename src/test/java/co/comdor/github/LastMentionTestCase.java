@@ -60,7 +60,7 @@ public final class LastMentionTestCase {
                 .get(repoMihai.coordinates())
                 .issues()
                 .get(mihai.number());
-        final Mention last = new LastMention(comdor);
+        final Command last = new LastMention(comdor);
         MatcherAssert.assertThat(
         	last.type(), Matchers.equalTo("unknown")
         );
@@ -99,7 +99,7 @@ public final class LastMentionTestCase {
                 .get(repoMihai.coordinates())
                 .issues()
                 .get(mihai.number());
-        final Mention last = new LastMention(comdor);
+        final Command last = new LastMention(comdor);
         MatcherAssert.assertThat(
         	last.type(), Matchers.equalTo("unknown")
         );
@@ -287,7 +287,7 @@ public final class LastMentionTestCase {
             comdor.comments().iterate(),
             Matchers.iterableWithSize(1)
         );
-        final Mention mention = new LastMention(comdor);
+        final Command mention = new LastMention(comdor);
         mention.reply("Hello there!");
         MatcherAssert.assertThat(
             comdor.comments().iterate(),

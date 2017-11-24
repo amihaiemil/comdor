@@ -51,20 +51,19 @@ public final class CommanderCheck extends PreconditionCheckStep {
 
     @Override
     public void perform(
-        final Mention mention, final Log log
-    ) throws IOException {
-        final String author = mention.author();
+        final Command command, final Log log) throws IOException {
+        final String author = command.author();
         log.logger().info(
             "Checking if " + author + " is a commander..."
         );
-        for(final String commander : mention.comdorYaml().commanders()) {
+        for(final String commander : command.comdorYaml().commanders()) {
             if(author.equalsIgnoreCase(commander)) {
                 log.logger().info(author + " is in commander - OK");
-                this.onTrue().perform(mention, log);
+                this.onTrue().perform(command, log);
                 return;
             }
         }
         log.logger().warn(author + " is not an commander!");
-        this.onFalse().perform(mention, log);
+        this.onFalse().perform(command, log);
     }
 }

@@ -51,14 +51,14 @@ public final class ConversationTestCase {
         final Conversation conv = new Conversation(
             new Knowledge() {
                 @Override
-                public Steps start(final Mention mention) throws IOException {
+                public Steps start(final Command mention) throws IOException {
                     Mockito.verify(mention).understand(langs);
                     return null;
                 }
             },
             langs
         );
-        conv.start(Mockito.mock(Mention.class));
+        conv.start(Mockito.mock(Command.class));
     }
     
     /**
@@ -69,7 +69,7 @@ public final class ConversationTestCase {
     public void followupIsCalled() throws Exception {
         final Knowledge followup = Mockito.mock(Knowledge.class);
         final Conversation conv = new Conversation(followup);
-        final Mention mention = Mockito.mock(Mention.class);
+        final Command mention = Mockito.mock(Command.class);
         conv.start(mention);
         Mockito.verify(followup).start(mention);
     }

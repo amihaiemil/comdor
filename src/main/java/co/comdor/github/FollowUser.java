@@ -50,10 +50,9 @@ public final class FollowUser extends IntermediaryStep {
     
     @Override
     public void perform(
-        final Mention mention, final Log log
-    ) throws IOException {
-        final String author = mention.author();
-        final Request follow = mention.issue().repo().github().entry()
+        final Command command, final Log log) throws IOException {
+        final String author = command.author();
+        final Request follow = command.issue().repo().github().entry()
             .uri().path("/user/following/").path(author).back()
             .method("PUT");
         log.logger().info("Following Github user " + author + " ...");
@@ -70,7 +69,7 @@ public final class FollowUser extends IntermediaryStep {
         } catch (final IOException ex) {
             log.logger().warn("IOException while trying to follow the user.");
         }
-        this.next().perform(mention, log);
+        this.next().perform(command, log);
     }
     
 }

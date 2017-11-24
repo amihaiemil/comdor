@@ -25,9 +25,9 @@
  */
 package co.comdor;
 
-import co.comdor.github.Mention;
 
 import java.io.IOException;
+import co.comdor.github.Command;
 
 /**
  * The bot knows how to do something.
@@ -38,11 +38,11 @@ import java.io.IOException;
 public interface Knowledge {
 
     /**
-     * Start handling the mention, create the Steps to be executed in
+     * Start handling the command, create the Steps to be executed in
      * order to fulfill it.
      * @param mention Github mentioning comment.
      * @return Steps to execute.
      * @throws IOException If something goes wrong when calling Github.
      */
-    Steps start(final Mention mention) throws IOException;
+    Steps start(final Command mention) throws IOException;
 }

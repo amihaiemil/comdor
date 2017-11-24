@@ -64,7 +64,7 @@ public final class FollowUserTestCase {
             new MkAnswer.Simple(HttpURLConnection.HTTP_NO_CONTENT)
         ).start(port);
 
-        final Mention com = this.mockMention();
+        final Command com = this.mockMention();
         Mockito.when(com.issue().repo().github().entry())
             .thenReturn(new ApacheRequest("http://localhost:" + port + "/"));
         
@@ -101,7 +101,7 @@ public final class FollowUserTestCase {
             new MkAnswer.Simple(HttpURLConnection.HTTP_INTERNAL_ERROR)
         ).start(port);
         
-        final Mention com = this.mockMention();
+        final Command com = this.mockMention();
         Mockito.when(com.issue().repo().github().entry())
             .thenReturn(new ApacheRequest("http://localhost:" + port + "/"));
         
@@ -137,7 +137,7 @@ public final class FollowUserTestCase {
      */
     @Test
     public void serverIsDown() throws Exception {
-        final Mention com = this.mockMention();
+        final Command com = this.mockMention();
         Mockito.when(com.issue().repo().github().entry())
             .thenReturn(
                 new ApacheRequest("http://localhost:" + this.port() + "/")
@@ -171,8 +171,8 @@ public final class FollowUserTestCase {
      * Mock a Mention, add issue, repo and github mocks into it.
      * @return Mention.
      */
-    private Mention mockMention() {
-        final Mention com = Mockito.mock(Mention.class);
+    private Command mockMention() {
+        final Command com = Mockito.mock(Command.class);
         Mockito.when(com.author()).thenReturn("amihaiemil");
         
         final Issue issue = Mockito.mock(Issue.class);

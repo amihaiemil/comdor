@@ -46,12 +46,12 @@ public final class RunScriptTestCase {
      */
     @Test
     public void startsRunCommand() throws Exception {
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         Mockito.when(com.type()).thenReturn("run");
         Mockito.when(com.comdorYaml()).thenReturn(new ComdorYaml.Missing());
         Mockito.when(com.language()).thenReturn(new English());
         final Knowledge run = new RunScript(
-            (Mention mention) -> {
+            (Command mention) -> {
                 throw new IllegalStateException(
                     "'run' command misunderstood!"
                 );
@@ -72,10 +72,10 @@ public final class RunScriptTestCase {
      */
     @Test
     public void forwardsNotRunCommand() throws Exception {
-        final Mention com = Mockito.mock(Mention.class);
+        final Command com = Mockito.mock(Command.class);
         Mockito.when(com.type()).thenReturn("notrun");
         final Knowledge hello = new RunScript(
-                (Mention mention) -> {
+                (Command mention) -> {
                      MatcherAssert.assertThat(
                          mention.type(),
                          Matchers.equalTo("notrun")

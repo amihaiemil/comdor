@@ -52,7 +52,7 @@ public final class RunScript implements Knowledge {
     }
 
     @Override
-    public Steps start(final Mention mention) throws IOException {
+    public Steps start(final Command mention) throws IOException {
         final Steps resolved;
         if("run".equalsIgnoreCase(mention.type())) {
             resolved =  new GithubSteps(

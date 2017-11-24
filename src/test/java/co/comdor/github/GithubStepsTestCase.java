@@ -52,7 +52,7 @@ public final class GithubStepsTestCase {
      */
     @Test
     public void logsAndExecutesSteps() throws Exception {
-        final Mention comment = Mockito.mock(Mention.class);
+        final Command comment = Mockito.mock(Command.class);
         Mockito.when(comment.json()).thenReturn(
             Json.createObjectBuilder().add("body", "@comdor run").build()
         );
@@ -79,7 +79,7 @@ public final class GithubStepsTestCase {
      */
     @Test(expected = IllegalStateException.class)
     public void stepsThrowIOException() throws Exception {
-        final Mention comment = Mockito.mock(Mention.class);
+        final Command comment = Mockito.mock(Command.class);
         Mockito.when(comment.language()).thenReturn(new English());
         Mockito.when(comment.author()).thenReturn("amihaiemil");
         Mockito.when(comment.json()).thenReturn(

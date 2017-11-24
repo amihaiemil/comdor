@@ -51,18 +51,17 @@ public final  class ArchitectsRequired extends PreconditionCheckStep{
 
     @Override
     public void perform(
-        final Mention mention, final Log log
-    ) throws IOException {
-        final String author = mention.author();
+        final Command command, final Log log) throws IOException {
+        final String author = command.author();
         log.logger().info(
             "At least an architect is needed for this..."
         );
-        if(mention.comdorYaml().architects().isEmpty()) {
+        if(command.comdorYaml().architects().isEmpty()) {
             log.logger().warn("No architects defined!");
-            this.onFalse().perform(mention, log);
+            this.onFalse().perform(command, log);
         } else {
             log.logger().info("Found at least an architect - OK!");
-            this.onTrue().perform(mention, log);
+            this.onTrue().perform(command, log);
         }
     }
 }

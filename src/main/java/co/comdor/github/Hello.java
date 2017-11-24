@@ -52,7 +52,7 @@ public final class Hello implements Knowledge {
     }
 
     @Override
-    public Steps start(final Mention com) throws IOException {
+    public Steps start(final Command com) throws IOException {
         final Steps resolved;
         if("hello".equalsIgnoreCase(com.type())) {
             resolved =  new GithubSteps(

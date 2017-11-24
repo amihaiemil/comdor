@@ -25,8 +25,8 @@
  */
 package co.comdor;
 
-import co.comdor.github.Mention;
 import java.io.IOException;
+import co.comdor.github.Command;
 
 /**
  * A step that the bot takes in order to do something.
@@ -38,12 +38,12 @@ public interface Step {
 
     /**
      * Perform this step.
-     * @param mention Mention that triggered the action.
+     * @param mention Command that triggered the action.
      * @param log The Action's logger.
      * @throws IOException If there is anything wrong in the communication
      *  with Github.
      */
-    void perform(final Mention mention, final Log log) throws IOException;
+    void perform(final Command command, final Log log) throws IOException;
 
     /**
      * Final step in the chain.
@@ -72,7 +72,7 @@ public interface Step {
         }
 
         @Override
-        public void perform(final Mention mention, final Log log) {
+        public void perform(final Command command, final Log log) {
             log.logger().info(this.message);
         }
     }
@@ -96,7 +96,7 @@ public interface Step {
         }
 
         @Override
-        public void perform(final Mention mention, final Log log) {
+        public void perform(final Command command, final Log log) {
             if(!this.pass) {
                 throw new IllegalStateException(
                     "Step should not have been executed!"

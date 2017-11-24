@@ -39,7 +39,7 @@ import java.io.IOException;
 public final class Confused implements Knowledge {
 
     @Override
-    public Steps start(final Mention mention) throws IOException {
+    public Steps start(final Command mention) throws IOException {
         final Step reply = new SendReply(
             String.format(
                 mention.language().response("unknown.comment"),

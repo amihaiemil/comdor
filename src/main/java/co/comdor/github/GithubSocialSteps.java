@@ -54,9 +54,9 @@ public final class GithubSocialSteps implements SocialSteps {
     }
 
     @Override
-    public void perform(final Mention mention, final Log log) {
+    public void perform(final Command command, final Log log) {
         try {
-            this.social.perform(mention, log);
+            this.social.perform(command, log);
         } catch (final IOException ioe){}
     }
     

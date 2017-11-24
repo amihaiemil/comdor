@@ -27,7 +27,7 @@ package co.comdor.rest;
 
 import co.comdor.Action;
 import co.comdor.VigilantAction;
-import co.comdor.github.GithubAction;
+import co.comdor.github.Chat;
 import co.comdor.github.GithubSocialSteps;
 import co.comdor.rest.model.Notification;
 import co.comdor.rest.model.Notifications;
@@ -55,7 +55,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 /**
- * REST interface to receive Github notifications.
+ * REST interface to receive Github notifications for chatting.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
@@ -63,7 +63,7 @@ import java.net.HttpURLConnection;
  */
 @Path("/")
 @Stateless
-public class NotificationsResource {
+public class ChatResource {
 
     /**
      * The name of the System property holding theGithub API token.
@@ -73,8 +73,7 @@ public class NotificationsResource {
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(
-        NotificationsResource.class.getName()
+    private static final Logger LOG = LoggerFactory.getLogger(ChatResource.class.getName()
     );
 
     /**
@@ -201,7 +200,7 @@ public class NotificationsResource {
                 for(final Notification notification : notifications) {
                     this.take(
                         new VigilantAction(
-                            new GithubAction(
+                            new Chat(
                                 github.repos().get(
                                     new Coordinates.Simple(
                                         notification.repoFullName()

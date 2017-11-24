@@ -50,11 +50,11 @@ public final class EnglishTestCase {
      */
     @Test
     public void categorizesHelloCommands() throws Exception {
-        final Mention hello1 = this.mockMention("@comdor, hello there!");
-        final Mention hello2 = this.mockMention("@comdor, hello?!");
-        final Mention hello3 = this.mockMention("@comdor hello");
-        final Mention hello4 = this.mockMention("@comdor hello, how are you?");
-        final Mention hello5 = this.mockMention("@comdor hello, who are you?");
+        final Command hello1 = this.mockMention("@comdor, hello there!");
+        final Command hello2 = this.mockMention("@comdor, hello?!");
+        final Command hello3 = this.mockMention("@comdor hello");
+        final Command hello4 = this.mockMention("@comdor hello, how are you?");
+        final Command hello5 = this.mockMention("@comdor hello, who are you?");
 
         final Language english = new English();
         MatcherAssert.assertThat(
@@ -79,11 +79,11 @@ public final class EnglishTestCase {
      */
     @Test
     public void categorizesRunCommands() throws Exception {
-        final Mention run1 = this.mockMention("@comdor, run ``cloc .`` pls");
-        final Mention run2 = this.mockMention("@comdor, run it");
-        final Mention run3 = this.mockMention("@comdor pls run ``mvn clean``");
-        final Mention run4 = this.mockMention("@comdor run");
-        final Mention run5 = this.mockMention("@comdor run?");
+        final Command run1 = this.mockMention("@comdor, run ``cloc .`` pls");
+        final Command run2 = this.mockMention("@comdor, run it");
+        final Command run3 = this.mockMention("@comdor pls run ``mvn clean``");
+        final Command run4 = this.mockMention("@comdor run");
+        final Command run5 = this.mockMention("@comdor run?");
 
         final Language english = new English();
         MatcherAssert.assertThat(
@@ -108,9 +108,9 @@ public final class EnglishTestCase {
      */
     @Test
     public void commandIsUnknown() throws Exception {
-        final Mention unknown1 = this.mockMention("@comdor who are you?");
-        final Mention unknown2 = this.mockMention("@comdor, Something else");
-        final Mention unknown3 = this.mockMention("@comdor howdy");
+        final Command unknown1 = this.mockMention("@comdor who are you?");
+        final Command unknown2 = this.mockMention("@comdor, Something else");
+        final Command unknown3 = this.mockMention("@comdor howdy");
 
         final Language english = new English();
         MatcherAssert.assertThat(
@@ -129,8 +129,8 @@ public final class EnglishTestCase {
      * @param message Message for it.
      * @return The mocked Mention.
      */
-    private Mention mockMention(final String message) {
-        final Mention mock = Mockito.mock(Mention.class);
+    private Command mockMention(final String message) {
+        final Command mock = Mockito.mock(Command.class);
         final JsonObject comment = Json
             .createObjectBuilder().add("body", message)
             .build();
