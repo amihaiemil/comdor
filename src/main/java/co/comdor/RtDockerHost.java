@@ -40,8 +40,6 @@ import java.nio.file.Paths;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #58:30min Add a Decorator which catches all the checked exceptions,
- *  logs them and throws a RuntimeException further.
  */
 public final class RtDockerHost implements DockerHost{
 
