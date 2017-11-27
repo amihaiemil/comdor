@@ -55,7 +55,7 @@ public final class FireUpDockerTestCase {
         final Container container = Mockito.mock(Container.class);
         Mockito.when(container.start()).thenReturn(container);
         Mockito.when(host.connect()).thenReturn(host);
-        Mockito.when(host.create(Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(host.create(Mockito.anyString()))
             .thenReturn(container);
 
         final Step fireup = new FireUpDocker(host, new Step.Fake(true));
@@ -90,7 +90,7 @@ public final class FireUpDockerTestCase {
         Mockito.doThrow(new IllegalStateException("Expected")).when(
                 container).execute(Mockito.anyString(), Mockito.any(Logger.class));
         Mockito.when(host.connect()).thenReturn(host);
-        Mockito.when(host.create(Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(host.create(Mockito.anyString()))
                 .thenReturn(container);
 
         final Step fireup = new FireUpDocker(host, new Step.Fake(false));

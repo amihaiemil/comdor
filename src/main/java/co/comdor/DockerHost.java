@@ -46,10 +46,9 @@ public interface DockerHost {
     /**
      * Create a container based on the given image.
      * @param image Docker image.
-     * @param name Name of the container.
      * @return The created Container.
      */
-    Container create(final String image, final String name);
+    Container create(final String image);
 
     /**
      * Start a container.

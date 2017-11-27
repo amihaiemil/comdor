@@ -123,7 +123,7 @@ public final class RtDockerHost implements DockerHost{
     }
     
     @Override
-    public Container create(final String image, final String name) {
+    public Container create(final String image) {
         if(this.client == null) {
             throw new IllegalStateException(
                 "Not connected. Don't forget to get a connected "
@@ -136,14 +136,13 @@ public final class RtDockerHost implements DockerHost{
                 ContainerConfig
                     .builder()
                     .image(image)
-                    .build(),
-                name
+                    .build()
             );
             return new Docker(container.id(), this);
         } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
                 "Exception when creating the container "
-                + "with image: " + image + " & name: " + name, ex
+                + "with image: " + image, ex
             );
         }
     }

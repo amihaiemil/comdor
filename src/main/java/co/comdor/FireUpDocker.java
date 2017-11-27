@@ -34,8 +34,6 @@ import java.io.IOException;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #68:30min Command should return the name for the Docker container
- *  (e.g. repo/name#22). Right now the name is hardcoded to "test".
  */
 public final class FireUpDocker extends IntermediaryStep {
 
@@ -83,9 +81,7 @@ public final class FireUpDocker extends IntermediaryStep {
         try(
             final Container container = this.host
                 .connect()
-                .create(
-                    command.comdorYaml().docker(), "test"
-                ).start()
+                .create(command.comdorYaml().docker()).start()
         ) {
             container.execute(command.scripts(), log.logger());
         }
