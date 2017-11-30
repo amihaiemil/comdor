@@ -25,8 +25,6 @@
  */
 package co.comdor;
 
-import org.slf4j.Logger;
-
 /**
  * A container where the scripts are run.
  * @author Mihai Andronache (amihaiemil@gmail.com)

@@ -28,13 +28,10 @@ package co.comdor;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerCertificates;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.LogStream;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
-import com.spotify.docker.client.messages.ExecCreation;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -157,7 +154,7 @@ public final class RtDockerHost implements DockerHost{
                 + "instance by calling #connect()"
             );
         }
-        
+
         try {
             this.client.startContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {

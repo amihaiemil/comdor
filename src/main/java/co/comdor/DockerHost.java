@@ -25,9 +25,6 @@
  */
 package co.comdor;
 
-import com.spotify.docker.client.LogStream;
-import org.slf4j.Logger;
-
 import java.io.IOException;
 
 /**
