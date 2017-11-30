@@ -37,16 +37,8 @@ public interface Container extends AutoCloseable {
 
     /**
      * Start this container.
-     * @return Started Container.
      */
-    Container start();
-    
-    /**
-     * Execute some scripts.
-     * @param scripts To execute.
-     * @param logger Logger to write the output into.
-     */
-    void execute(final String scripts, final Logger logger);
+    void start();
     
     @Override
     void close();

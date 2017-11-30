@@ -25,6 +25,9 @@
  */
 package co.comdor;
 
+import com.spotify.docker.client.LogStream;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 
 /**
@@ -46,9 +49,10 @@ public interface DockerHost {
     /**
      * Create a container based on the given image.
      * @param image Docker image.
+     * @param scripts Scripts to run inside the craeted container.
      * @return The created Container.
      */
-    Container create(final String image);
+    Container create(final String image, final String scripts);
 
     /**
      * Start a container.
@@ -57,8 +61,15 @@ public interface DockerHost {
     void start(final String containterId);
 
     /**
+     * Kill a container.
+     * @param containerId The container's Id.
+     */
+    void kill(final String containerId);
+
+    /**
      * Remove a container.
      * @param containerId The container's Id.
      */
     void remove(final String containerId);
+
 }

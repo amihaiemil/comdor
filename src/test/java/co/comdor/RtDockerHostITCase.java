@@ -44,7 +44,7 @@ public class RtDockerHostITCase {
     @Test
     public void createsAndRemovesLocalContainer() throws Exception {
         final DockerHost host = new RtDockerHost().connect();
-        final Container created = host.create("hello-world");
+        final Container created = host.create("hello-world", "");
         MatcherAssert.assertThat(created, Matchers.notNullValue());
         MatcherAssert.assertThat(created.isStarted(), Matchers.is(false));
         host.remove(created.containerId());

@@ -53,9 +53,8 @@ public final class FireUpDockerTestCase {
     public void performsOk() throws Exception {
         final DockerHost host = Mockito.mock(DockerHost.class);
         final Container container = Mockito.mock(Container.class);
-        Mockito.when(container.start()).thenReturn(container);
         Mockito.when(host.connect()).thenReturn(host);
-        Mockito.when(host.create(Mockito.anyString()))
+        Mockito.when(host.create(Mockito.anyString(), Mockito.anyString()))
             .thenReturn(container);
 
         final Step fireup = new FireUpDocker(host, new Step.Fake(true));
@@ -72,25 +71,24 @@ public final class FireUpDockerTestCase {
         fireup.perform(command, log);
 
         Mockito.verify(container, Mockito.times(1))
-            .execute("echo 'test'", logger);
+            .start();
         Mockito.verify(container, Mockito.times(1))
                 .close();
     }
 
     /**
-     * An exception is thrown when the container executes the scripts.
+     * An exception is thrown when the container is started.
      * Even if this happens, the container should still be closed.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void executeThrowsException() throws Exception {
+    public void startThrowsException() throws Exception {
         final DockerHost host = Mockito.mock(DockerHost.class);
         final Container container = Mockito.mock(Container.class);
-        Mockito.when(container.start()).thenReturn(container);
         Mockito.doThrow(new IllegalStateException("Expected")).when(
-                container).execute(Mockito.anyString(), Mockito.any(Logger.class));
+                container).start();
         Mockito.when(host.connect()).thenReturn(host);
-        Mockito.when(host.create(Mockito.anyString()))
+        Mockito.when(host.create(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(container);
 
         final Step fireup = new FireUpDocker(host, new Step.Fake(false));
@@ -112,7 +110,7 @@ public final class FireUpDockerTestCase {
             );
         }
         Mockito.verify(container, Mockito.times(1))
-                .execute("echo 'test'", logger);
+                .start();
         Mockito.verify(container, Mockito.times(1))
                 .close();
     }

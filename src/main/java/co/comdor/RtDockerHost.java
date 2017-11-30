@@ -28,10 +28,13 @@ package co.comdor;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerCertificates;
 import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.LogStream;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
+import com.spotify.docker.client.messages.ExecCreation;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -121,11 +124,11 @@ public final class RtDockerHost implements DockerHost{
     }
     
     @Override
-    public Container create(final String image) {
+    public Container create(final String image, final String scripts) {
         if(this.client == null) {
             throw new IllegalStateException(
                 "Not connected. Don't forget to get a connected "
-                + "instnace by calling #connect()"
+                + "instance by calling #connect()"
             );
         }
         
@@ -134,13 +137,14 @@ public final class RtDockerHost implements DockerHost{
                 ContainerConfig
                     .builder()
                     .image(image)
+                    .cmd("/bin/bash", "-c", scripts)
                     .build()
             );
             return new Docker(container.id(), this);
         } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
                 "Exception when creating the container "
-                + "with image: " + image, ex
+                + "with image: " + image + " and scripts: " + scripts, ex
             );
         }
     }
@@ -150,7 +154,7 @@ public final class RtDockerHost implements DockerHost{
         if(this.client == null) {
             throw new IllegalStateException(
                 "Not connected. Don't forget to get a connected "
-                + "instnace by calling #connect()"
+                + "instance by calling #connect()"
             );
         }
         
@@ -158,7 +162,7 @@ public final class RtDockerHost implements DockerHost{
             this.client.startContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
-                "Exception when removing container with id " + containerId, ex
+                "Exception when starting container with id " + containerId, ex
             );
         }
     }
@@ -168,7 +172,7 @@ public final class RtDockerHost implements DockerHost{
         if(this.client == null) {
             throw new IllegalStateException(
                 "Not connected. Don't forget to get a connected "
-                + "instnace by calling #connect()"
+                + "instance by calling #connect()"
             );
         }
         try {
@@ -176,6 +180,23 @@ public final class RtDockerHost implements DockerHost{
         } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
                 "Exception when removing container with id " + containerId, ex
+            );
+        }
+    }
+
+    @Override
+    public void kill(final String containerId) {
+        if(this.client == null) {
+            throw new IllegalStateException(
+                "Not connected. Don't forget to get a connected "
+                + "instance by calling #connect()"
+            );
+        }
+        try {
+            this.client.killContainer(containerId);
+        } catch (final DockerException | InterruptedException ex) {
+            throw new IllegalStateException(
+                "Exception when killing container with id " + containerId, ex
             );
         }
     }

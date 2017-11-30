@@ -25,14 +25,11 @@
  */
 package co.comdor;
 
-import org.slf4j.Logger;
-
 /**
  * A Docker container where the scripts are run.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #58:30min Continue implementation of execute and close methods.
  */
 public final class Docker implements Container {
 
@@ -49,7 +46,7 @@ public final class Docker implements Container {
     /**
      * Is this container started or not?
      */
-    private final boolean started;
+    private boolean started;
 
     /**
      * Ctor.
@@ -73,22 +70,17 @@ public final class Docker implements Container {
         this.docker = docker;
         this.started = started;
     }
-    @Override
-    public Container start() {
-        this.docker.start(this.id);
-        return new Docker(this.id, this.docker, true);
-    }
 
     @Override
-    public void execute(final String scripts, final Logger logger) {
-        if(!this.started) {
-            throw new IllegalStateException("Container is not started.");
-        }
+    public void start() {
+        this.docker.start(this.id);
+        this.started = true;
     }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        this.docker.kill(this.id);
+        this.started = false;
     }
 
     @Override

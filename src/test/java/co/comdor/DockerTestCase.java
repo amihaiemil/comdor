@@ -38,38 +38,25 @@ import org.slf4j.Logger;
  * @since 0.0.3
  */
 public final class DockerTestCase {
-    
+
     /**
-     * Docker can start.
+     * Docker can be started and then closed.
      */
     @Test
-    public void containerStarts() {
+    public void containerStartsAndCloses() {
+        final DockerHost host = Mockito.mock(DockerHost.class);
         final Container created = new Docker(
-             "id", Mockito.mock(DockerHost.class)
+            "id", host
         );
+
         MatcherAssert.assertThat(created.isStarted(), Matchers.is(false));
-        final Container started = created.start();
-        MatcherAssert.assertThat(created == started, Matchers.is(false));
-        MatcherAssert.assertThat(started.isStarted(), Matchers.is(true));
-    }
-    
-    /**
-     * Docker throws ISE if we try to execute something when it's not started.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void executionFailsIfContainerIsStopped() {
-        Container container = new Docker("id", Mockito.mock(DockerHost.class));
-        container.execute("cloc .", Mockito.mock(Logger.class));
-    }
-    
-    /**
-     * Docker can be closed.
-     * TODO: edit this test when the method will be implemented.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void containerCloses() {
-        Container container = new Docker("id", Mockito.mock(DockerHost.class));
-        container.close();
+        created.start();
+        Mockito.verify(host, Mockito.times(1)).start(created.containerId());
+        MatcherAssert.assertThat(created.isStarted(), Matchers.is(true));
+
+        created.close();
+        Mockito.verify(host, Mockito.times(1)).kill(created.containerId());
+        MatcherAssert.assertThat(created.isStarted(), Matchers.is(false));
     }
     
 }

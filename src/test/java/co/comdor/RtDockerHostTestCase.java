@@ -46,7 +46,7 @@ public final class RtDockerHostTestCase {
     public void cannotCreateIfNotConnected() throws Exception {
         final DockerHost host = new RtDockerHost();
         try {
-            host.create("test/test");
+            host.create("test/test", "whoami");
         } catch (final IllegalStateException ex) {
             MatcherAssert.assertThat(
                 ex.getMessage(), Matchers.startsWith("Not connected.")
