@@ -43,7 +43,7 @@ RUN apt-get install -y wget bcrypt curl
 RUN apt-get install -y unzip zip
 RUN apt-get install -y gnupg gnupg2
 RUN apt-get install -y jq
-RUN apt-get install cloc
+RUN apt-get install -y cloc
 RUN apt-get install -y bsdmainutils
 RUN apt-get install -y libxml2-utils
 RUN apt-get install -y build-essential
