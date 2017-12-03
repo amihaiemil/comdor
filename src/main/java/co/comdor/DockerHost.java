@@ -26,6 +26,7 @@
 package co.comdor;
 
 import java.io.IOException;
+import org.slf4j.Logger;
 
 /**
  * The Docker host where comdor runs the containers.
@@ -56,6 +57,13 @@ public interface DockerHost {
      * @param containterId The container's id.
      */
     void start(final String containterId);
+
+    /**
+     * Follow a container's logs.
+     * @param containerId The container's id.
+     * @param logger Logger to record the output into.
+     */
+    void followLogs(final String containerId, final Logger logger);
 
     /**
      * Kill a container.

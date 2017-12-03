@@ -25,6 +25,8 @@
  */
 package co.comdor;
 
+import org.slf4j.Logger;
+
 /**
  * A Docker container where the scripts are run.
  * @author Mihai Andronache (amihaiemil@gmail.com)
@@ -75,6 +77,11 @@ public final class Docker implements Container {
     public void start() {
         this.docker.start(this.id);
         this.started = true;
+    }
+
+    @Override
+    public void fetchLogs(final Logger logger) {
+        this.docker.followLogs(this.id, logger);
     }
 
     @Override

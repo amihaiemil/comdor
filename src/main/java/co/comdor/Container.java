@@ -25,6 +25,8 @@
  */
 package co.comdor;
 
+import org.slf4j.Logger;
+
 /**
  * A container where the scripts are run.
  * @author Mihai Andronache (amihaiemil@gmail.com)
@@ -37,7 +39,13 @@ public interface Container extends AutoCloseable {
      * Start this container.
      */
     void start();
-    
+
+    /**
+     * Fetch the logs of this container.
+     * @param logger Logger used to register the container's logs.
+     */
+    void fetchLogs(final Logger logger);
+
     @Override
     void close();
     

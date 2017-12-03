@@ -86,6 +86,7 @@ public final class FireUpDocker extends IntermediaryStep {
                 );
         ) {
             container.start();
+            container.fetchLogs(log.logger());
         }
         this.next().perform(command, log);
     }

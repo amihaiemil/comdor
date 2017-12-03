@@ -28,10 +28,13 @@ package co.comdor;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerCertificates;
 import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.LogStream;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -154,7 +157,6 @@ public final class RtDockerHost implements DockerHost{
                 + "instance by calling #connect()"
             );
         }
-
         try {
             this.client.startContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {
@@ -162,6 +164,31 @@ public final class RtDockerHost implements DockerHost{
                 "Exception when starting container with id " + containerId, ex
             );
         }
+    }
+
+    @Override
+    public void followLogs(final String containerId, final Logger logger) {
+        if(this.client == null) {
+            throw new IllegalStateException(
+                "Not connected. Don't forget to get a connected "
+                + "instance by calling #connect()"
+            );
+        }
+        logger.info("********** Container logs **********");
+        try {
+            final LogStream logs = this.client.logs(
+                containerId,
+                DockerClient.LogsParam.stdout(),
+                DockerClient.LogsParam.stderr(),
+                DockerClient.LogsParam.follow()
+            );
+            logger.info(logs.readFully());
+        } catch (final DockerException | InterruptedException ex) {
+            throw new IllegalStateException(
+                "Exception when starting container with id " + containerId, ex
+            );
+        }
+        logger.info("************************************");
     }
 
     @Override
