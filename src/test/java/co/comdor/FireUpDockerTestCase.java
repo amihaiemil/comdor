@@ -63,7 +63,7 @@ public final class FireUpDockerTestCase {
         Mockito.when(command.comdorYaml()).thenReturn(
             new ComdorYaml.Missing()
         );
-        Mockito.when(command.scripts()).thenReturn("echo 'test'");
+        Mockito.when(command.scripts()).thenReturn(()->{return "echo 'test'";});
         final Log log = Mockito.mock(Log.class);
         final Logger logger = Mockito.mock(Logger.class);
         Mockito.when(log.logger()).thenReturn(logger);
@@ -97,7 +97,7 @@ public final class FireUpDockerTestCase {
         Mockito.when(command.comdorYaml()).thenReturn(
                 new ComdorYaml.Missing()
         );
-        Mockito.when(command.scripts()).thenReturn("echo 'test'");
+        Mockito.when(command.scripts()).thenReturn(()->{return "echo 'test'";});
         final Log log = Mockito.mock(Log.class);
         final Logger logger = Mockito.mock(Logger.class);
         Mockito.when(log.logger()).thenReturn(logger);
@@ -131,7 +131,7 @@ public final class FireUpDockerTestCase {
         Mockito.when(command.comdorYaml()).thenReturn(
                 new ComdorYaml.Missing()
         );
-        Mockito.when(command.scripts()).thenReturn("echo 'test'");
+        Mockito.when(command.scripts()).thenReturn(()->{return "echo 'test'";});
         final Log log = Mockito.mock(Log.class);
         final Logger logger = Mockito.mock(Logger.class);
         Mockito.when(log.logger()).thenReturn(logger);

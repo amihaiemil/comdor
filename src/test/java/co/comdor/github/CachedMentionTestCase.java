@@ -41,24 +41,21 @@ import org.mockito.Mockito;
 public final class CachedMentionTestCase {
     
     /**
-     * CachedMention can cache the scripts from the original Mention.
+     * CachedMention doesn't cache the Scripts.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void cachesScripts() throws Exception {
+    public void doesntCacheScripts() throws Exception {
         final Command original = Mockito.mock(Command.class);
-        Mockito.when(original.scripts()).thenReturn("echo 'hello'");
+        Mockito.when(original.scripts()).thenReturn(()-> {return "echo 'hello'";});
         final Command cached = new CachedMention(original);
         MatcherAssert.assertThat(
-            cached.scripts(), Matchers.equalTo("echo 'hello'")
+            cached.scripts().asText(), Matchers.equalTo("echo 'hello'")
         );
         MatcherAssert.assertThat(
-            cached.scripts(), Matchers.equalTo("echo 'hello'")
+            cached.scripts().asText(), Matchers.equalTo("echo 'hello'")
         );
-        MatcherAssert.assertThat(
-            cached.scripts(), Matchers.equalTo("echo 'hello'")
-        );
-        Mockito.verify(original, Mockito.times(1)).scripts();
+        Mockito.verify(original, Mockito.times(2)).scripts();
     }
     
     /**

@@ -25,6 +25,8 @@
  */
 package co.comdor.github;
 
+import co.comdor.MetaScripts;
+import co.comdor.Scripts;
 import com.jcabi.github.Content;
 import com.jcabi.github.Issue;
 import java.io.ByteArrayInputStream;
@@ -40,6 +42,7 @@ import java.io.IOException;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle ClassDataAbstractionCoupling (200 lines)
  */
 public abstract class JsonMention implements Command {
 
@@ -101,11 +104,13 @@ public abstract class JsonMention implements Command {
 
 
     @Override
-    public final String scripts() {
-        final String body = this.json.getString("body");
-        final int start = body.indexOf("```") + 3;
-        final int end = body.lastIndexOf("```");
-        return body.substring(start, end);
+    public final Scripts scripts() {
+        return new MetaScripts(
+            new CloneRepo(
+                this.issue.repo(),
+                new CommandScripts(this)
+            )
+        );
     }
 
     @Override

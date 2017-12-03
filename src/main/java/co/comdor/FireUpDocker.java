@@ -82,7 +82,7 @@ public final class FireUpDocker extends IntermediaryStep {
             final Container container = this.host
                 .connect()
                 .create(
-                    command.comdorYaml().docker(), command.scripts()
+                    command.comdorYaml().docker(), command.scripts().asText()
                 );
         ) {
             container.start();

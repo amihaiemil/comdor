@@ -25,6 +25,7 @@
  */
 package co.comdor.github;
 
+import co.comdor.Scripts;
 import com.jcabi.github.Issue;
 
 import javax.json.JsonObject;
@@ -59,9 +60,9 @@ public interface Command {
 
     /**
      * What scripts to run does it contain?
-     * @return String.
+     * @return Scripts.
      */
-    String scripts();
+    Scripts scripts();
 
     /**
      * Issue where the mention is found.

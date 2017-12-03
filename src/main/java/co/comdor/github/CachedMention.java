@@ -25,6 +25,7 @@
  */
 package co.comdor.github;
 
+import co.comdor.Scripts;
 import com.jcabi.github.Issue;
 import java.io.IOException;
 import javax.json.JsonObject;
@@ -42,11 +43,6 @@ public final class CachedMention implements Command {
      * Cached .comdor.yml.
      */
     private ComdorYaml comdorYaml;
-    
-    /**
-     * Cached scripts.
-     */
-    private String scripts;
     
     /**
      * Decorated mention.
@@ -77,11 +73,8 @@ public final class CachedMention implements Command {
     }
 
     @Override
-    public String scripts() {
-        if(this.scripts == null) {
-            this.scripts = this.original.scripts();
-        }
-        return this.scripts;
+    public Scripts scripts() {
+        return this.original.scripts();
     }
 
     @Override

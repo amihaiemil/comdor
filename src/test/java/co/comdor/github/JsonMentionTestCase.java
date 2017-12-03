@@ -100,7 +100,7 @@ public final class JsonMentionTestCase {
     }
 
     /**
-     * JsonMention finds and returns the scripts from the comment's body.* TODO: Adapt this unit test once JsonMention.scripts() is properly
+     * JsonMention finds and returns the scripts.
      * @throws Exception If something goes wrong.
      */
     @Test
@@ -111,7 +111,7 @@ public final class JsonMentionTestCase {
             comment, Mockito.mock(Issue.class)
         );
         MatcherAssert.assertThat(
-            mention.scripts(), Matchers.equalTo("cd src \ncloc .")
+            mention.scripts(), Matchers.notNullValue()
         );
     }
 
