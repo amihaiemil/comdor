@@ -56,6 +56,12 @@ public interface Container extends AutoCloseable {
     boolean isStarted();
 
     /**
+     * The code with which this container exited.
+     * @return Integer exit code.
+     */
+    int exitCode();
+
+    /**
      * This container's id.
      * @return String.
      */

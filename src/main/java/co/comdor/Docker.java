@@ -96,6 +96,16 @@ public final class Docker implements Container {
     }
 
     @Override
+    public int exitCode() {
+        if(this.started) {
+            throw new IllegalStateException(
+                "Container " + this.id + " is still running."
+            );
+        }
+        return this.docker.inspect(this.id).state().exitCode();
+    }
+
+    @Override
     public String containerId() {
         return this.id;
     }

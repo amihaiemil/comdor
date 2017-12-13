@@ -234,7 +234,7 @@ public final class RtDockerHost implements DockerHost{
                 + "instance by calling #connect()"
             );
         }
-        try {//.state().exitCode();
+        try {
             return this.client.inspectContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
