@@ -25,6 +25,7 @@
  */
 package co.comdor;
 
+import com.spotify.docker.client.messages.ContainerInfo;
 import java.io.IOException;
 import org.slf4j.Logger;
 
@@ -77,4 +78,10 @@ public interface DockerHost {
      */
     void remove(final String containerId);
 
+    /**
+     * Inspect a container, get the info about it.
+     * @param containerId The container's ID.
+     * @return ContainerInfo.
+     */
+    ContainerInfo inspect(final String containerId);
 }

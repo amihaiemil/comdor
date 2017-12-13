@@ -33,6 +33,7 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
+import com.spotify.docker.client.messages.ContainerInfo;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -221,6 +222,23 @@ public final class RtDockerHost implements DockerHost{
         } catch (final DockerException | InterruptedException ex) {
             throw new IllegalStateException(
                 "Exception when killing container with id " + containerId, ex
+            );
+        }
+    }
+    
+    @Override
+    public ContainerInfo inspect(final String containerId) {
+        if(this.client == null) {
+            throw new IllegalStateException(
+                "Not connected. Don't forget to get a connected "
+                + "instance by calling #connect()"
+            );
+        }
+        try {//.state().exitCode();
+            return this.client.inspectContainer(containerId);
+        } catch (final DockerException | InterruptedException ex) {
+            throw new IllegalStateException(
+                "Exception when inspecting container with id " + containerId, ex
             );
         }
     }
