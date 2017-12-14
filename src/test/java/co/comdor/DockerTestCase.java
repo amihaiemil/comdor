@@ -27,13 +27,11 @@ package co.comdor;
 
 import com.spotify.docker.client.messages.ContainerInfo;
 import com.spotify.docker.client.messages.ContainerState;
-import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 /**
  * Unit tests for {@link Docker}.

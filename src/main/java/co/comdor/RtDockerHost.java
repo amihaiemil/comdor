@@ -67,7 +67,7 @@ public final class RtDockerHost implements DockerHost{
      * If these are not set, then it will connect to the local dockerd.
      */
     public RtDockerHost() {
-        this(null, "", "");
+        this(new Disconnected(), "", "");
     }
 
     /**
@@ -78,7 +78,7 @@ public final class RtDockerHost implements DockerHost{
     public RtDockerHost(
         final String dockerHost, final String dockerCertPath
     ) {
-        this(null, dockerHost, dockerCertPath);
+        this(new Disconnected(), dockerHost, dockerCertPath);
     }
 
     /**
@@ -126,13 +126,6 @@ public final class RtDockerHost implements DockerHost{
     
     @Override
     public Container create(final String image, final String scripts) {
-        if(this.client == null) {
-            throw new IllegalStateException(
-                "Not connected. Don't forget to get a connected "
-                + "instance by calling #connect()"
-            );
-        }
-        
         try {
             final ContainerCreation container = this.client.createContainer(
                 ContainerConfig
@@ -152,12 +145,6 @@ public final class RtDockerHost implements DockerHost{
 
     @Override
     public void start(final String containerId) {
-        if(this.client == null) {
-            throw new IllegalStateException(
-                "Not connected. Don't forget to get a connected "
-                + "instance by calling #connect()"
-            );
-        }
         try {
             this.client.startContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {
@@ -169,12 +156,6 @@ public final class RtDockerHost implements DockerHost{
 
     @Override
     public void followLogs(final String containerId, final Logger logger) {
-        if(this.client == null) {
-            throw new IllegalStateException(
-                "Not connected. Don't forget to get a connected "
-                + "instance by calling #connect()"
-            );
-        }
         logger.info("********** Container logs **********");
         try {
             final LogStream logs = this.client.logs(
@@ -194,12 +175,6 @@ public final class RtDockerHost implements DockerHost{
 
     @Override
     public void remove(final String containerId) {
-        if(this.client == null) {
-            throw new IllegalStateException(
-                "Not connected. Don't forget to get a connected "
-                + "instance by calling #connect()"
-            );
-        }
         try {
             this.client.removeContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {
@@ -211,12 +186,6 @@ public final class RtDockerHost implements DockerHost{
 
     @Override
     public void kill(final String containerId) {
-        if(this.client == null) {
-            throw new IllegalStateException(
-                "Not connected. Don't forget to get a connected "
-                + "instance by calling #connect()"
-            );
-        }
         try {
             this.client.killContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {
@@ -228,12 +197,6 @@ public final class RtDockerHost implements DockerHost{
     
     @Override
     public ContainerInfo inspect(final String containerId) {
-        if(this.client == null) {
-            throw new IllegalStateException(
-                "Not connected. Don't forget to get a connected "
-                + "instance by calling #connect()"
-            );
-        }
         try {
             return this.client.inspectContainer(containerId);
         } catch (final DockerException | InterruptedException ex) {
