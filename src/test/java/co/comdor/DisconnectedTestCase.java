@@ -30,10 +30,7 @@ import java.lang.reflect.Method;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
-
 
 /**
  * Unit tests for {@link Disconnected}.
@@ -55,20 +52,28 @@ public final class DisconnectedTestCase {
      */
     @Test
     public void allMethodsThrowISE() throws Exception {
-        for(final Method method : Disconnected.class.getMethods()) {
+        for(final Method method : Disconnected.class.getDeclaredMethods()) {
             try {
                 Object[] params = new Object[method.getParameterCount()];
                 for(int i=0; i < method.getParameters().length; i++) {
-                    if(method.getParameters()[i].getClass().isPrimitive()) {
-                        params[i] = Mockito.mock(method.getParameters()[i].getClass());
+                    if(method.getParameters()[i].getType().equals(int.class)) {
+                        params[i] = 0;
+                    } else if(method.getParameters()[i].getType().equals(boolean.class)) {
+                        params[i] = false;
+                    } else {
+                        params[i] = null;   
                     }
-                }                
-                System.out.println(method.getName());
+                }
                 method.invoke(new Disconnected(), params);
+                Assert.fail("ISE should have been thrown by now!");
             } catch (final InvocationTargetException ex) {
-                
-            } catch (final IllegalArgumentException ex) {
-                //...
+                MatcherAssert.assertThat(
+                    ex.getCause().getMessage(),
+                    Matchers.equalTo(
+                        "Not connected. Don't forget to "
+                        + "get a connected instance by calling #connect()"
+                    )
+                );
             }
         }
     }
