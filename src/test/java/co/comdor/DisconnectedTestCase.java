@@ -54,6 +54,9 @@ public final class DisconnectedTestCase {
     public void allMethodsThrowISE() throws Exception {
         for(final Method method : Disconnected.class.getDeclaredMethods()) {
             try {
+                if(!method.isAccessible()) {
+                    continue;
+                }
                 Object[] params = new Object[method.getParameterCount()];
                 for(int i=0; i < method.getParameters().length; i++) {
                     if(method.getParameters()[i].getType().equals(int.class)) {
