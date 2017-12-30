@@ -72,7 +72,7 @@
 				</executions>
                                 <configuration>
                                     <excludes>
-                                        <exclude>**/co/comdor/Disconnected</exclude>
+                                        <exclude>**/co/comdor/Disconnected.*</exclude>
                                     </excludes>
 				</configuration>
 			</plugin>
