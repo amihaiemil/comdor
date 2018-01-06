@@ -35,7 +35,7 @@ import java.io.IOException;
  * @version $Id$
  * @since 0.0.3
  */
-public final class FireUpDocker extends IntermediaryStep {
+public final class FireUpDocker extends PreconditionCheckStep {
 
     /**
      * Docker host where containers will run.
@@ -44,33 +44,40 @@ public final class FireUpDocker extends IntermediaryStep {
     
     /**
      * Ctor. Docker host will run based on the environment variables.
-     * @param next The next step to perform.
+     * @param onTrue Step to perform if Docker's exit code is 0.
+     * @param onFalse Step to perform if Docker's exit code is not 0.
      */
-    public FireUpDocker(final Step next) {
+    public FireUpDocker(final Step onTrue, final Step onFalse) {
         this(
-            "", "", next
+            "", "", onTrue, onFalse
         );
     }
     
     /**
      * Ctor. Docker host will run remotely at the specified coordinates.
-     * @param next The next step to perform.
+     * @param onTrue Step to perform if Docker's exit code is 0.
+     * @param onFalse Step to perform if Docker's exit code is not 0.
      * @param dockerHost Https-scheme ip + port of the remote docker host.
      * @param dockerCertPath Path, on disk, to the certificates.
+     * @checkstyle ParameterNumber (5 lines)
      */
     public FireUpDocker(
-        final String dockerHost, final String dockerCertPath, final Step next
+        final String dockerHost, final String dockerCertPath,
+        final Step onTrue, final Step onFalse
     ) {
-        this(new RtDockerHost(dockerHost, dockerCertPath), next);
+        this(new RtDockerHost(dockerHost, dockerCertPath), onTrue, onFalse);
     }
 
     /**
      * Ctor. Docker host will run remotely at the specified coordinates.
-     * @param next The next step to perform.
+     * @param onTrue Step to perform if Docker's exit code is 0.
+     * @param onFalse Step to perform if Docker's exit code is not 0.
      * @param host Docker host where the containers will run.
      */
-    public FireUpDocker(final DockerHost host, final Step next) {
-        super(next);
+    public FireUpDocker(
+        final DockerHost host, final Step onTrue, final Step onFalse
+    ) {
+        super(onTrue, onFalse);
         this.host = host;
     }
     
@@ -78,16 +85,34 @@ public final class FireUpDocker extends IntermediaryStep {
     public void perform(
         final Command command, final Log log
     ) throws IOException {
-        try(
-            final Container container = this.host
-                .connect()
-                .create(
-                    command.comdorYaml().docker(), command.scripts().asText()
-                );
-        ) {
+        final String scripts = command.scripts().asText();
+        log.logger().info("Connecting to the Docker host...");
+        final Container container = this.host
+            .connect()
+            .create(command.comdorYaml().docker(), scripts);
+        final String id = container.containerId();
+        try {
+            log.logger().info(
+                "Connected; starting container with id " + id
+            );
+            log.logger().info("Executing scripts: " + scripts);
             container.start();
             container.fetchLogs(log.logger());
+        } finally {
+            log.logger().info("Killing container " + id);
+            container.close();
         }
-        this.next().perform(command, log);
+        final int exitCode = container.exitCode();
+        if(exitCode != 0) {
+            log.logger().error(
+                    "Container " + id + " exited with code: " + exitCode
+            );
+            this.onFalse().perform(command, log);
+        } else {
+            log.logger().info(
+                    "Container " + id + " exited with code 0 - OK"
+            );
+            this.onTrue().perform(command, log);
+        }
     }
 }

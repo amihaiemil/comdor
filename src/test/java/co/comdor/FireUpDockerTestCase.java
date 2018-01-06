@@ -57,7 +57,9 @@ public final class FireUpDockerTestCase {
         Mockito.when(host.create(Mockito.anyString(), Mockito.anyString()))
             .thenReturn(container);
 
-        final Step fireup = new FireUpDocker(host, new Step.Fake(true));
+        final Step fireup = new FireUpDocker(
+            host, new Step.Fake(true), new Step.Fake(false)
+        );
 
         final Command command = Mockito.mock(Command.class);
         Mockito.when(command.comdorYaml()).thenReturn(
@@ -91,11 +93,13 @@ public final class FireUpDockerTestCase {
         Mockito.when(host.create(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(container);
 
-        final Step fireup = new FireUpDocker(host, new Step.Fake(false));
+        final Step fireup = new FireUpDocker(
+            host, new Step.Fake(false), new Step.Fake(false)
+        );
 
         final Command command = Mockito.mock(Command.class);
         Mockito.when(command.comdorYaml()).thenReturn(
-                new ComdorYaml.Missing()
+            new ComdorYaml.Missing()
         );
         Mockito.when(command.scripts()).thenReturn(()->{return "echo 'test'";});
         final Log log = Mockito.mock(Log.class);
@@ -125,7 +129,9 @@ public final class FireUpDockerTestCase {
         final DockerHost host = Mockito.mock(DockerHost.class);
         Mockito.when(host.connect()).thenThrow(new IOException("Cannot connect"));
 
-        final Step fireup = new FireUpDocker(host, new Step.Fake(false));
+        final Step fireup = new FireUpDocker(
+            host, new Step.Fake(false), new Step.Fake(false)
+        );
 
         final Command command = Mockito.mock(Command.class);
         Mockito.when(command.comdorYaml()).thenReturn(

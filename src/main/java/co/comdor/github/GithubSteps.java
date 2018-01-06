@@ -89,7 +89,7 @@ public final class GithubSteps implements Steps {
                     log.location()
                 )
             );
-            throw new IllegalStateException("An exception occured", ex);
+            throw new IllegalStateException("An exception occured ", ex);
         }
 
     }
