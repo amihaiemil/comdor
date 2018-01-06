@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Step;
 import co.comdor.Steps;
 import java.io.IOException;
@@ -39,7 +40,9 @@ import java.io.IOException;
 public final class Confused implements Knowledge {
 
     @Override
-    public Steps start(final Command mention) throws IOException {
+    public Steps start(
+        final Command mention, final Log log
+    ) throws IOException {
         final Step reply = new SendReply(
             String.format(
                 mention.language().response("unknown.comment"),

@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Steps;
 
 import java.io.IOException;
@@ -67,8 +68,10 @@ public final class Conversation implements Knowledge {
     }
 
     @Override
-    public Steps start(final Command mention) throws IOException {
+    public Steps start(
+        final Command mention, final Log log
+    ) throws IOException {
         mention.understand(this.languages);
-        return this.followup.start(mention);
+        return this.followup.start(mention, log);
     }
 }

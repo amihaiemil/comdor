@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Steps;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -52,7 +53,7 @@ public final class ConfusedTestCase {
 
         final Knowledge confused = new Confused();
 
-        Steps steps = confused.start(com);
+        Steps steps = confused.start(com, Mockito.mock(Log.class));
         MatcherAssert.assertThat(steps, Matchers.notNullValue());
         MatcherAssert.assertThat(
             steps instanceof GithubSteps, Matchers.is(true)

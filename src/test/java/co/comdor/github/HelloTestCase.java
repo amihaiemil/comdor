@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Steps;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -53,14 +54,16 @@ public final class HelloTestCase {
         final Knowledge hello = new Hello(
             new Knowledge() {
                 @Override
-                public Steps start(final Command com) throws IOException {
+                public Steps start(
+                    final Command com, final Log log
+                ) throws IOException {
                     throw new IllegalStateException(
                         "'hello' command was misunderstood!"
                     );
                 }
             }
         );
-        final Steps steps = hello.start(com);
+        final Steps steps = hello.start(com, Mockito.mock(Log.class));
         MatcherAssert.assertThat(steps, Matchers.notNullValue());
         MatcherAssert.assertThat(
             steps instanceof GithubSteps, Matchers.is(true)
@@ -80,7 +83,9 @@ public final class HelloTestCase {
         final Knowledge hello = new Hello(
             new Knowledge() {
                 @Override
-                public Steps start(final Command com) throws IOException {
+                public Steps start(
+                    final Command com, final Log log
+                ) throws IOException {
                     MatcherAssert.assertThat(
                         com.type(),
                         Matchers.equalTo("runcommand")
@@ -89,7 +94,7 @@ public final class HelloTestCase {
                 }
             }
         );
-        hello.start(com);
+        hello.start(com, Mockito.mock(Log.class));
     }
 
 }

@@ -41,8 +41,9 @@ public interface Knowledge {
      * Start handling the command, create the Steps to be executed in
      * order to fulfill it.
      * @param mention Github mentioning comment.
+     * @param log the Action's log.
      * @return Steps to execute.
      * @throws IOException If something goes wrong when calling Github.
      */
-    Steps start(final Command mention) throws IOException;
+    Steps start(final Command mention, final Log log) throws IOException;
 }

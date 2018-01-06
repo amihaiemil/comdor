@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Steps;
 
 import java.io.IOException;
@@ -52,7 +53,9 @@ public final class RunScript implements Knowledge {
     }
 
     @Override
-    public Steps start(final Command mention) throws IOException {
+    public Steps start(
+        final Command mention, final Log log
+    ) throws IOException {
         final Steps resolved;
         if("run".equalsIgnoreCase(mention.type())) {
             resolved =  new GithubSteps(
@@ -96,7 +99,7 @@ public final class RunScript implements Knowledge {
                 mention
             );
         } else {
-            resolved = this.notRun.start(mention);
+            resolved = this.notRun.start(mention, log);
         }
         return resolved;
     }

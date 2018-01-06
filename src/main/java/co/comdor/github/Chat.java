@@ -108,7 +108,7 @@ public final class Chat implements Action {
             final Command mention = new CachedMention(
                 new LastMention(this.issue)
             );
-            final Steps steps = talk.start(mention);
+            final Steps steps = talk.start(mention, this.log);
             steps.perform(this.log);
             this.social.perform(mention, this.log);
         } catch (final MentionLookupException mle) {
