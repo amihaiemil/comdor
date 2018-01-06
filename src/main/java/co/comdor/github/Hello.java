@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Steps;
 
 import java.io.IOException;
@@ -52,7 +53,9 @@ public final class Hello implements Knowledge {
     }
 
     @Override
-    public Steps start(final Command com) throws IOException {
+    public Steps start(
+        final Command com, final Log log
+    ) throws IOException {
         final Steps resolved;
         if("hello".equalsIgnoreCase(com.type())) {
             resolved =  new GithubSteps(
@@ -65,7 +68,7 @@ public final class Hello implements Knowledge {
                 com
             );
         } else {
-            resolved = this.notHello.start(com);
+            resolved = this.notHello.start(com, log);
         }
         return resolved;
     }

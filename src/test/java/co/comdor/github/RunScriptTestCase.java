@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Steps;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -51,13 +52,13 @@ public final class RunScriptTestCase {
         Mockito.when(com.comdorYaml()).thenReturn(new ComdorYaml.Missing());
         Mockito.when(com.language()).thenReturn(new English());
         final Knowledge run = new RunScript(
-            (Command mention) -> {
+            (Command mention, Log log) -> {
                 throw new IllegalStateException(
                     "'run' command misunderstood!"
                 );
             }
         );
-        final Steps steps = run.start(com);
+        final Steps steps = run.start(com, Mockito.mock(Log.class));
         MatcherAssert.assertThat(steps, Matchers.notNullValue());
         MatcherAssert.assertThat(
             steps instanceof GithubSteps, Matchers.is(true)
@@ -75,15 +76,15 @@ public final class RunScriptTestCase {
         final Command com = Mockito.mock(Command.class);
         Mockito.when(com.type()).thenReturn("notrun");
         final Knowledge hello = new RunScript(
-                (Command mention) -> {
-                     MatcherAssert.assertThat(
-                         mention.type(),
-                         Matchers.equalTo("notrun")
-                     );
-                     return null;
-                }
+            (Command mention, Log log) -> {
+                 MatcherAssert.assertThat(
+                     mention.type(),
+                     Matchers.equalTo("notrun")
+                 );
+                 return null;
+            }
         );
-        hello.start(com);
+        hello.start(com, Mockito.mock(Log.class));
     }
 
 }

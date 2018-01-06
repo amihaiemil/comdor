@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Knowledge;
+import co.comdor.Log;
 import co.comdor.Steps;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -51,14 +52,16 @@ public final class ConversationTestCase {
         final Conversation conv = new Conversation(
             new Knowledge() {
                 @Override
-                public Steps start(final Command mention) throws IOException {
+                public Steps start(
+                    final Command mention, final Log log
+                ) throws IOException {
                     Mockito.verify(mention).understand(langs);
                     return null;
                 }
             },
             langs
         );
-        conv.start(Mockito.mock(Command.class));
+        conv.start(Mockito.mock(Command.class), Mockito.mock(Log.class));
     }
     
     /**
@@ -70,7 +73,8 @@ public final class ConversationTestCase {
         final Knowledge followup = Mockito.mock(Knowledge.class);
         final Conversation conv = new Conversation(followup);
         final Command mention = Mockito.mock(Command.class);
-        conv.start(mention);
-        Mockito.verify(followup).start(mention);
+        final Log log = Mockito.mock(Log.class);
+        conv.start(mention, log);
+        Mockito.verify(followup).start(mention, log);
     }
 }
