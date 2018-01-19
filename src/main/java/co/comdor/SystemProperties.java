@@ -23,45 +23,68 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor.rest;
-
-import co.comdor.SystemProperties;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-import java.io.File;
+package co.comdor;
 
 /**
- * REST resource for log files.
+ * System properties that comdor reads.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.0.3
  */
-@Path("/logs/")
-public final class LogsResource {
+public interface SystemProperties {
 
     /**
-     * Fetch the log file of an Action by name.
-     * @param name The log file's name.
-     * @return HTTP Response.
+     * Root of the logs for comdor.
      */
-    @Path("/{name}")
-    @GET
-    public Response getActionLogs(@PathParam("name") final String name) {
-        Response response = Response.noContent().build();
-        final File log = new File(
-            new SystemProperties.LogRoot() + "/comdor/ActionLogs" + name
-        );
-        if(log.exists()) {
-            response =  Response.ok()
-                    .entity(log)
-                    .header(
-                        "Content-Type",
-                        "text/plain; charset=UTF-8"
-                    ).build();
+    final class LogRoot implements SystemProperties {
+
+        @Override
+        public String toString() {
+            return System.getProperty("LOG_ROOT", ".");
         }
-        return response;
+    }
+
+    /**
+     * HTTP endpoint which returns a log file to the user.
+     */
+    final class LogsEndpoint implements SystemProperties {
+
+        @Override
+        public String toString() {
+            return System.getProperty("comdor.logs.endpoint", ".");
+        }
+    }
+
+    /**
+     * Github API token.
+     */
+    final class GithubApiToken implements SystemProperties {
+
+        @Override
+        public String toString() {
+            return System.getProperty("comdor.api.token", "");
+        }
+    }
+
+    /**
+     * The Docker host to which comdor connects to run containers.
+     */
+    final class DockerHost implements SystemProperties {
+
+        @Override
+        public String toString() {
+            return System.getProperty("comdor.docker.host", "");
+        }
+    }
+
+    /**
+     * The Docker certificates used to secure the connection to the host.
+     */
+    final class DockerCertificates implements SystemProperties {
+
+        @Override
+        public String toString() {
+            return System.getProperty("comdor.docker.certs", "");
+        }
     }
 }

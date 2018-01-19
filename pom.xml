@@ -73,7 +73,8 @@
                                 <configuration>
                                     <excludes>
                                         <exclude>**/co/comdor/Disconnected.*</exclude>
-                                    </excludes>
+										<exclude>**/co/comdor/SystemProperties.*</exclude>
+									</excludes>
 				</configuration>
 			</plugin>
 			<plugin>

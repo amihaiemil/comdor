@@ -26,6 +26,7 @@
 package co.comdor.rest;
 
 import co.comdor.Action;
+import co.comdor.SystemProperties;
 import co.comdor.VigilantAction;
 import co.comdor.github.Chat;
 import co.comdor.github.GithubSocialSteps;
@@ -60,15 +61,11 @@ import java.net.HttpURLConnection;
  * @version $Id$
  * @since 0.0.1
  * @checkstyle DesignForExtension (300 lines)
+ * @checkstyle ClassDataAbstractionCoupling (300 lines)
  */
 @Path("/")
 @Stateless
 public class ChatResource {
-
-    /**
-     * The name of the System property holding theGithub API token.
-     */
-    private static final String GITHUB_API_TOKEN = "comdor.api.token";
 
     /**
      * Logger.
@@ -116,7 +113,8 @@ public class ChatResource {
         if(token == null || token.isEmpty()) {
             status = HttpURLConnection.HTTP_FORBIDDEN;
         } else {
-            final String key = System.getProperty(GITHUB_API_TOKEN);
+            final String key = new SystemProperties.GithubApiToken()
+                .toString();
             if(token.equals(key)) {
                 final boolean startedHandling = this.handleNotifications(
                     new SimplifiedNotifications(notifications)
@@ -185,9 +183,9 @@ public class ChatResource {
      * @return true if actions were started successfully; false otherwise.
      */
     private boolean handleNotifications(final Notifications notifications) {
-        final String authToken = System.getProperty(GITHUB_API_TOKEN);
+        final String auth = new SystemProperties.GithubApiToken().toString();
         boolean handled;
-        if(authToken == null || authToken.isEmpty()) {
+        if(auth == null || auth.isEmpty()) {
             LOG.error(
                 "Missing comdor.auth.token; "
                 + "Please specify the Github api access token!"
@@ -195,7 +193,7 @@ public class ChatResource {
             handled = false;
         } else {
             final Github github = new RtGithub(
-                new RtGithub(authToken).entry().through(RetryWire.class)
+                new RtGithub(auth).entry().through(RetryWire.class)
             );
             try {
                 for(final Notification notification : notifications) {

@@ -25,12 +25,7 @@
  */
 package co.comdor.github;
 
-import co.comdor.Action;
-import co.comdor.Log;
-import co.comdor.LogFile;
-import co.comdor.SocialSteps;
-import co.comdor.Steps;
-import co.comdor.WebLog;
+import co.comdor.*;
 import com.jcabi.github.Issue;
 import java.io.IOException;
 import java.util.UUID;
@@ -82,9 +77,9 @@ public final class Chat implements Action {
         this.id = UUID.randomUUID().toString();
         this.log = new WebLog(
             new LogFile(
-                System.getProperty("LOG_ROOT") + "/comdor/ActionLogs", this.id
+                new SystemProperties.LogRoot() + "/comdor/ActionLogs", this.id
             ),
-            System.getProperty("comdor.logs.endpoint")
+            new SystemProperties.LogsEndpoint().toString()
         );
     }
     

@@ -49,7 +49,10 @@ public final class FireUpDocker extends PreconditionCheckStep {
      */
     public FireUpDocker(final Step onTrue, final Step onFalse) {
         this(
-            "", "", onTrue, onFalse
+            new SystemProperties.DockerHost().toString(),
+            new SystemProperties.DockerCertificates().toString(),
+            onTrue,
+            onFalse
         );
     }
     
