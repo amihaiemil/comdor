@@ -25,6 +25,7 @@
  */
 package co.comdor.github;
 
+import co.comdor.FireUpDocker;
 import co.comdor.Knowledge;
 import co.comdor.Log;
 import co.comdor.Steps;
@@ -66,7 +67,28 @@ public final class RunScript implements Knowledge {
                                 mention.language().response(
                                     "run.comment.started"
                                 ),
-                                mention.author()
+                                mention.author(),
+                                log.location()
+                            ),
+                            new FireUpDocker(
+                                new SendReply(
+                                    String.format(
+                                        mention.language().response(
+                                            "run.comment.successful"
+                                        ),
+                                        mention.author(),
+                                        log.location()
+                                    )
+                                ),
+                                new SendReply(
+                                    String.format(
+                                        mention.language().response(
+                                            "run.comment.failed"
+                                        ),
+                                        mention.author(),
+                                        log.location()
+                                    )
+                                )
                             )
                         ),
                         new CommanderCheck(
