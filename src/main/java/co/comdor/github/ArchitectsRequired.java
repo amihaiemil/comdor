@@ -52,7 +52,6 @@ public final  class ArchitectsRequired extends PreconditionCheckStep{
     @Override
     public void perform(
         final Command command, final Log log) throws IOException {
-        final String author = command.author();
         log.logger().info(
             "At least an architect is needed for this..."
         );

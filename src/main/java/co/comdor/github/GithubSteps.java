@@ -80,7 +80,8 @@ public final class GithubSteps implements Steps {
             this.steps.perform(this.mention, log);
         } catch (final IOException | RuntimeException ex) {
             log.logger().error(
-                "Some step did not execute properly, sending failure reply.", ex
+                "Some step did not execute properly, sending failure reply.",
+                ex
             );
             this.mention.reply(
                 String.format(
@@ -89,7 +90,11 @@ public final class GithubSteps implements Steps {
                     log.location()
                 )
             );
-            throw new IllegalStateException("An exception occured ", ex);
+            throw new IllegalStateException(
+                "An exception occured in Issue: "
+              + this.mention.issue().toString(),
+                ex
+            );
         }
 
     }

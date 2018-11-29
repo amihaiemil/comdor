@@ -26,6 +26,7 @@
 package co.comdor.github;
 
 import co.comdor.Log;
+
 import java.io.IOException;
 
 import javax.json.Json;
@@ -33,6 +34,8 @@ import javax.json.Json;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+
+import com.jcabi.github.Issue;
 
 import co.comdor.Step;
 import co.comdor.Steps;
@@ -79,9 +82,12 @@ public final class GithubStepsTestCase {
      */
     @Test(expected = IllegalStateException.class)
     public void stepsThrowIOException() throws Exception {
+    	final Issue issue = Mockito.mock(Issue.class);
+    	Mockito.when(issue.toString()).thenReturn("test/123");
         final Command comment = Mockito.mock(Command.class);
         Mockito.when(comment.language()).thenReturn(new English());
         Mockito.when(comment.author()).thenReturn("amihaiemil");
+        Mockito.when(comment.issue()).thenReturn(issue);
         Mockito.when(comment.json()).thenReturn(
             Json.createObjectBuilder().add("body", "@comdor run").build()
         );
