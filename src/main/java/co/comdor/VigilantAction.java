@@ -29,7 +29,7 @@ import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Issue;
 import java.io.IOException;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Action which catches exceptions and reports a Github Issue in comdor's
