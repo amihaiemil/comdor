@@ -26,7 +26,13 @@
 package co.comdor;
 
 import co.comdor.github.Command;
+import com.amihaiemil.docker.Container;
+import com.amihaiemil.docker.Docker;
+import com.amihaiemil.docker.LocalDocker;
+
+import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Step where a Docker container is fired up, scripts are executed and then 
@@ -34,13 +40,15 @@ import java.io.IOException;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
+ * @todo #99:30min Use the logs' Reader to write the Container's logs into our
+ *  slf4J Logger.
  */
 public final class FireUpDocker extends PreconditionCheckStep {
 
     /**
      * Docker host where containers will run.
      */
-    private DockerHost host;
+    private Docker host;
     
     /**
      * Ctor. Docker host will run based on the environment variables.
@@ -49,26 +57,12 @@ public final class FireUpDocker extends PreconditionCheckStep {
      */
     public FireUpDocker(final Step onTrue, final Step onFalse) {
         this(
-            new SystemProperties.DockerHost().toString(),
-            new SystemProperties.DockerCertificates().toString(),
+            new LocalDocker(
+                new File("/var/run/docker.sock")
+            ),
             onTrue,
             onFalse
         );
-    }
-    
-    /**
-     * Ctor. Docker host will run remotely at the specified coordinates.
-     * @param onTrue Step to perform if Docker's exit code is 0.
-     * @param onFalse Step to perform if Docker's exit code is not 0.
-     * @param dockerHost Https-scheme ip + port of the remote docker host.
-     * @param dockerCertPath Path, on disk, to the certificates.
-     * @checkstyle ParameterNumber (5 lines)
-     */
-    public FireUpDocker(
-        final String dockerHost, final String dockerCertPath,
-        final Step onTrue, final Step onFalse
-    ) {
-        this(new RtDockerHost(dockerHost, dockerCertPath), onTrue, onFalse);
     }
 
     /**
@@ -78,7 +72,7 @@ public final class FireUpDocker extends PreconditionCheckStep {
      * @param host Docker host where the containers will run.
      */
     public FireUpDocker(
-        final DockerHost host, final Step onTrue, final Step onFalse
+        final Docker host, final Step onTrue, final Step onFalse
     ) {
         super(onTrue, onFalse);
         this.host = host;
@@ -90,9 +84,8 @@ public final class FireUpDocker extends PreconditionCheckStep {
     ) throws IOException {
         final String scripts = command.scripts().asText();
         log.logger().info("Connecting to the Docker host...");
-        final Container container = this.host
-            .connect()
-            .create(command.comdorYaml().docker(), scripts);
+        final Container container = this.host.containers()
+            .create(command.comdorYaml().docker());
         final String id = container.containerId();
         try {
             log.logger().info(
@@ -100,20 +93,22 @@ public final class FireUpDocker extends PreconditionCheckStep {
             );
             log.logger().info("Executing scripts: " + scripts);
             container.start();
-            container.fetchLogs(log.logger());
+            final Reader reader = container.logs().follow();
         } finally {
             log.logger().info("Killing container " + id);
-            container.close();
+            container.kill();
         }
-        final int exitCode = container.exitCode();
+        final int exitCode = container.inspect()
+            .getJsonObject("State")
+            .getInt("ExitCode");
         if(exitCode != 0) {
             log.logger().error(
-                    "Container " + id + " exited with code: " + exitCode
+                "Container " + id + " exited with code: " + exitCode
             );
             this.onFalse().perform(command, log);
         } else {
             log.logger().info(
-                    "Container " + id + " exited with code 0 - OK"
+                "Container " + id + " exited with code 0 - OK"
             );
             this.onTrue().perform(command, log);
         }

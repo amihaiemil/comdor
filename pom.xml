@@ -243,6 +243,11 @@
 			<version>8.9.2</version>
 		</dependency>
 		<dependency>
+			<groupId>com.amihaiemil.web</groupId>
+			<artifactId>docker-java-api</artifactId>
+			<version>0.0.5</version>
+		</dependency>
+		<dependency>
 			<groupId>com.jcabi</groupId>
 			<artifactId>jcabi-github</artifactId>
 			<version>0.28</version>
