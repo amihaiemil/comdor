@@ -107,7 +107,7 @@ public final class CreateLabels implements Knowledge {
      * @version $Id$
      * @since 0.0.3
      * @checkstyle AnonInnerLength (100 lines)
-     * @todo #110:30min Write some unit tests for this class.
+     * @todo #105g:30min Write some unit tests for this class.
      *  For mocking, use MkGithub instead of mocking your own Github istance,
      *  it will be much easier.
      */
