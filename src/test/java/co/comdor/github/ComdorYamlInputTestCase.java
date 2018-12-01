@@ -63,6 +63,27 @@ public final class ComdorYamlInputTestCase {
     }
 
     /**
+     * ComdorYamlInput can read the labels list.
+     * @throws IOException If something goes wrong.
+     */
+    @Test
+    public void readsLabels() throws IOException {
+        final ComdorYaml comdor = new ComdorYamlInput(
+            new ByteArrayInputStream(
+                "docker: c/d\nlabels:\n  - 0.0.1\n  - 0.0.2".getBytes()
+            )
+        );
+        final List<String> labels = comdor.labels();
+        MatcherAssert.assertThat(labels, Matchers.hasSize(2));
+        MatcherAssert.assertThat(
+            labels.get(0), Matchers.equalTo("0.0.1")
+        );
+        MatcherAssert.assertThat(
+            labels.get(1), Matchers.equalTo("0.0.2")
+        );
+    }
+
+    /**
      * ComdorYamlInput can tag the architects.
      * @throws IOException If something goes wrong.
      */
@@ -140,6 +161,23 @@ public final class ComdorYamlInputTestCase {
         );
         MatcherAssert.assertThat(
             comdor.architects(), Matchers.iterableWithSize(0)
+        );
+    }
+
+    /**
+     * The labels' list is missing, so ComdorYamlInput returns an
+     * empty list.
+     * @throws IOException If something goes wrong.
+     */
+    @Test
+    public void missingLabels() throws IOException {
+        final ComdorYaml comdor = new ComdorYamlInput(
+            new ByteArrayInputStream(
+                "docker: a/b".getBytes()
+            )
+        );
+        MatcherAssert.assertThat(
+            comdor.labels(), Matchers.iterableWithSize(0)
         );
     }
 }

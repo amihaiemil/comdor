@@ -142,4 +142,29 @@ public final class ComdorYamlRulesTestCase {
         MatcherAssert.assertThat(cmd2, Matchers.iterableWithSize(2));
         MatcherAssert.assertThat(cmd2, Matchers.contains("amihaiemil", "joe"));
     }
+
+    /**
+     * Doesn't touch the labels' list. It returns it "as is".
+     */
+    @Test
+    public void returnsReadLabels() {
+        final ComdorYaml read = Mockito.mock(ComdorYaml.class);
+        Mockito.when(read.labels())
+            .thenReturn(new ArrayList<>())
+            .thenReturn(Arrays.asList(new String[]{"0.0.1"}))
+            .thenReturn(Arrays.asList(new String[]{"0.0.1", "0.0.2"}));
+
+        MatcherAssert.assertThat(
+            new ComdorYamlRules(read).labels(),
+            Matchers.iterableWithSize(0)
+        );
+
+        final List<String> arch1 = new ComdorYamlRules(read).labels();
+        MatcherAssert.assertThat(arch1, Matchers.iterableWithSize(1));
+        MatcherAssert.assertThat(arch1, Matchers.contains("0.0.1"));
+
+        final List<String> arch2 = new ComdorYamlRules(read).labels();
+        MatcherAssert.assertThat(arch2, Matchers.iterableWithSize(2));
+        MatcherAssert.assertThat(arch2, Matchers.contains("0.0.1", "0.0.2"));
+    }
 }
