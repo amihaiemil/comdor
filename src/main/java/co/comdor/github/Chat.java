@@ -95,8 +95,10 @@ public final class Chat implements Action {
             this.log.logger().info("Started action " + this.id);
             final Conversation talk = new Conversation(
                 new Hello(
-                    new RunScript(
-                        new Confused()
+                    new CreateLabels(
+                        new RunScript(
+                            new Confused()
+                        )
                     )
                 )
             );

@@ -76,5 +76,16 @@ public final class ComdorYamlInput implements ComdorYaml {
         }
         return commanders;
     }
-    
+
+    @Override
+    public List<String> labels() {
+        final List<String> labels = new ArrayList<>();
+        final YamlSequence sequence = this.yaml.yamlSequence("labels");
+        if(sequence != null) {
+            for(int idx=0; idx<sequence.size(); idx = idx + 1) {
+                labels.add(sequence.string(idx));
+            }
+        }
+        return labels;
+    }
 }

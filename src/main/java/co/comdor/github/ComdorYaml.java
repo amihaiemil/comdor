@@ -66,6 +66,12 @@ public interface ComdorYaml {
     List<String> commanders();
 
     /**
+     * Labels to be created in the repo.
+     * @return List String of labels.
+     */
+    List<String> labels();
+
+    /**
      * Missing .comdor.yml file.
      */
     final class Missing implements ComdorYaml {
@@ -89,6 +95,12 @@ public interface ComdorYaml {
         public List<String> commanders() {
             return new ArrayList<>();
         }
+
+        @Override
+        public List<String> labels() {
+            return new ArrayList<>();
+        }
+
     }
     
 }

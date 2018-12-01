@@ -32,7 +32,7 @@ import co.comdor.Steps;
 import java.io.IOException;
 
 /**
- * The is ultimately confused, if it cannot understand the mention.
+ * The bot is ultimately confused, if it cannot understand the mention.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1

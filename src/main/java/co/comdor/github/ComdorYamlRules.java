@@ -77,5 +77,10 @@ public final class ComdorYamlRules implements ComdorYaml {
     public List<String> commanders() {
         return this.decorated.commanders();
     }
-    
+
+    @Override
+    public List<String> labels() {
+        return this.decorated.labels();
+    }
+
 }
