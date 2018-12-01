@@ -59,7 +59,7 @@ public final class FireUpDockerTestCase {
     public void performsOk() throws Exception {
         final Logs logs = Mockito.mock(Logs.class);
         Mockito.when(logs.follow()).thenReturn(
-            new StringReader("container logs")
+            new StringReader("some container logs")
         );
         final Container container = Mockito.mock(Container.class);
         Mockito.when(container.logs()).thenReturn(logs);
@@ -94,10 +94,10 @@ public final class FireUpDockerTestCase {
 
         fireup.perform(command, log);
 
-        Mockito.verify(container, Mockito.times(1))
-            .start();
-        Mockito.verify(container, Mockito.times(1))
-            .kill();
+        Mockito.verify(container, Mockito.times(1)).start();
+        Mockito.verify(logs, Mockito.times(1)).follow();
+        Mockito.verify(logger, Mockito.times(1)).info("some container logs");
+        Mockito.verify(container, Mockito.times(1)).kill();
     }
 
     /**

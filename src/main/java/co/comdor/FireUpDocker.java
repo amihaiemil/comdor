@@ -29,10 +29,9 @@ import co.comdor.github.Command;
 import com.amihaiemil.docker.Container;
 import com.amihaiemil.docker.Docker;
 import com.amihaiemil.docker.LocalDocker;
-
+import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 
 /**
  * Step where a Docker container is fired up, scripts are executed and then 
@@ -40,8 +39,6 @@ import java.io.Reader;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.3
- * @todo #99:30min Use the logs' Reader to write the Container's logs into our
- *  slf4J Logger.
  */
 public final class FireUpDocker extends PreconditionCheckStep {
 
@@ -83,17 +80,16 @@ public final class FireUpDocker extends PreconditionCheckStep {
         final Command command, final Log log
     ) throws IOException {
         final String scripts = command.scripts().asText();
-        log.logger().info("Connecting to the Docker host...");
         final Container container = this.host.containers()
             .create(command.comdorYaml().docker());
         final String id = container.containerId();
         try {
-            log.logger().info(
-                "Connected; starting container with id " + id
-            );
+            log.logger().info("Starting container with id " + id);
             log.logger().info("Executing scripts: " + scripts);
             container.start();
-            final Reader reader = container.logs().follow();
+            log.logger().info("----------Container Logs----------");
+            log.logger().info(IOUtils.toString(container.logs().follow()));
+            log.logger().info("----------End Container Logs----------");
         } finally {
             log.logger().info("Killing container " + id);
             container.kill();
