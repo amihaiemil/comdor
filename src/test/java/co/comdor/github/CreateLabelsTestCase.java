@@ -98,128 +98,128 @@ public final class CreateLabelsTestCase {
     }
 
     /**
-	 * For {@link Create}. No labels are actually specified, so none is
-	 * created.
-	 * @throws Exception If something goes wrong.
-	 */
-	@Test
-	public void missingLabels() throws Exception {
-		final Command command = Mockito.mock(Command.class);
-		Mockito.when(command.comdorYaml()).thenReturn(
-		    new ComdorYaml.Missing()
-		);
-		final Log log = Mockito.mock(Log.class);
-		Mockito.when(log.logger()).thenReturn(
-		    Mockito.mock(Logger.class)
-		);
-		final Issue issue = new MkGithub("comdor")
-	        .repos()
-	        .create(new RepoCreate("testrepo", false))
-	        .issues()
-	        .create("test issue", "test body");
-		Mockito.when(command.issue()).thenReturn(issue);
-		
-		MatcherAssert.assertThat(
-		    issue.repo().labels().iterate(),
-		    Matchers.is(Matchers.emptyIterable())
-		);
-		
+     * For {@link Create}. No labels are actually specified, so none is
+     * created.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void missingLabels() throws Exception {
+        final Command command = Mockito.mock(Command.class);
+        Mockito.when(command.comdorYaml()).thenReturn(
+            new ComdorYaml.Missing()
+        );
+        final Log log = Mockito.mock(Log.class);
+        Mockito.when(log.logger()).thenReturn(
+            Mockito.mock(Logger.class)
+        );
+        final Issue issue = new MkGithub("comdor")
+            .repos()
+            .create(new RepoCreate("testrepo", false))
+            .issues()
+            .create("test issue", "test body");
+        Mockito.when(command.issue()).thenReturn(issue);
+        
+        MatcherAssert.assertThat(
+            issue.repo().labels().iterate(),
+            Matchers.is(Matchers.emptyIterable())
+        );
+        
         final Create create = new Create(new Step.Fake(true));
         create.perform(command, log);
         
         MatcherAssert.assertThat(
-		    issue.repo().labels().iterate(),
-		    Matchers.is(Matchers.emptyIterable())
-		);
-	}
-	
-	/**
-	 * For {@link Create}. Some labels are actually specified, so they
-	 * should be created.
-	 * @throws Exception If something goes wrong.
-	 */
-	@Test
-	public void createsLabels() throws Exception {
-		final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
-		Mockito.when(yaml.labels()).thenReturn(
-		    Arrays.asList(
-		        new String[]{
-		            "0.0.1", "0.0.2", "@amihaiemil", "@comdor"
-		        }
-		    )
-		);
-		final Command command = Mockito.mock(Command.class);
-		Mockito.when(command.comdorYaml()).thenReturn(yaml);
-		final Log log = Mockito.mock(Log.class);
-		Mockito.when(log.logger()).thenReturn(
-		    Mockito.mock(Logger.class)
-		);
-		final Issue issue = new MkGithub("comdor")
-	        .repos()
-	        .create(new RepoCreate("testrepo", false))
-	        .issues()
-	        .create("test issue", "test body");
-		Mockito.when(command.issue()).thenReturn(issue);
-		
-		MatcherAssert.assertThat(
-		    issue.repo().labels().iterate(),
-		    Matchers.is(Matchers.emptyIterable())
-		);
-		
+            issue.repo().labels().iterate(),
+            Matchers.is(Matchers.emptyIterable())
+        );
+    }
+    
+    /**
+     * For {@link Create}. Some labels are actually specified, so they
+     * should be created.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void createsLabels() throws Exception {
+        final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
+        Mockito.when(yaml.labels()).thenReturn(
+            Arrays.asList(
+                new String[]{
+                    "0.0.1", "0.0.2", "@amihaiemil", "@comdor"
+                }
+            )
+        );
+        final Command command = Mockito.mock(Command.class);
+        Mockito.when(command.comdorYaml()).thenReturn(yaml);
+        final Log log = Mockito.mock(Log.class);
+        Mockito.when(log.logger()).thenReturn(
+            Mockito.mock(Logger.class)
+        );
+        final Issue issue = new MkGithub("comdor")
+            .repos()
+            .create(new RepoCreate("testrepo", false))
+            .issues()
+            .create("test issue", "test body");
+        Mockito.when(command.issue()).thenReturn(issue);
+        
+        MatcherAssert.assertThat(
+            issue.repo().labels().iterate(),
+            Matchers.is(Matchers.emptyIterable())
+        );
+        
         final Create create = new Create(new Step.Fake(true));
         create.perform(command, log);
         
         MatcherAssert.assertThat(
-		    issue.repo().labels().iterate(),
-		    Matchers.iterableWithSize(4)
-		);
-	}
-	
-	/**
-	 * For {@link Create}. Some labels are actually specified, so they
-	 * should be created. However, if the command is ran a second time, no
-	 * duplicates are created.
-	 * @throws Exception If something goes wrong.
-	 */
-	@Test
-	public void doesntCreateDuplicateLabels() throws Exception {
-		final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
-		Mockito.when(yaml.labels()).thenReturn(
-		    Arrays.asList(
-		        new String[]{
-		            "0.0.1", "0.0.2", "@amihaiemil", "@comdor"
-		        }
-		    )
-		);
-		final Command command = Mockito.mock(Command.class);
-		Mockito.when(command.comdorYaml()).thenReturn(yaml);
-		final Log log = Mockito.mock(Log.class);
-		Mockito.when(log.logger()).thenReturn(
-		    Mockito.mock(Logger.class)
-		);
-		final Issue issue = new MkGithub("comdor")
-	        .repos()
-	        .create(new RepoCreate("testrepo", false))
-	        .issues()
-	        .create("test issue", "test body");
-		Mockito.when(command.issue()).thenReturn(issue);
-		
-		MatcherAssert.assertThat(
-		    issue.repo().labels().iterate(),
-		    Matchers.is(Matchers.emptyIterable())
-		);
-		
+            issue.repo().labels().iterate(),
+            Matchers.iterableWithSize(4)
+        );
+    }
+    
+    /**
+     * For {@link Create}. Some labels are actually specified, so they
+     * should be created. However, if the command is ran a second time, no
+     * duplicates are created.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void doesntCreateDuplicateLabels() throws Exception {
+        final ComdorYaml yaml = Mockito.mock(ComdorYaml.class);
+        Mockito.when(yaml.labels()).thenReturn(
+            Arrays.asList(
+                new String[]{
+                    "0.0.1", "0.0.2", "@amihaiemil", "@comdor"
+                }
+            )
+        );
+        final Command command = Mockito.mock(Command.class);
+        Mockito.when(command.comdorYaml()).thenReturn(yaml);
+        final Log log = Mockito.mock(Log.class);
+        Mockito.when(log.logger()).thenReturn(
+            Mockito.mock(Logger.class)
+        );
+        final Issue issue = new MkGithub("comdor")
+            .repos()
+            .create(new RepoCreate("testrepo", false))
+            .issues()
+            .create("test issue", "test body");
+        Mockito.when(command.issue()).thenReturn(issue);
+        
+        MatcherAssert.assertThat(
+            issue.repo().labels().iterate(),
+            Matchers.is(Matchers.emptyIterable())
+        );
+        
         final Create create = new Create(new Step.Fake(true));
         create.perform(command, log);
         MatcherAssert.assertThat(
-		    issue.repo().labels().iterate(),
-		    Matchers.iterableWithSize(4)
-		);
+            issue.repo().labels().iterate(),
+            Matchers.iterableWithSize(4)
+        );
         
         create.perform(command, log);
         MatcherAssert.assertThat(
-		    issue.repo().labels().iterate(),
-		    Matchers.iterableWithSize(4)
-		);
-	}
+            issue.repo().labels().iterate(),
+            Matchers.iterableWithSize(4)
+        );
+    }
 }
