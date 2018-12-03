@@ -25,11 +25,17 @@
  */
 package co.comdor.github;
 
-import co.comdor.*;
-import com.jcabi.github.Labels;
 import java.io.IOException;
 import java.util.Random;
 import java.util.function.Consumer;
+
+import co.comdor.IntermediaryStep;
+import co.comdor.Knowledge;
+import co.comdor.Log;
+import co.comdor.Step;
+import co.comdor.Steps;
+
+import com.jcabi.github.Labels;
 
 /**
  * The bot can create the Github Labels specified in .comdor.yml.
@@ -107,11 +113,8 @@ public final class CreateLabels implements Knowledge {
      * @version $Id$
      * @since 0.0.3
      * @checkstyle AnonInnerLength (100 lines)
-     * @todo #105g:30min Write some unit tests for this class.
-     *  For mocking, use MkGithub instead of mocking your own Github istance,
-     *  it will be much easier.
      */
-    final class Create extends IntermediaryStep {
+    static final class Create extends IntermediaryStep {
 
         /**
          * Ctor.
@@ -123,11 +126,11 @@ public final class CreateLabels implements Knowledge {
 
         @Override
         public void perform(
-                final Command command, final Log log
+            final Command command, final Log log
         ) throws IOException {
             log.logger().info("Creating labels...");
             final Labels.Smart repo = new Labels.Smart(
-                    command.issue().repo().labels()
+                command.issue().repo().labels()
             );
             command.comdorYaml().labels().forEach(
                 new Consumer<String>() {
@@ -137,19 +140,31 @@ public final class CreateLabels implements Knowledge {
                     public void accept(final String label) {
                         if(!repo.contains(label)) {
                             try {
-                                repo.create(
-                                    label,
-                                    String.format(
-                                        "#%06x",
-                                        this.colors.nextInt(Integer.MAX_VALUE)
-                                    )
-                                );
+                                repo.create(label, this.pickRandom(colors));
                             } catch (final IOException ex) {
                                 throw new IllegalStateException(
                                     "IOException when creating labels", ex
                                 );
                             }
                         }
+                    }
+                    
+                    /**
+                     * Pick a random hex RGB color.
+                     * @param random Randomizer.
+                     * @return String hex color (without the leading '#').
+                     * @checkstyle MagicNumber (50 lines)
+                     */
+                    private String pickRandom(final Random random) {
+                        final String[] values = {
+                            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                            "a", "b", "c", "d", "e", "f"
+                        };
+                        final StringBuilder color = new StringBuilder();
+                        for (int idx = 0; idx < 6; idx++) {
+                            color.append(values[random.nextInt(values.length)]);
+                        }
+                        return color.toString();
                     }
                 }
             );
