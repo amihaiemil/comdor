@@ -96,8 +96,8 @@ public final class Chat implements Action {
             );
             new Social(
                 new Careful(
-            talk.start(mention, this.log)
-        )
+                    talk.start(mention, this.log)
+                )
             ).perform(mention, this.log);
         } catch (final MentionLookupException mle) {
             this.log.logger().warn(mle.getMessage());
