@@ -27,17 +27,17 @@ package co.comdor.github;
 
 import java.util.Arrays;
 
-import co.comdor.Knowledge;
-import co.comdor.Log;
-import co.comdor.Step;
-import co.comdor.Steps;
-import co.comdor.github.CreateLabels.Create;
-
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+
+import co.comdor.Careful;
+import co.comdor.Knowledge;
+import co.comdor.Log;
+import co.comdor.Step;
+import co.comdor.github.CreateLabels.Create;
 
 import com.jcabi.github.Issue;
 import com.jcabi.github.Repos.RepoCreate;
@@ -68,10 +68,10 @@ public final class CreateLabelsTestCase {
                 );
             }
         );
-        final Steps steps = labels.start(com, Mockito.mock(Log.class));
+        final Step steps = labels.start(com, Mockito.mock(Log.class));
         MatcherAssert.assertThat(steps, Matchers.notNullValue());
         MatcherAssert.assertThat(
-                steps instanceof GithubSteps, Matchers.is(true)
+            steps instanceof ArchitectCheck, Matchers.is(true)
         );
 
     }

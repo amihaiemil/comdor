@@ -23,32 +23,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor;
+package co.comdor.github;
 
-import co.comdor.github.Command;
+import java.io.IOException;
+
+import co.comdor.Log;
+import co.comdor.Step;
 
 /**
- * After executing all the steps which are needed to fulfill an action, 
- * the bot performs a few more social, cosmetic steps, like starring the repo,
- * following the user on Github, tweeting etc.
- * 
- * These steps should be executted all the time, in the end of the Steps
- * pyramid.
- * 
- * @author Mihai Andronache (amihaiemil@gmail.com)
- * @version $Id$
- * @since 0.0.2
+ * Social steps. Follow the user and star the repository.
+ * @todo #34:30min StarRepo and FollowUser are each tested separately, but some
+ *  tests for this class would also be useful.
  */
+public final class Social implements Step {
 
-public interface SocialSteps extends Step {
-    
     /**
-     * Notice that this overriden perform() does not throw IOException.
-     * This is because we are not treating social steps failures, they are only
-     * cosmetic, not affecting the business at all.
-     * @param command Command which triggered everything.
-     * @param log Log of the Action.
+     * Original steps.
+     * Actual steps performed to fulfil the command.
      */
+    private final Step original;
+        
+    /**
+     * Ctor.
+     * @param original Actual steps to execute.
+     */    
+    public Social(final Step original) {
+        this.original = original;
+    }
+
     @Override
-    void perform(final Command command, final Log log);
+    public void perform(
+        final Command command, final Log log
+    ) throws IOException {
+        this.original.perform(command, log);
+        try {
+            new StarRepo(
+                new FollowUser(
+                    new Step.FinalStep()
+                )
+            ).perform(command, log);
+        } catch (final IOException ioe){}
+    }
+    
 }

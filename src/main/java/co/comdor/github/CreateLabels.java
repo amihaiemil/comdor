@@ -33,7 +33,6 @@ import co.comdor.IntermediaryStep;
 import co.comdor.Knowledge;
 import co.comdor.Log;
 import co.comdor.Step;
-import co.comdor.Steps;
 
 import com.jcabi.github.Labels;
 
@@ -59,13 +58,24 @@ public final class CreateLabels implements Knowledge {
     }
 
     @Override
-    public Steps start(
+    public Step start(
         final Command mention, final Log log
     ) throws IOException {
-        final Steps resolved;
+        final Step resolved;
         if("labels".equalsIgnoreCase(mention.type())) {
-            resolved =  new GithubSteps(
-                new ArchitectCheck(
+            resolved = new ArchitectCheck(
+                new Create(
+                    new SendReply(
+                        String.format(
+                            mention.language().response(
+                                "labels.comment.successful"
+                            ),
+                            mention.author(),
+                            log.location()
+                        )
+                    )
+                ),
+                new CommanderCheck(
                     new Create(
                         new SendReply(
                             String.format(
@@ -77,29 +87,15 @@ public final class CreateLabels implements Knowledge {
                             )
                         )
                     ),
-                    new CommanderCheck(
-                        new Create(
-                            new SendReply(
-                                String.format(
-                                    mention.language().response(
-                                        "labels.comment.successful"
-                                    ),
-                                    mention.author(),
-                                    log.location()
-                                )
-                            )
-                        ),
-                        new SendReply(
-                            String.format(
-                                mention.language().response(
-                                    "author.no.rights"
-                                ),
-                                mention.author()
-                            )
+                    new SendReply(
+                        String.format(
+                            mention.language().response(
+                                "author.no.rights"
+                            ),
+                            mention.author()
                         )
                     )
-                ),
-                mention
+                )
             );
         } else {
             resolved = this.notLabels.start(mention, log);

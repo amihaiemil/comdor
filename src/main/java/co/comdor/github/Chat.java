@@ -50,12 +50,6 @@ public final class Chat implements Action {
     private Issue issue;
     
     /**
-     * Social steps to be executed in the end, after the bot finishes everything
-     * else.
-     */
-    private SocialSteps social;
-    
-    /**
      * Log of this action. Each Github action should be logged in its own file,
      * since we want to let the user inspect the logs sometimes.
      */
@@ -64,16 +58,11 @@ public final class Chat implements Action {
     /**
      * Ctor.
      * @param issue Github Issue which triggered this action.
-     * @param social Social steps that the bot executes after the he fulfills
-     *  the triggering Mention.
      * @throws IOException If there is any IO problem (e.g. writing files,
      *  communicating with Github etc).
      */
-    public Chat(
-        final Issue issue, final SocialSteps social
-    ) throws IOException {
+    public Chat(final Issue issue) throws IOException {
         this.issue = issue;
-        this.social = social;
         this.id = UUID.randomUUID().toString();
         this.log = new WebLog(
             new LogFile(
@@ -105,9 +94,11 @@ public final class Chat implements Action {
             final Command mention = new CachedMention(
                 new LastMention(this.issue)
             );
-            final Steps steps = talk.start(mention, this.log);
-            steps.perform(this.log);
-            this.social.perform(mention, this.log);
+            new Social(
+                new Careful(
+            talk.start(mention, this.log)
+        )
+            ).perform(mention, this.log);
         } catch (final MentionLookupException mle) {
             this.log.logger().warn(mle.getMessage());
         }

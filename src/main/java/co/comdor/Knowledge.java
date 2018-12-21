@@ -45,5 +45,5 @@ public interface Knowledge {
      * @return Steps to execute.
      * @throws IOException If something goes wrong when calling Github.
      */
-    Steps start(final Command mention, final Log log) throws IOException;
+    Step start(final Command mention, final Log log) throws IOException;
 }

@@ -25,11 +25,11 @@
  */
 package co.comdor.github;
 
+import java.io.IOException;
+
 import co.comdor.Knowledge;
 import co.comdor.Log;
-import co.comdor.Steps;
-
-import java.io.IOException;
+import co.comdor.Step;
 
 /**
  * The bot has a conversation on Github, based on an initial Mention.
@@ -68,7 +68,7 @@ public final class Conversation implements Knowledge {
     }
 
     @Override
-    public Steps start(
+    public Step start(
         final Command mention, final Log log
     ) throws IOException {
         mention.understand(this.languages);

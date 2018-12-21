@@ -25,21 +25,8 @@
  */
 package co.comdor.rest;
 
-import co.comdor.Action;
-import co.comdor.SystemProperties;
-import co.comdor.VigilantAction;
-import co.comdor.github.Chat;
-import co.comdor.github.GithubSocialSteps;
-import co.comdor.rest.model.Notification;
-import co.comdor.rest.model.Notifications;
-import co.comdor.rest.model.SimplifiedNotifications;
-import co.comdor.rest.model.WebhookNotifications;
-import com.jcabi.github.Coordinates;
-import com.jcabi.github.Github;
-import com.jcabi.github.RtGithub;
-import com.jcabi.http.wire.RetryWire;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -52,8 +39,23 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.net.HttpURLConnection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import co.comdor.Action;
+import co.comdor.SystemProperties;
+import co.comdor.VigilantAction;
+import co.comdor.github.Chat;
+import co.comdor.rest.model.Notification;
+import co.comdor.rest.model.Notifications;
+import co.comdor.rest.model.SimplifiedNotifications;
+import co.comdor.rest.model.WebhookNotifications;
+
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.RtGithub;
+import com.jcabi.http.wire.RetryWire;
 
 /**
  * REST interface to receive Github notifications for chatting.
@@ -204,8 +206,7 @@ public class ChatResource {
                                     new Coordinates.Simple(
                                         notification.repoFullName()
                                     )
-                                ).issues().get(notification.issueNumber()),
-                                new GithubSocialSteps()
+                                ).issues().get(notification.issueNumber())
                             ),
                             github
                         )

@@ -25,8 +25,6 @@
  */
 package co.comdor.github;
 
-import co.comdor.Log;
-
 import java.io.IOException;
 
 import javax.json.Json;
@@ -35,18 +33,19 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
+import co.comdor.Careful;
+import co.comdor.Log;
+import co.comdor.Step;
+
 import com.jcabi.github.Issue;
 
-import co.comdor.Step;
-import co.comdor.Steps;
-
 /**
- * Unit tests for {@link GithubSteps}
+ * Unit tests for {@link Careful}
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class GithubStepsTestCase {
+public final class CarefulTestCase {
 
     /**
      * GithubSteps logs the received comment and author and
@@ -62,13 +61,13 @@ public final class GithubStepsTestCase {
         Mockito.when(comment.author()).thenReturn("amihaiemil");
         final Step toExecute = Mockito.mock(Step.class);
         
-        final Steps steps = new GithubSteps(toExecute, comment);
+        final Step steps = new Careful(toExecute);
         
         final Log log = Mockito.mock(Log.class);
         final Logger slf4j = Mockito.mock(Logger.class);
         Mockito.when(log.logger()).thenReturn(slf4j);
         
-        steps.perform(log);
+        steps.perform(comment, log);
         
         Mockito.verify(slf4j).info("Received command: @comdor run");
         Mockito.verify(slf4j).info("Author login: amihaiemil");
@@ -98,9 +97,9 @@ public final class GithubStepsTestCase {
         Mockito.doThrow(
             new IOException("Intented IOException")
         ).when(toExecute).perform(comment, log);
-        final Steps steps = new GithubSteps(toExecute, comment);
+        final Step steps = new Careful(toExecute);
         
-        steps.perform(log);
+        steps.perform(comment, log);
         Mockito.verify(comment).reply(
             String.format(
                 new English().response("steps.failure.comment"),

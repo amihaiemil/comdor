@@ -23,40 +23,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package co.comdor.github;
-
-import co.comdor.Step;
-import co.comdor.Steps;
-import co.comdor.Log;
+package co.comdor;
 
 import java.io.IOException;
 
+import co.comdor.github.Command;
+
 /**
- * Steps to fulfill a mention, executed on Github.
+ * Careful steps. It watches for exceptions and informs the user
+ * if anything went wrong.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class GithubSteps implements Steps {
+public final class Careful implements Step {
 
     /**
      * Steps to be performed.
      */
     private Step steps;
-    
-    /**
-     * Initial mention. The one that triggered everything.
-     */
-    private Command mention;
 
     /**
      * Constructor.
      * @param steps Steps to perform everything.
-     * @param mention Initial menton.
      */
-    public GithubSteps(final Step steps, final Command mention) {
+    public Careful(final Step steps) {
         this.steps = steps;
-        this.mention = mention;
     }
 
     /**
@@ -66,33 +58,36 @@ public final class GithubSteps implements Steps {
      * language) and then they are rethrown -- they should be caught by 
      * {@link VigilanteAction} which should open an Issue in comdor's Repo.
      * 
+     * @param command Command.
      * @param log Action logger.
      * @throws IOException If something goes wrong while calling Github.
      * @checkstyle IllegalCatch (50 lines)
      */
     @Override
-    public void perform(final Log log) throws IOException {
+    public void perform(
+        final Command command, final Log log
+    ) throws IOException {
         try {
             log.logger().info(
-                "Received command: " + this.mention.json().getString("body")
+                "Received command: " + command.json().getString("body")
             );
-            log.logger().info("Author login: " + this.mention.author());
-            this.steps.perform(this.mention, log);
+            log.logger().info("Author login: " + command.author());
+            this.steps.perform(command, log);
         } catch (final IOException | RuntimeException ex) {
             log.logger().error(
                 "Some step did not execute properly, sending failure reply.",
                 ex
             );
-            this.mention.reply(
+            command.reply(
                 String.format(
-                    this.mention.language().response("steps.failure.comment"),
-                    this.mention.author(),
+                    command.language().response("steps.failure.comment"),
+                    command.author(),
                     log.location()
                 )
             );
             throw new IllegalStateException(
                 "An exception occured in Issue: "
-              + this.mention.issue().toString(),
+              + command.issue().toString(),
                 ex
             );
         }

@@ -25,13 +25,14 @@
  */
 package co.comdor.github;
 
-import co.comdor.Knowledge;
-import co.comdor.Log;
-import co.comdor.Steps;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
+import co.comdor.Knowledge;
+import co.comdor.Log;
+import co.comdor.Step;
 
 /**
  * Unit tests for {@link Conversation}
@@ -52,7 +53,7 @@ public final class ConversationTestCase {
         final Conversation conv = new Conversation(
             new Knowledge() {
                 @Override
-                public Steps start(
+                public Step start(
                     final Command mention, final Log log
                 ) throws IOException {
                     Mockito.verify(mention).understand(langs);

@@ -25,11 +25,11 @@
  */
 package co.comdor.github;
 
+import java.io.IOException;
+
 import co.comdor.Knowledge;
 import co.comdor.Log;
-import co.comdor.Steps;
-
-import java.io.IOException;
+import co.comdor.Step;
 
 /**
  * The bot knows how to respond to a 'hello' mention.
@@ -53,19 +53,16 @@ public final class Hello implements Knowledge {
     }
 
     @Override
-    public Steps start(
+    public Step start(
         final Command com, final Log log
     ) throws IOException {
-        final Steps resolved;
+        final Step resolved;
         if("hello".equalsIgnoreCase(com.type())) {
-            resolved =  new GithubSteps(
-                new SendReply(
-                    String.format(
-                        com.language().response("hello.comment"),
-                        com.author()
-                    )
-                ),
-                com
+            resolved = new SendReply(
+                String.format(
+                    com.language().response("hello.comment"),
+                    com.author()
+                )
             );
         } else {
             resolved = this.notHello.start(com, log);

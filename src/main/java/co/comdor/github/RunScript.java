@@ -25,12 +25,12 @@
  */
 package co.comdor.github;
 
+import java.io.IOException;
+
 import co.comdor.FireUpDocker;
 import co.comdor.Knowledge;
 import co.comdor.Log;
-import co.comdor.Steps;
-
-import java.io.IOException;
+import co.comdor.Step;
 
 /**
  * The bot knows how to run a given script.
@@ -54,71 +54,68 @@ public final class RunScript implements Knowledge {
     }
 
     @Override
-    public Steps start(
+    public Step start(
         final Command mention, final Log log
     ) throws IOException {
-        final Steps resolved;
+        final Step resolved;
         if("run".equalsIgnoreCase(mention.type())) {
-            resolved =  new GithubSteps(
-                new ArchitectsRequired(
-                    new ArchitectCheck(
-                        new SendReply(
-                            String.format(
-                                mention.language().response(
-                                    "run.comment.started"
-                                ),
-                                mention.author(),
-                                log.location()
+            resolved = new ArchitectsRequired(
+                new ArchitectCheck(
+                    new SendReply(
+                        String.format(
+                            mention.language().response(
+                                "run.comment.started"
                             ),
-                            new FireUpDocker(
-                                new SendReply(
-                                    String.format(
-                                        mention.language().response(
-                                            "run.comment.successful"
-                                        ),
-                                        mention.author(),
-                                        log.location()
-                                    )
-                                ),
-                                new SendReply(
-                                    String.format(
-                                        mention.language().response(
-                                            "run.comment.failed"
-                                        ),
-                                        mention.author(),
-                                        log.location()
-                                    )
-                                )
-                            )
+                            mention.author(),
+                            log.location()
                         ),
-                        new CommanderCheck(
+                        new FireUpDocker(
                             new SendReply(
                                 String.format(
                                     mention.language().response(
-                                        "architects.approval"
+                                        "run.comment.successful"
                                     ),
                                     mention.author(),
-                                    mention.comdorYaml().taggedArchitects()
+                                    log.location()
                                 )
                             ),
                             new SendReply(
                                 String.format(
                                     mention.language().response(
-                                        "author.no.rights"
+                                        "run.comment.failed"
                                     ),
-                                    mention.author()
+                                    mention.author(),
+                                    log.location()
                                 )
                             )
                         )
                     ),
-                    new SendReply(
-                        String.format(
-                            mention.language().response("architects.missing"),
-                            mention.author()
+                    new CommanderCheck(
+                        new SendReply(
+                            String.format(
+                                mention.language().response(
+                                    "architects.approval"
+                                ),
+                                mention.author(),
+                                mention.comdorYaml().taggedArchitects()
+                            )
+                        ),
+                        new SendReply(
+                            String.format(
+                                mention.language().response(
+                                    "author.no.rights"
+                                ),
+                                mention.author()
+                            )
                         )
                     )
                 ),
-                mention
+                new SendReply(
+                    String.format(
+                        mention.language().response("architects.missing"),
+                        mention.author()
+                    )
+                )
             );
         } else {
             resolved = this.notRun.start(mention, log);

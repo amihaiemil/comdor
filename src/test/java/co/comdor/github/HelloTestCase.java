@@ -25,14 +25,16 @@
  */
 package co.comdor.github;
 
-import co.comdor.Knowledge;
-import co.comdor.Log;
-import co.comdor.Steps;
+import java.io.IOException;
+
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
-import java.io.IOException;
+
+import co.comdor.Knowledge;
+import co.comdor.Log;
+import co.comdor.Step;
 
 /**
  * Unit tests for {@link Hello}
@@ -54,7 +56,7 @@ public final class HelloTestCase {
         final Knowledge hello = new Hello(
             new Knowledge() {
                 @Override
-                public Steps start(
+                public Step start(
                     final Command com, final Log log
                 ) throws IOException {
                     throw new IllegalStateException(
@@ -63,10 +65,10 @@ public final class HelloTestCase {
                 }
             }
         );
-        final Steps steps = hello.start(com, Mockito.mock(Log.class));
+        final Step steps = hello.start(com, Mockito.mock(Log.class));
         MatcherAssert.assertThat(steps, Matchers.notNullValue());
         MatcherAssert.assertThat(
-            steps instanceof GithubSteps, Matchers.is(true)
+            steps instanceof SendReply, Matchers.is(true)
         );
 
     }
@@ -83,7 +85,7 @@ public final class HelloTestCase {
         final Knowledge hello = new Hello(
             new Knowledge() {
                 @Override
-                public Steps start(
+                public Step start(
                     final Command com, final Log log
                 ) throws IOException {
                     MatcherAssert.assertThat(

@@ -25,13 +25,15 @@
  */
 package co.comdor.github;
 
-import co.comdor.Knowledge;
-import co.comdor.Log;
-import co.comdor.Steps;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import co.comdor.Careful;
+import co.comdor.Knowledge;
+import co.comdor.Log;
+import co.comdor.Step;
 
 /**
  * Unit tests for {@link Confused}
@@ -53,10 +55,10 @@ public final class ConfusedTestCase {
 
         final Knowledge confused = new Confused();
 
-        Steps steps = confused.start(com, Mockito.mock(Log.class));
+        Step steps = confused.start(com, Mockito.mock(Log.class));
         MatcherAssert.assertThat(steps, Matchers.notNullValue());
         MatcherAssert.assertThat(
-            steps instanceof GithubSteps, Matchers.is(true)
+            steps instanceof SendReply, Matchers.is(true)
         );
 
     }

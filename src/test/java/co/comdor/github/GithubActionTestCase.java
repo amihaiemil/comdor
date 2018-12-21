@@ -25,26 +25,29 @@
  */
 package co.comdor.github;
 
-import co.comdor.Action;
-import co.comdor.SocialSteps;
-import com.google.common.collect.Lists;
-import com.jcabi.github.*;
-import com.jcabi.github.mock.MkGithub;
-import com.jcabi.github.mock.MkStorage;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+
+import co.comdor.Action;
+
+import com.google.common.collect.Lists;
+import com.jcabi.github.Comment;
+import com.jcabi.github.Coordinates;
+import com.jcabi.github.Github;
+import com.jcabi.github.Issue;
+import com.jcabi.github.Repos;
+import com.jcabi.github.mock.MkGithub;
+import com.jcabi.github.mock.MkStorage;
 
 /**
  * Unit tests for {@link Chat}
@@ -65,10 +68,9 @@ public final class GithubActionTestCase {
             final Issue issue1 = this.githubIssue("amihaiemil", "@comdor hello there");
             final Issue issue2 = this.githubIssue("jeff", "@comdor hello");
             final Issue issue3 = this.githubIssue("vlad", "@comdor, hello");
-            final SocialSteps social = Mockito.mock(SocialSteps.class);
-            final Action ac1 = new Chat(issue1, social);
-            final Action ac2 = new Chat(issue2, social);
-            final Action ac3 = new Chat(issue3, social);
+            final Action ac1 = new Chat(issue1);
+            final Action ac2 = new Chat(issue2);
+            final Action ac3 = new Chat(issue3);
             
             final ExecutorService executorService = Executors.newFixedThreadPool(5);
             final List<Future> futures = new ArrayList<>();
