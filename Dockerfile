@@ -23,7 +23,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 
-FROM lwieske/java-8:jdk-8u202
+FROM airhacks/java
 MAINTAINER Mihai Andronache <amihaiemil@gmail.com>
 LABEL Description="This is the default Docker image for comdor.co" Vendor="comdor.co" Version="1.0"
 WORKDIR /tmp
@@ -31,8 +31,8 @@ WORKDIR /tmp
 ENV DEBIAN_FRONTEND=noninteractive
 
 # UTF-8 locale
-#RUN locale-gen en_US en_US.UTF-8
-#RUN dpkg-reconfigure locales
+RUN locale-gen en_US en_US.UTF-8
+RUN dpkg-reconfigure locales
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
